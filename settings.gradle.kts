@@ -49,6 +49,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "My Application"
+rootProject.name = "Stability"
 include(":app")
 include(":nativelib")
