@@ -1,0 +1,2217 @@
+Android
+Android
+xJ.P
+WyR'$%
+2b>I
+8&rM*6
+3Zr[
+__cxa_finalize
+_ZdlPvm
+_ZNSt3__122__libcpp_verbose_abortEPKcz
+_Znwm
+memcmp
+_ZdaPv
+__cxa_guard_acquire
+__cxa_guard_release
+__cxa_pure_virtual
+dlsym
+__errno
+strerror
+strrchr
+dlopen
+__system_property_find
+__system_property_read_callback
+strlen
+_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6appendEmc
+eventfd
+write
+read
+fstat
+close
+__read_chk
+fdatasync
+open
+strtoul
+geteuid
+strtol
+strncmp
+fprintf
+stderr
+_Znam
+isatty
+__android_log_print
+android_set_abort_message
+__vsnprintf_chk
+clock_gettime
+vsnprintf
+mmap
+mprotect
+munmap
+madvise
+timerfd_create
+timerfd_settime
+_ZNSt3__119__shared_weak_count14__release_weakEv
+_ZNKSt3__119__shared_weak_count13__get_deleterERKSt9type_info
+_ZNSt3__119__shared_weak_countD2Ev
+fcntl
+memchr
+_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE21__grow_by_and_replaceEmmmmmmPKc
+_ZNSt3__16threadD1Ev
+_ZNSt3__16thread4joinEv
+prctl
+_ZSt9terminatev
+poll
+_ZNSt3__115__thread_structC1Ev
+_ZNSt3__120__throw_system_errorEiPKc
+pthread_create
+_ZNSt3__119__thread_local_dataEv
+pthread_setspecific
+_ZNSt3__115__thread_structD1Ev
+getenv
+pthread_self
+_ZNSt3__118condition_variableD1Ev
+_ZNSt3__15mutexD1Ev
+pthread_setname_np
+_ZNSt3__118condition_variable10notify_oneEv
+_ZNSt3__15mutex4lockEv
+_ZNSt3__15mutex6unlockEv
+_ZNSt3__118condition_variable4waitERNS_11unique_lockINS_5mutexEEE
+usleep
+time
+tzset
+localtime_r
+strftime
+sscanf
+gettid
+getpagesize
+posix_memalign
+free
+__memcpy_chk
+_ZNSt3__118condition_variable10notify_allEv
+getpid
+syscall
+sysconf
+_ZTVNSt3__120__shared_ptr_emplaceIbNS_9allocatorIbEEEE
+setsockopt
+shutdown
+__cmsg_nxthdr
+getsockopt
+socket
+getaddrinfo
+freeaddrinfo
+connect
+sendmsg
+recvmsg
+accept
+_ZNSt3__16localeD1Ev
+_ZNSt3__112__next_primeEm
+_ZTVNSt3__111__end_stateIcEE
+_ZTVNSt3__120__shared_ptr_pointerIPNS_13__empty_stateIcEENS_10shared_ptrIS2_E27__shared_ptr_default_deleteIS2_S2_EENS_9allocatorIS2_EEEE
+_ZTVNSt3__113__empty_stateIcEE
+_ZTVNSt3__116__owns_one_stateIcEE
+_ZTVNSt3__120__l_anchor_multilineIcEE
+_ZTVNSt3__120__r_anchor_multilineIcEE
+_ZTVNSt3__115__word_boundaryIcNS_12regex_traitsIcEEEE
+_ZTVNSt3__111__lookaheadIcNS_12regex_traitsIcEEEE
+_ZTVNSt3__123__match_any_but_newlineIcEE
+_ZTVNSt3__118__match_char_icaseIcNS_12regex_traitsIcEEEE
+_ZTVNSt3__120__match_char_collateIcNS_12regex_traitsIcEEEE
+_ZTVNSt3__112__match_charIcEE
+_ZTVNSt3__116__back_ref_icaseIcNS_12regex_traitsIcEEEE
+_ZTVNSt3__118__back_ref_collateIcNS_12regex_traitsIcEEEE
+_ZTVNSt3__110__back_refIcEE
+_ZTVNSt3__120__bracket_expressionIcNS_12regex_traitsIcEEEE
+_ZTVNSt3__128__begin_marked_subexpressionIcEE
+_ZTVNSt3__126__end_marked_subexpressionIcEE
+_ZTVNSt3__16__loopIcEE
+_ZTVNSt3__117__owns_two_statesIcEE
+_ZTVNSt3__117__repeat_one_loopIcEE
+_ZTVNSt3__111__alternateIcEE
+_ZTVNSt3__121__empty_non_own_stateIcEE
+_ZTVNSt3__111__match_anyIcEE
+_ZNSt3__16localeC1ERKS0_
+_ZNSt3__16localeC1Ev
+_ZNKSt3__16locale9use_facetERNS0_2idE
+_ZNKSt3__123__match_any_but_newlineIcE6__execERNS_7__stateIcEE
+_ZNKSt3__16locale4nameEv
+_ZNSt3__120__get_collation_nameEPKc
+_ZNSt3__115__get_classnameEPKcb
+_ZNSt3__15ctypeIcE2idE
+_ZNSt3__17collateIcE2idE
+PerfettoDsImplCreate
+PerfettoDsSetOnSetupCallback
+PerfettoDsSetOnStartCallback
+PerfettoDsSetOnStopCallback
+PerfettoDsSetOnDestroyCallback
+PerfettoDsSetOnFlushCallback
+PerfettoDsSetOnCreateTls
+PerfettoDsSetOnDeleteTls
+PerfettoDsSetOnCreateIncr
+PerfettoDsSetOnDeleteIncr
+PerfettoDsSetCbUserArg
+PerfettoDsSetBufferExhaustedPolicy
+PerfettoDsImplRegister
+PerfettoDsImplUpdateDescriptor
+PerfettoDsOnStopArgsPostpone
+PerfettoDsStopDone
+PerfettoDsOnFlushArgsPostpone
+PerfettoDsFlushDone
+PerfettoDsImplGetInstanceLocked
+PerfettoDsImplReleaseInstanceLocked
+PerfettoDsImplGetCustomTls
+PerfettoDsImplGetIncrementalState
+PerfettoDsImplTraceIterateBegin
+PerfettoDsImplTraceIterateNext
+PerfettoDsImplTraceIterateBreak
+PerfettoDsTracerImplPacketBegin
+PerfettoDsTracerImplPacketEnd
+PerfettoDsTracerImplFlush
+perfetto_atomic_false
+_ZNSt3__115recursive_mutex6unlockEv
+_ZNSt3__115recursive_mutex4lockEv
+PerfettoHeapBufferCreate
+PerfettoHeapBufferCopyInto
+PerfettoHeapBufferDestroy
+PerfettoPbDecoderParseField
+PerfettoPbDecoderSkipField
+PerfettoProducerBackendInitArgsCreate
+PerfettoProducerBackendInitArgsSetShmemSizeHintKb
+PerfettoProducerBackendInitArgsDestroy
+PerfettoProducerInProcessInit
+PerfettoProducerSystemInit
+PerfettoProducerActivateTriggers
+PerfettoStreamWriterUpdateWritePtr
+PerfettoStreamWriterNewChunk
+PerfettoStreamWriterAnnotatePatch
+PerfettoStreamWriterAppendBytesSlowpath
+PerfettoStreamWriterReserveBytesSlowpath
+PerfettoGetThreadIdImpl
+PerfettoTracingSessionSystemCreate
+PerfettoTracingSessionInProcessCreate
+PerfettoTracingSessionSetup
+PerfettoTracingSessionSetStopCb
+PerfettoTracingSessionStartAsync
+PerfettoTracingSessionStartBlocking
+PerfettoTracingSessionFlushAsync
+PerfettoTracingSessionFlushBlocking
+PerfettoTracingSessionStopAsync
+PerfettoTracingSessionStopBlocking
+PerfettoTracingSessionReadTraceBlocking
+PerfettoTracingSessionDestroy
+PerfettoTeCategoryImplCreate
+PerfettoTePublishCategories
+PerfettoTeCategoryImplSetCallback
+PerfettoTeCategoryImplGetEnabled
+PerfettoTeCategoryImplGetIid
+PerfettoTeCategoryImplDestroy
+PerfettoTeInit
+PerfettoTeGetTimestamp
+PerfettoTeHlEmitImpl
+PerfettoTeLlImplBegin
+PerfettoTeLlImplNext
+PerfettoTeLlImplBreak
+PerfettoTeLlImplDynCatEnabled
+PerfettoTeLlImplTrackSeen
+PerfettoTeLlImplIntern
+perfetto_te_any_categories
+perfetto_te_any_categories_enabled
+perfetto_te_process_track_uuid
+_ZTVNSt3__120__shared_ptr_pointerIPNS_6vectorIcNS_9allocatorIcEEEENS_10shared_ptrIS4_E27__shared_ptr_default_deleteIS4_S4_EENS2_IS4_EEEE
+_ZNSt3__115recursive_mutexC1Ev
+_ZNSt3__112__get_sp_mutEPKv
+_ZNSt3__18__sp_mut4lockEv
+_ZNSt3__18__sp_mut6unlockEv
+pthread_key_create
+pthread_getspecific
+pthread_key_delete
+strtoull
+sched_yield
+uname
+ftruncate
+fchmod
+writev
+getauxval
+__stack_chk_fail
+memcpy
+__system_property_get
+memset
+memmove
+liblog.so
+LIBLOG
+libc.so
+LIBC
+LIBC_O
+libdl.so
+libc++.so
+libm.so
+libperfetto_c.so
+APS2/
+PERFETTO_CHECK(rounded_up_size >= req_size)
+The trace config specified an invalid trigger_mode
+deferred_start=true is not supported in unsupervised traces
+buffers.size_kb must be a multiple of 4, got %u
+COMPRESSION_TYPE_DEFLATE is not supported in the current build configuration. Skipping compression
+Trace trigger activated: trigger_name="%s" trigger_mode=%d trace_name="%s" trace_uuid="%s" tsid=%lu
+Consumer trying to read from write_into_file session.
+Unable to read ro.build.fingerprint
+ro.boot.hardware.revision
+ro.boot.hardware.ddr
+PERFETTO_CHECK(localtime_r(&raw_time, &local_tm) != nullptr)
+Socket message truncated. This might be due to a SELinux denial on fd:use.
+external/perfetto/src/protozero/scattered_heap_buffer.cc
+PERFETTO_CHECK(cur_packet_->is_finalized())
+PERFETTO_CHECK(page_size >= kMinPageSize)
+PERFETTO_CHECK(!is_shmem_provided_by_producer_ && !shared_memory_)
+Too many buffers configured (%d)
+Failed to allocate tracing buffers: OOM or too many buffers
+ProducerPort
+android_internal::StatsdLogUploadEvent
+external/perfetto/include/perfetto/ext/base/scoped_file.h
+external/perfetto/src/base/time.cc
+PERFETTO_CHECK(args.dcheck_is_on_ == PERFETTO_DCHECK_IS_ON())
+PERFETTO_CHECK(!args.use_monotonic_raw_clock)
+PERFETTO_CHECK(next_chunk_ptr <= end())
+bugreport_filename contains invalid chars. Use [a-zA-Z0-9-_.]+
+Requested too large trace buffer (%lukB  > %u kB)
+ro.boot.guest_soc.model
+The consumer is already attached to another tracing session
+/sys/fs/cgroup/apps/uid_%u/pid_%u/cgroup.freeze
+SaveTraceForBugreport
+PERFETTO_CHECK(move_begin > buf())
+P60REDACTED
+Could not find data source to clear incremental state for
+PERFETTO_CHECK(IsReservationTargetBufferId(entry.second))
+external/perfetto/src/tracing/service/trace_buffer.h
+writev() failed (errno: %d, %s)
+ro.soc.model
+external/perfetto/src/base/string_utils.cc
+PERFETTO_CHECK(getaddrinfo(parts[0].c_str(), parts[1].c_str(), &hints, &addr_info) == 0)
+PERFETTO_CHECK(rds.descriptor.name() == descriptor.name())
+PERFETTO_CHECK(chunk_state == expected_chunk_state)
+PERFETTO_CHECK(reinterpret_cast<uintptr_t>(begin) % kChunkAlignment == 0)
+PERFETTO_CHECK(id_ != 0)
+PERFETTO_CHECK(start != MAP_FAILED)
+ChangeTraceConfig() called without a current data source also present in the new config: %s
+PERFETTO_CHECK(res == 0)
+external/perfetto/src/base/paged_memory.cc
+external/perfetto/src/base/thread_task_runner.cc
+thread constructor failed
+external/perfetto/src/base/utils.cc
+mallopt
+external/perfetto/src/base/unix_socket.cc
+bad_optional_access was thrown in -fno-exceptions mode
+external/perfetto/src/tracing/internal/tracing_muxer_impl.cc
+PERFETTO_CHECK(args.system_producer_backend_factory_)
+Consumer called DisableTracing() but tracing was not active
+FlushAndDisableTracing(%lu) done, success=%d
+external/perfetto/src/base/file_utils.cc
+ro.arch
+PERFETTO_CHECK(!stack_.empty())
+external/perfetto/src/protozero/static_buffer.cc
+Unknown interceptor configured for data source: %s
+PERFETTO_CHECK(!g_instance)
+Shared memory buffer max stall count exceeded; possible deadlock free=%zu bw=%zu br=%zu comp=%zu pages_free=%zu pages_err=%zu (errno: %d, %s)
+EnableTracing IPC request rejected. This is likely due to a loss of the traced connection
+external/perfetto/src/tracing/ipc/producer/producer_ipc_client_impl.cc
+Tracing session %lu ended, total sessions:%zu
+/data/misc/perfetto-traces/
+UnregisterTraceWriter
+PERFETTO_CHECK(size_)
+%c%2d%2d
+Unsupported tracing backend type (errno: %d, %s)
+Tracing session not found
+PERFETTO_CHECK(pthread_key_create(&tls_key_, tls_dtor) == 0)
+PERFETTO_CHECK(ptr <= chunk.end() - SharedMemoryABI::kPacketHeaderSize)
+PERFETTO_CHECK(producer_endpoint_)
+PERFETTO_CHECK(res == 0 && stat_buf.st_size > 0)
+/dev/socket/traced_consumer
+duration_ms was set, this must not be set for traces with triggers.
+android_internal::NotifyTraceSessionEnded
+The TraceConfig for DataSource %s specified a target_buffer out of bound (%u). Skipping it.
+session not found
+Consumer called StartTracing() but tracing was not active
+external/perfetto/include/perfetto/ext/base/circular_queue.h
+NotifyDataSourceStarted
+ro.traced.hypervisor
+track_event
+Could not find data source to stop
+/proc/self/stat
+PERFETTO_CHECK(size <= std::numeric_limits<uint16_t>::max())
+PERFETTO_PRODUCER_SOCK_NAME
+length_error was thrown in -fno-exceptions mode with message "%s"
+exynos9810
+PERFETTO_CHECK(false)
+PERFETTO_CHECK(port.size() == 1)
+v49.0
+TracingMuxer
+Failed to setup data source because some another instance of this data source is already active
+Could not find data source to flush
+No tracing sessions eligible for bugreport found
+PERFETTO_CHECK(clock_gettime(clk_id, &ts) == 0)
+PERFETTO_CHECK(capacity_ > size_)
+external/perfetto/src/protozero/filtering/message_filter.cc
+Static buffer too small (errno: %d, %s)
+PERFETTO_CHECK(args.system_consumer_backend_factory_)
+Async stop of data source %lu failed. This might be due to calling the async_stop_closure twice.
+PERFETTO_CHECK((requested_backend_type & (requested_backend_type - 1)) == 0)
+PERFETTO_CHECK(producer_endpoint_ && task_runner_)
+Another session has been detached with the same key "%s"
+CLONED_READ_ONLY
+PERFETTO_CHECK((new_capacity & (new_capacity - 1)) == 0)
+Flush
+external/perfetto/include/perfetto/base/time.h
+PERFETTO_CHECK(n == 0)
+PERFETTO_CHECK(StartsWith(socket_name, kVsockNamePrefix))
+PERFETTO_CHECK(insertion_slot < capacity_)
+Must call Setup(config) first
+PERFETTO_CHECK(!message.empty())
+PERFETTO_CHECK(buf_iter != buffers_.end())
+/sys/fs/cgroup/uid_%u/pid_%u/cgroup.freeze
+Original session ended
+UnregisterDataSource
+perfetto
+external/perfetto/src/base/watchdog_posix.cc
+Perfetto %s (%s)
+external/perfetto/src/ipc/buffered_frame_deserializer.cc
+external/perfetto/src/protozero/filtering/string_filter.cc
+bitset reset argument out of range
+bitset set argument out of range
+Unable to connect to the system tracing service as a consumer. On Android, use the "perfetto" command line tool instead to start system-wide tracing sessions
+PERFETTO_CHECK(HasMemfdSupport())
+Trace filter has invalid string filtering rules, aborting
+Failed to notify Traceur long tracing has ended
+ro.build.fingerprint
+The in-process SharedMemoryArbiter can only be used when CreateProducer has been called with in_process=true and after tracing has started. (errno: %d, %s)
+Sync
+dlopen(%s) failed (errno: %d, %s)
+PERFETTO_CHECK(ret >= 0)
+Producer disconnected too many times; not reconnecting
+external/perfetto/include/perfetto/tracing/tracing.h
+PERFETTO_CHECK(size > 0)
+PERFETTO_CHECK(!read_only_)
+When write_into_file==true either a FD needs to be passed or output_path must be populated (but not both)
+Unable to read ro.boot.hardware.revision
+/sys/fs/cgroup/system/uid_%u/pid_%u/cgroup.freeze
+PERFETTO_CHECK(new_capacity > capacity_)
+Periodic flush timed out
+%.*s%.*s %.*s
+PERFETTO_CHECK(sock_raw_)
+PERFETTO_CHECK(peer_cred_mode_ != SockPeerCredMode::kIgnore)
+true
+PERFETTO_CHECK(madvise_begin > buf() + size_)
+No tracing backend ready for type=%u, consumer will disconnect
+external/perfetto/src/tracing/core/trace_writer_impl.cc
+PERFETTO_CHECK(!ipc_shared_memory)
+Traces with START_TRACING triggers must provide a positive trigger_timeout_ms < 7 days (received %ums)
+StartTracing() failed, invalid session ID %lu
+FreeBuffers
+InitializeConnection
+GetAsyncCommand
+NotifyDataSourceStopped
+[printf format error]
+external/perfetto/src/ipc/client_impl.cc
+PERFETTO_CHECK(was_always_bound_)
+PERFETTO_CHECK(fd)
+Too many flushes (%zu) pending for the tracing session
+PERFETTO_CHECK(producer_id)
+Unable to read ro.soc.model
+Attach
+PERFETTO_CHECK(fds == nullptr)
+PERFETTO_CONSUMER_SOCK_NAME
+Duplicate trigger name: %s
+A trace with unique session name "%s" began less than %lds ago (%lds)
+UpdateDataSource() must have a non-zero id
+Producer %u tried to write into forbidden target buffer %u
+Received patch from producer: %u of unexpected size %zu
+Buffer allocation failed while attempting to clone
+PERFETTO_CHECK(fchmod(*fd, 0644) == 0)
+GetTraceStats
+PERFETTO_CHECK(addr_info->ai_family == AF_INET6)
+PERFETTO_CHECK(match.second >= match.first)
+Unknown field type %d (errno: %d, %s)
+Flush() can be called only after Start() and before Stop()
+bitset test argument out of range
+external/perfetto/src/tracing/platform_posix.cc
+PERFETTO_CHECK(target_buffer > 0)
+PERFETTO_CHECK(shared_memory_arbiter_)
+PERFETTO_CHECK(wptr + sizeof(record) + size <= end())
+trigger_mode must be STOP_TRACING when use_clone_snapshot_if_available=true
+Failed to create the trace file %s
+Started data source instance in incorrect state: %d
+Unable to read ro.product.manufacturer
+SaveTraceForBugreport is deprecated. Use CloneSession(kBugreportSessionId) instead.
+out_of_range was thrown in -fno-exceptions mode with message "%s"
+PERFETTO_CHECK(strftime(buf, 80, fmt.c_str(), &local_tm) > 0)
+regex_error was thrown in -fno-exceptions mode
+/proc/self/cmdline
+Maximum number of data source instances exhausted. Dropping data source %lu
+PERFETTO_CHECK(backend_id < producer_backends_.size())
+Async flush of data source %lu failed. This might be due to the data source being stopped in the meantime
+Specifying trigger mode STOP_TRACING/CLONE_SNAPSHOT and write_into_file together is unsupported
+Configured tracing session %lu, #sources:%zu, duration:%u ms%s, #buffers:%d, total buffer size:%zu KB, total sessions:%zu, uid:%u session name: "%s"
+Too many patches (%zu) batched in the same request
+Consumer called Flush() but tracing was not active
+Not supported (errno: %d, %s)
+PERFETTO_CHECK(event_handle_)
+%s%s%s%s %s%s%s
+PERFETTO_CHECK(control_buf_len <= sizeof(control_buf))
+PERFETTO_CHECK(args.in_process_backend_factory_)
+Must call Setup(config) and Start() first
+Consumer session for backend type type=%u forbidden, consumer will disconnect
+external/perfetto/src/tracing/core/shared_memory_abi.cc
+external/perfetto/src/tracing/core/shared_memory_arbiter_impl.cc
+Recovered from stall after %d iterations
+The tracing service doesn't support SaveTraceForBugreport()
+PERFETTO_CHECK(size <= static_cast<size_t>(max_size))
+Too many concurrent tracing sesions (%d) for uid %d limit is %d
+Too many concurrent tracing sesions (%zu)
+Failed to allocate tracing buffers: Invalid buffer sizes
+Writer %u of producer %u was registered to write into target buffer %u, but tried to write into buffer %u
+Buffer id allocation failed
+Consumer called ReadBuffers() but tracing was not active
+CONFIGURED
+ReadBuffers
+QueryServiceState
+QueryCapabilities
+[%03u.%03u] 
+PERFETTO_CHECK(!setsockopt(*fd_, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<const char*>(&flag), sizeof(flag)))
+PERFETTO_CHECK(static_cast<size_t>(sz) <= len)
+PERFETTO_CHECK(parts.size() == 2)
+PERFETTO_CHECK(size % page_size == 0)
+Shared memory buffer overrun! Stalling
+Buffer allocation failed
+Invalid output_path %s. On Android it must be within %s.
+EnableTracing
+PERFETTO_CHECK(addr_info->ai_family == AF_INET)
+PERFETTO_CHECK(res || !sock_->is_connected())
+Failed to parse config
+external/perfetto/src/tracing/internal/tracing_muxer_fake.cc
+PERFETTO_CHECK(producer_backends_.empty())
+perfetto_shmem
+external/perfetto/src/tracing/ipc/consumer/consumer_ipc_client_impl.cc
+Cannot reattach consumer to session %s while it already attached tracing session ID %lu
+Unable to read ro.build.version.sdk
+PERFETTO_CHECK(endpoint)
+UpdateDataSource
+PERFETTO_CHECK((flags & O_CREAT) == 0 || mode != kFileModeInvalid)
+PERFETTO_CHECK(!delimiter.empty())
+PERFETTO_CHECK(max_capacity % base::GetSysPageSize() == 0)
+PERFETTO_CHECK(recv_size + size_ <= capacity_)
+PERFETTO_CHECK(writer_)
+external/perfetto/src/shared_lib/data_source.cc
+PERFETTO_CHECK(chunk.size() == page_chunk_size)
+PERFETTO_CHECK(fully_bound_ || all_writers_have_drop_policy_)
+PERFETTO_CHECK(reservation_id > 0)
+PERFETTO_CHECK(protobuf_stream_writer_.bytes_available() != 0)
+TraceBuffer read too many fragments from an incomplete chunk
+Semaphore "%s" exceeds maximum allowed other session count (%lu > min(%lu, %lu))
+UpdateDataSource() failed, could not find an existing data source with name="%s" id=%lu
+Unable to read ro.boot.hardware.ddr
+vector
+DisableTracing
+ActivateTriggers
+PERFETTO_CHECK(new_capacity >= old_capacity)
+PERFETTO_CHECK(page_size <= kMaxPageSize)
+Failed to decode merged QueryServiceStateResponse
+Trace buffer allocation failed (size: %zu)
+Stopped data source instance in incorrect state: %d
+ro.boot.hardware.ufs
+Unable to read ro.boot.hardware.ufs
+Consumer called FreeBuffers() but tracing was not active
+StartTracing
+CloneSession
+%*s:%s
+PERFETTO_CHECK(res)
+PERFETTO_CHECK(IsMultipleOf(window_ms, polling_interval_ms_) || bytes == 0)
+PERFETTO_CHECK(fd_)
+PERFETTO_CHECK(address.size() == 1)
+PERFETTO_CHECK(g_instance == this)
+external/perfetto/src/tracing/service/trace_buffer.cc
+PERFETTO_CHECK(!discard_writes_)
+ (suspend_clock)
+Data source failed to start within 20s data_source="%s", producer="%s", tsid=%lu
+Flush() called, but tracing has not been started
+external/perfetto/src/tracing/internal/system_tracing_backend.cc
+basic_string
+ObserveEvents
+%s (errno: %d, %s)
+%s%s %s
+PERFETTO_CHECK(ptr && ptr != MAP_FAILED)
+PERFETTO_CHECK(!task_runner_->QuitCalled())
+Filter bytecode checksum failed. Expected: %x, actual: %x
+PERFETTO_CHECK(consumer_backends_.empty())
+PERFETTO_CHECK(!trace_fd || trace_config->write_into_file())
+PERFETTO_CHECK(reinterpret_cast<uintptr_t>(start) % kMinPageSize == 0)
+CloneSession IPC not supported
+external/perfetto/src/tracing/service/tracing_service_impl.cc
+Discarding incorrectly sized producer-provided SMB for producer "%s", falling back to service-provided SMB. Requested sizes: %zu B total, %zu B page size; suggested corrected sizes: %zu B total, %zu B page size
+Failed to attach consumer, session '%s' not found for uid %d
+StartTracing() failed, invalid session state: %d
+Failed to register data source "%s". A data source with the same id %lu (name="%s") is already registered for producer %d
+Not allowed to clone a session from another UID
+Consumer called ChangeTraceConfig() but tracing was not active
+STOP_WAIT
+external/perfetto/include/perfetto/ext/base/flat_hash_map.h
+PERFETTO_CHECK(!ds_impl->IsRegistered())
+external/perfetto/src/shared_lib/track_event.cc
+PERFETTO_CHECK(was_always_bound_ || uses_drop_policy)
+A Consumer is trying to EnableTracing() but another tracing session is already active (forgot a call to FreeBuffers() ?)
+ro.build.version.sdk
+Looking for sessions for bugreport
+PERFETTO_CHECK(std::none_of( buf_snaps.begin(), buf_snaps.end(), [](const std::unique_ptr<TraceBuffer>& buf) { return buf == nullptr; }))
+CommitData
+PERFETTO_CHECK(getaddrinfo(address[0].c_str(), port[0].c_str(), &hints, &addr_info) == 0)
+PERFETTO_CHECK(args.custom_backend)
+PERFETTO_CHECK(task_runner_->RunsTasksOnCurrentThread())
+Couldn't verify file seals on shmem FD (errno: %d, %s)
+ro.product.manufacturer
+FlushAndCloneSession(%lu) started, success=%d
+ConsumerPort
+external/perfetto/src/base/event_fd.cc
+read(timerfd) failed, falling back on PostDelayedTask (errno: %d, %s)
+bad_function_call was thrown in -fno-exceptions mode
+IPC Frame too large (size %zu)
+external/perfetto/src/protozero/filtering/filter_bytecode_parser.cc
+PERFETTO_CHECK(out_ >= out_buf_.get() && out_ <= out_end_)
+Interceptors are experimental. If you want to use them, please get in touch with the project maintainers (https://perfetto.dev/docs/contributing/getting-started#community).
+external/perfetto/src/tracing/core/null_trace_writer.cc
+unique_lock::unlock: not locked
+Requested too long trace (%ums  > %u ms)
+RegisterDataSource
+RegisterTraceWriter
+dlsym(%s) failed (errno: %d, %s)
+%s %s
+external/perfetto/src/protozero/field.cc
+The service likely doesn't support producer-provided SMBs. Preventing future attempts to use producer-provided SMB again with this backend.
+PERFETTO_CHECK(task_runner_)
+%d.%d
+Failed to set filter root.
+ChangeTraceConfig() was called for a tracing session which isn't running.
+external/perfetto/include/perfetto/base/status.h
+PERFETTO_CHECK(!message_.empty())
+external/perfetto/src/base/unix_task_runner.cc
+PERFETTO_CHECK(fcntl_res == 0)
+external/perfetto/src/tracing/tracing.cc
+PERFETTO_CHECK(page_size % kMinPageSize == 0)
+PERFETTO_CHECK(!fully_bound_)
+PERFETTO_CHECK(!producer_endpoint_ && !task_runner_)
+PERFETTO_CHECK(!reservation.resolved)
+external/perfetto/src/tracing/ipc/posix_shared_memory.cc
+Trace filter bytecode invalid, aborting
+Trigger activated but trigger mode unspecified.
+Timeout while waiting for ACKs for tracing session %lu
+PERFETTO_CHECK(new_capacity >= size())
+bad_array_new_length was thrown in -fno-exceptions mode
+ChangeTraceConfig
+Detach
+external/perfetto/src/android_internal/lazy_library_loader.cc
+android_internal::StatsdLogTriggerEvent
+external/perfetto/src/base/periodic_task.cc
+PERFETTO_CHECK(page_size > 0 && page_size % 4096 == 0)
+PERFETTO_CHECK(msg_hdr.msg_controllen <= sizeof(control_buf))
+Unexpected adopt_state (errno: %d, %s)
+PERFETTO_CHECK(max_capacity >= base::GetSysPageSize())
+PERFETTO_CHECK(move_begin + size_ <= buf() + capacity_)
+Tracing not initialized. Call perfetto::Tracing::Initialize() first. (errno: %d, %s)
+Could not find data source to start
+PERFETTO_CHECK(chunk.is_valid())
+/dev/socket/traced_producer
+PERFETTO_CHECK(is_shmem_provided_by_producer_ && shared_memory_ && shared_memory_arbiter_)
+Data source "%s" specified an out of bounds target_buffer (%zu >= %zu)
+ChangeTraceConfig() was called with a config containing unsupported changes; only adding to the producer_name_{,regex}_filter is currently supported and will have an effect.
+Failed to create %s (errno: %d, %s)
+2>8.4@BMK&60
+D:FO
++/%5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+9AM-q5
+(3$:
+YUEIl?AOM
+"Peer disconnect
+?0123456789abcdef
+libperfetto_android_internal.so
+[39m
+[32m
+[31m
+[90m
+vsock://
+@CHU
+A trace with this unique session name (%s) already exists
+32mW
+6h"@
+Th&A
+TuZB
+ThbA9
+ 6ab
+hBA9
+hB@9
+hB@9
+j58h
+hb@9
+hb@9
+j58h
+7h"A9
+7h"@9
+6h2@
+h"A9
+6h&@
+h"@9
+F8(
+<((@
+=(,@
+<(8@
+=(D@
+<(H@
+76h"A9j&E
+h"@9
+h"@9
+B8(
+Th&A
+Th&@
+(6a&@
+'6aB@
+7hB@9
+hB@9H
+7hB@9
+hB@9
+7h"@9
+h"@9H
+7h"@9
+h"@9
+6h^@
+6h^@
+*kh8)
+TuZB
+Thj@
+6a.@
+'6ab@
+/6a6@
+76ar@
+?6av@
+G6a>@
+O6aB@
+W6aF@
+_6uJ@
+g6aN@
+o6aR@
+w6aV@
+(7H07
+6aN@
+W6a"@
+6a&@
+6a*@
+6a.@
+_6a2@
+'6a6@
+/6a:@
+76a>@
+?6aB@
+G6aF@
+O6aJ@
+6h&@
+6h&@
+6h&@
+6h&@
+<(L@
+jh8)
+6a"@9 
+Th&@
+6h2@
+(!A9
+*AB9
+ThbB
+ThJ@
+aBA9
+'6aZ
+06a"A9
+/6a*
+ThZ@
+X6aBB9`
+?6af@
+G6a6@
+O6ar
+7`&@
+hb@9(
+6h>@
+T|"E
+7hB@9
+hB@9H
+7hB@9
+hB@9
+o`f@
+7h"@9
+h"@9H
+7h"@9
+h"@9
+D8(
+'6a&
+hbM9
+7hBL9
+7h"K9
+7hbJ9
+7hBI9
+7h"H9
+7hBF9h
+7h"E9
+7hbD9
+7hBC9h
+7h"B9
+7hbA9
+7h"@9
+hBL9
+6h~A
+6hrA
+h"K9H
+6hfA
+6hZA
+hbJ9H
+6hNA
+6hBA
+6h6A
+hBI9
+6h*A
+h"H9H
+hBF9
+h"E9h
+hbD9h
+6hv@
+hBC9
+6hj@
+6h^@
+6hR@
+h"B9h
+6hF@
+6h:@
+hbA9h
+6h.@
+6h"@
+h"@9h
+bD9`b
+"E9`"
+BF9(
+BF9(
+BI9`B
+bJ9`b
+"K9`"
+BL9`B
+bM9`b
+G8(
+J8(
+M8(
+ibD9
+bD9`b
+i"E9
+"E9`"
+iBF9
+i"H9
+"H9`"
+iBI9
+BI9`B
+ibJ9
+bJ9`b
+i"K9
+"K9`"
+iBL9
+BL9`B
+ibM9
+bM9`b
+7h~N9
+ 7h
+7(7 7
+8(7(:07
+;87h
+6a"@
+6a&@
+h~N9
+?6a.@
+G6a6
+hbA9j&F
+h"B9j&I
+B9j&L
+hBC9j
+C9j&O
+hbD9j&R
+h"E9j&U
+E9j&X
+hBF9j
+F9j&[
+G9j&_
+h"H9i
+H9i&A
+hBI9i2A
+I9i>A
+J9iJA
+6hbJ9iVA
+J9ibA
+6h"K9inA
+K9izA
+/6hBL9i
+h"@9
+h"@9
+h2A9
+(`@9 
+(`@9 
+G8(
+b@9ib@9
+/6ab@9
+?6b2@
+G6b6@
+W6`B@
+_6h&@
+g6hR@
+o6ab
+7hbA9
+6h:@
+hbA9H
+6h.@
+7hbA9
+6h.@
+6h:@
+hbA9
+@JhR
+kh8)
+j58h
+6h:@
+h"D9
+6hb@
+6h>@
+T`*@
+(3@9)
+r+)B
+r+)B
+H#@yI
+T`*@
+Tw.@
+Tw.@
+=vR@
+B8(
+B8(
+D8(
+B8(
+A@9)A@9
+E@9)E@9
+6h:@
+Tz"B
+Tx"E
+jkh8)
++!@y,
+=H/@
+<+!@
+T`*@
+<+!@
+TuZB
+(6aJ
+X7(
+6un@
+6aB@
+W6aN@
+_6vR@
+06aF@9
+/6aB@9
+@6aV@9
+a"@9 
+6a&@9@
+6a*@9`
+'6a.@9
+?6aR@9
+(6a2@9
+Th"A9
+6a*@
+h"@9
+h"@9
+7h"@9
+h"@9H
+7h"@9
+h"@9
+6h"@
+h"@9
+B8(
+j68h
+j68h
+7hB@9
+hB@9H
+7hB@9
+hB@9
+D8(
+7h"@9
+h"@9H
+7h"@9
+h"@9
+(0@9)
+2@9i2@9
+6(;@
+(6`"@
+6a:@
+'6a>@
+7h"@9
+h"@9H
+7h"@9
+h"@9
+B8(
+h"@9
+h"@9
+6h"@
+D8(
+)0@9
+(0@9)
+2@9i2@9
+6a2@9@
+6hB@
+TuZB
+TuZE
+ThN@
+76a:@
+hB@9
+hB@9
+a"@9 
+7h"A9
+7hB@9
+h"A9
+6h&@
+hB@9
+@6a6@
+'6aB
+76a"
+?6ab
+hB@9
+hB@9
+T{rA
+h"@9
+h"@9
+j58h
+hB@9
+hB@9
+T{"A
+hB@9
+hB@9
+7h"A9
+7hB@9
+h"A9
+6h&@
+hB@9
+86a"
+'6a*
+6h.@
+"@9 
+&@9@
+6a"@9 
+hB@9
+hB@9
+hB@9
+hB@9
+j58h
+hB@9
+hB@9
+j58h
+?i(8
+_i)8
+BS9p
+* |_
+'NB8
+BS9p
+BS9p
+yhFA9
+iJA9h
+Tu:@
+T`"@
+T*e@
+hJA9
+Thf@
+T?i(8
+9@
+?k68
+hB@9
+Ti"F
+ThB@
+Rh>@
+Th2@
+TiF@
+Ti:@
+Tv.@
+Tv.@
+ThZ@
+La@9_
+-`@9
+a@9L
+Ka@9
+Ja@9_
+THa@9H
+Ka@9
+la@9
+9Ha@9
+)a@9I
+a@9*a
+Ia@9I
+a@9*a
+(a@9(
+O<)I
+eN.<
+mLJ<
+eN.<
+mLJ<
+/mIJ
+JmJJ
+JmJJ
+JmJJI}
+ip81
+0j(8
+ip8q
+j58)
+j58X
+j48&
+*!Yh
+T(@
+4 G@
+T!{{
+hb@9
+b@9hb
+j48`
+T`R@
+T+!@
+Th&@
+=b&@
+Th+@
+Tt#@
+TiB@
+T*!@
+h"A9
+6h&@
+7J3@
+*i"A
+Tj&A
+5 @9
+5j&@
+THI"
+TlE@
+@9?|
+hc8)
+*(+y)
+Sni)8)
+5JAY
+)+y)
+Thj@
+Tn^@
+_8(hh8(!
+CA9y
+h#A9i+@
+Ti/@
+h#A9i+@
+Ti/@
+BAyt
+BAyt
+BAyt
+T)5
+T!}@
+T!}@
+R:}@
+T!}@
+R:}@
+R:}@
+(pA9
+T(`A9h
+T)`A9)
+@@9?
+T)X@
+@9?}
+)`A9
+9irA9
+kA@9
+T(}S
+9k#|
+kA@9
+9k3|
+@9_u
+@9?u
+@9?u
+@9?u
+@9?m
+@9?q
+BAyi
+@@9?
+iw8)
+!iw8
+A@9?
+A@9?
+B9y"C
+BAy+
+FAy?
+@9_u
+iw8)
+iw8)
+c@9H
+Thb@9
+Tib@9
+T7E+
+TJ5
+b@9(
+@9?q
+_k88
+9x:@
+X7h6
+@9xb
+X7x6
+7i"@
+Ti"@
+6i"@
+9i*@
+RJyk
+kA@9
+Tu^@
+?i(8
+?i(8
+j48h
+9`"@
+2K|N
+9J|U
+EM@L)
+bM@LJ
+T{%@
+<tVB
+=h"@
+`@9?
+lih8
+Tji(8i.@
+*iu8_
+T6i58h
+Th]
+i{8(
+i<8i
+TPyo
+Ti)8
+K1@9
+76*)A
+?6*YA
+3@9H
+5@@9d
+BS9p
+4 0`8
+* |_
+BS9p
+* |_
+kX)I
+KA@9
+TC@9h
+76)(A
+?6)XA
+T!ku
+#})+
+ B@9`
+#A9(
+*1@9
+87Hku
+THku
+THku
+T5P@
+Ti~@
+*iv8_
+T7i68h
+iu8I
+ihu8
+Xi(8j
+*A@9
+*8}@
+_k88
+j48(b
+HP@y(
+BS9p
+a@9?
+BS9p
+4 0`
+* |_
+BS9p
+Th&@
+T`B@
+B@9H
+T`B@
+R`B@
+7hj@9
+FC9hc
+T`B@
+TZm@
+Rh"@
+"@9i"@9
+@9hS
+8hzN9
+Rl!@9i
+k>))
+WS@y
+7(7@
+s@9(
+6@?@
+Th6@
+hBB9
+7hBA9
+hBA9
+6h*@
+hBB9
+hBB9
+#@9H
+6h*@
+9@EA
+hbB9
+c@9H
+Thr@
+TMyi
+TNYn
+= T*
+6h*@
+T+!@
+Th.@
+Th&@
+5{"@
+T*m@
+6NU@
+TN]@
+ 6O!A
+TO)A
+(6NeA
+TNmA
+R)EC9K
+2@y)
+j9x9
+6iC_
+Ti3@y
+jyx?
+_x)A^x_
+(a@9
+JC9J
+R@yx
+Th^@
+Tu6@
+Th&@
+hb@9
+6h.@
+6h.@
+6h.@
+6h.@
+hBA9
+BA9hB
+b@9jb@9
+6h.@
+6h.@
+BA9hB
+6h.@
+=`"@
+Th&B
+CAyj
+cA9H
+BA9h
+=i"@
+7(Q@
+=h"@
+=h"@
+=h"@
+#@9H
+=h"@
+=h"@
+=h"@
+h"B9
+C9(#
+h"@9
+b@9j
+T6?@
+a@9?
+TwbA
+4 C@
+(c@9
+Th/@
+T C@
+4 C@
+6i"@
+TK%@
+TJ!@
+`@9?
+4)C@
+?A9?
+yuN1
+=u>2
+=un2
+bW9H
+BS9p
+S,5n
+T?,@
+"Q@yI<@
+@y)!
+J{jx
+y((@9
+y((@9
+6hF@
+*h6@
+7aB@
+6aB@
+oh6@
+T$xd
+5+@9(
+m@x)y
+T)+@
+6v"@
+A@qc
+TkE@y%@
+A@qc
+TkE@y)@
+hB@9
+B@qC
+!7kH
+T*E@yj
+Thb@
+K9@y
+Tv"@
+Thb@
+h2@y
+2@yh2
+h2@y
+2@yh2
+iB@y(
+hr@y
+4`6@
+aB@y]
+Ti"E
+Tj&@
+hr@yh
+Tj&@
+xB@y
+Rh6@
+A9`B
+5hrB9
+RiB@y
+yb&E)
+C@y)
+m@x)
+H(}G
+2jB@
+9h6@
+ir@y
+kr@y*!
+*m@xJ
+/hB@
+kr@y,!
+7hB@
+A9iR@
+ir@y
+m@x)
+Tj&@
+ir@y
+7i*E
+m@x*
+sB@y
+iR@y
+m@x)
+T(#@9)
+(#@9)
+"@9`
+hbB9
+6hN@
+o9h@
+@yi*@9
+nL8h
+Bha8D
+TByq
+Am!8b
+lih8
+Tji(8i.@
++9@y
+T+=@y
++9@y
+T+=@y
+T+!@
+=@y_
+Tib@
+J9@y
+Tj?@y_
+Tj#@
+Tiz@
+@y?#%k
+TH1@9
+T?#%k
+hs@y
+n9@y
+Tn=@y
+Tn!@
+=@y_
+*3@9
+k/6
+TN9@y
+TM=@y
+TL!@
+k+6
+Tis@yjo@y?
+=@y?
+@yj5~
+@9Ky
+R(1@9J
+r@yh
+T(G@9
+(G@9
+T!@
+T-o@y-
+9(+@y)'@y
+4)?@y*;@y
+TI!@
+(C@9<
+N,@y*
+H$@yI@@9_,
+TK(@yL$@y
+!+kK(
+TK@@9
+7J@@9Jy
+-@yq
+Li)8
+T?@
+>@y)<
+TK=@y?
+k9@y
+TK9@y
+TK=@y?@y
+TK!@
+)9@y
+>@y_
+k9@y
+>@y?
+*A@y_!8k
+!8kH
+THt@
+Tjf@
+Th.@
+Th&@
+l5@y
+TK5@y
+E9@y
+KA@y
+A@y?!4ki
+Tx>@
+fQ9h
+Tib@
+Tl5C
+=zJ@
+K5@y
+5@y?
+Thc@
+@y`b
+*A@y_
+T|7@
++1@9_
+ *Zz
+h!@9j-A
+ThcC
+h!@9j-A
+T(C@9)
+Th#@9j'A
+80.
+h#@9j/A
+THC@9I
+^8-
+ii8H
+h#@9G
+h#@9D
+T7s@y
+*A@y_
+!B9J#@9
+Rv'A
+*)!@
+hB@9t
+TI @
+,A@y
+TiA@y_
+lA@y
+THA@y?
+iA@y
+A9q
+iyyx
+5h>@
+5i:@
+TawB
+RiO@
+(!@9h
+RiO@
+8(Q@9
+TawB
+#D8`
+Dx)!D8
+hCC9
+IC@y
+KA@y
+A@y?
+T*]D
+*1@9
+KA@y
+A@y?
+T3kx
+6H4D
+KA@y
+A@y?
+TK]D
+T(_D
+)C@y
+KA@y
+A@y?
+Ta^B
+A@y?
+KA@y
+T*A@y?
+ThaC
+1@9)*
+7sWC
+T(oQ9(
+7C@y
+IC@y
+KA@y
+A@y?
+VC@yh
+/A@y
+5@y?!#k
+9@y?
+TK1@9
+"T9(
+D9(X
+#F9(Y
+F9(Z
+9(-@9
+T)-C
+#F9(
+cJ9(
+KA@y
+T*A@y
+TI#@
+=K#@
+oW#@
+TlA@y
+TlE@y
+T*A@y
+T*E@y
+875%@
+)i2A
+T(#@
+KA@y
+A@y?
+lA@y
+T+A@y_
+Kiw8
+Hiw8
+oQ9h
+5@y_
+=7!@
+jzjx
+A@y_
+T8'A
+4(cT9
+*cT9 c
+TaWA
+4 oA
+TagA
+Th3A
+hCI9(
+7h;B
+T(gA
+Riy(
+TwfB
+[#@9H
+B@y[
++!@y
+KA@y
+T*A@y
+Tj#B9hK@
+*h&@
+THC@
+ThC@
+*h&@
+Rh&@
+KA@y
+T*]D
+TlaC
+hr@y
+=)@
+7@@y
+T+aC
+T(cC
+CA9H
+KA@y
+T*A@y
+R9yzx
+JA@9_
+J5@y?
+J5@y?
+*A@y_
+*A@y_
+q@y?
+6hR@
+h"B9
+6hF@
+lA@y
+TIA@y
+*q@y_
+T*1@
+h"@9
+ThcC
+owsK
+j"@9m
+r(!A9k&
+@y! 
+T,5@y
+@y)!
++A@y
+A@y?
+K5@y
+lA@y
+THA@y?
+Tyb@
+T(cC
+h!@9h
+T(cC
+T!wB
+T!wB
+T!wB
+A@y?
+KA@y
+T*A@y
+<hNA
+Tj"@
+T*U@
+kj'
+T!}@
+T!}@
+R:}@
+T!}@
+R:}@
+R:}@
+@9?u
+@9?u
+@9?u
+@9?u
+@9?q
+@9_u
+Thb@9
+@9?q
+Thb@9
+T)5
+b@9(
+9j&@
+hbA9
+6hvB
+hBS9
+6hjB
+T`VA
+6h"B
+J9h$
+Th_D
+iC@y
+KA@y
+A@y?
+Q9i+B
+"B9 
+T(aC
+KA@y
+T*A@y
+KA@y
+lA@y
+KA@y
+=h"@
+6h>@
+6h2@
+Tj&@
+TK5@y
+5@y?
+*yxx
+l5@y_
++A@y
+A@y_
+hb@9
+b@9hb
+hb@9
+b@9hb
+`@9C
+hb@9
+b@9`
+Rk*@
+Ti"@
+6TE))
+.init_array
+.fini_array
+.text
+.got
+.note.android.pad_segment
+.note.android.ident
+.got.plt
+.rela.plt
+.tbss
+.bss
+.dynstr
+.eh_frame_hdr
+.gnu.version_r
+.data.rel.ro
+.relr.dyn
+.rela.dyn
+.gnu.version
+.dynsym
+.gnu.hash
+.relro_padding
+.eh_frame
+.note.gnu.build-id
+.dynamic
+.shstrtab
+.rodata
+.gnu_debugdata
+.data
+7zXZ
+x[be
+JOY<H7/
+nI{4
+cc7V_
+O1./
+.d?ar&
+4!/V
+~ iq
+pAq0
+|Qcx
+#rs
+N;~[
+|HMX
+H,.5
+DZ[7
+m9I+
+@"8m
+hIH=
+KuHz
+$E?R
+M1lJ6Y+&
+Yhci
+CU#`UG
+@Rho
+!yVsz
+8ICB_
+?xmK
+?Xw>
+<7"d
+f#EF
+4?3N^Z
+9s4b
+5*\A
+2W{f
+Lg4'
+rz:}#
+DM-d
++"HBl1.O
+s`i[
+J+z
+9f!y
++^{ur
+la$!
+`-hR\(i0
+3(/w
+?i8`
+vi"rrq@
+k;#9
+Z'),crO
+T4#O)I
+.X]3
+~TiI;
+TbzX
+ZmP+[
+.'4v8
+p5$#
+L7z<
+5a4f
+Vqlk
+UoyT
+zHZs
+DnSBw
+uvy~
+{YVZ?
+l<Z~
+BxbTy
+7"tBW
+wtkb
+^h7x
+ s<*
+]%[D
+ruT<
+@|1t
+%KIt[vJ
+[-x@
+]; Q
+H:]$
+?x]y
+"\CH
+rI6J
+c0V/R
+aq[g
+s_~v
+YTE]
+-}wR<
+CQ_[
+C9&jo
+Ilr30
+On9)
+dCWiYbT
+\qz+
+G@G_
+Ptt]8
+#ctbS
+zdW+?g
+K)K)
+j#UX
+F=NT
+)u]|J
+V;m#
+_2g^YRF
+Y{Qn
+Z:iP
+SY*n
+'rB2
+e_W1
+%PoitL
+\i\eS
+Pv1|
+C}+<
+q@}{,
+H qr
+6M4$
+udTp"
+D8sQ
+zG;
+wS<%
+zg~)
+\whnM
+sAaa
+d?*s
+;kN
+nK+C
+kilh
+Jqc%
+aEoJ
+d=jE
+$<%pK
+=ss2
+0||@
+|C~R
+a~ms
+.y>9g!a#
+'2wK
+:QX~%.c
+"faL
+~j9#
+Z0]#{K
+n\8f
+wU{W
+Rgzc
+6Fbv
+}n]_
+Zj4`D
+v;*[
+i}a_
+3`1u
+N=}E#$D
+~sf6
+{T@@:
+X>d4
+)lg|
+WS]wF8
+}O5%Hi
+v|q)G
+n3d6
+5mfr.
+9]&c
+bBhT
+m`4^
+p"9V
+]P8y
+T^CPy
+KILx
+%ZW\
+^MG@
+l;>p
+N=O
+!jew
+}Hzj
+A@h4
+I@0Y
+XNCd
+uZ<RK
+kq^Qw>Y
+#\i#
+d EQ
+'U&^n
+)|#EA/
+jl)6
+lN0I
+-^(4
+eb(Q
+)zWN
+<70Y
+WH1WC
+L_Gwh
+ajq=
+puKo6
+1/1A]
+q/C?^
+|ZaTb
+_}8FE2q
+Ps<.Q
+~i`i
+ld;F
+xr+)
+rN:PcQ
+u~}1
+c1+U
+=]F>
+8fsJG
+Tg45
+.9/8
+TcNo$
+84pxi
+h5-4A
+o1=y
+q>&'
+Z2Syt
+(,O/K
+0LyO
+nAcZ
+rlpU;
+fNHd,
+0nH2
+='nQ
+,s9;Q
++B1
+cJ0*;b
+@J0i
+*v[UL/
+GhYl
+N~%12
+!qR1x
+y/l0#.
+.9-uF
+s(.\
+toqeY
+`%aev
+uYy`lP
+w+7rzMH
+$[\>
+A|
+Vo^:r
+"yVW
+\9:`
+$l)Py
++`!9
+}w)x
+PV)n2
+N?\5
+M%3#
++{DA
+["s#G
+Ml!a
+x]?{
+kmX1
+4:GC
+YJPs
+HxsoQ
+NzDwJ
+=Y+Q{u0
+\28g
+qWkR
+5b:a
+VuFL^
+C\yN3<
+qh[C
+E>B#
+Kc-0
+WQ5:
+k({s
+t4.rN
+eNWz(%
+ nW`J[
+p?fLW
+zJCd
+u[DY?=
+jK:g
+dJR[2
+2-Li 
+}EMj
+]NQ!Bv
+Z$H<
+cxZu
+c`P'|
+7c;w>3"
+rKFD$
+N@r9W
+!F73<
+gRLj
+=A$%
+s7-N
+LD}Y
+Oxci
+N1j%f
+r{\b
+lP@b
+TSpiX
+Q*7-
+0P&)
+"$Z
+O)0&
+-Y,E
+C"-dN
+<U4J
+7e@<\
+r"gVU
+9K 9
+BqSZ5
+=FJtA
+.a)j
+KrwH
+el4
+6,`e
+^z2k
+4pp1
+.0M
+B25C|
+)b{a)
+)ew:
+V'~W
+9mN,
+w%w`Y
+R\&e
+VkZ7
+$v"Bb
+LU26rk.Z
+oV~Pu
+/;XQ
+!7?R"e
+^!>GL
+F%kFE
+?VZ|
+'q3'Z
+6M^) 
+NC?5
+S}@}
+L31K
+@!ZH%)
+29V3G
+Y\bZ
+PIu|i
+d%+,
+r&y/
+b([L
+jO/+5
+k*R6
+7vSL
+"%7r2-
+7Kla
+.8jHB
+;"8Ms
+j~1G
+}O?~U
+8l&7
+;K7D
+>/0Wh
+AlK(
+S+Xy
+>sFz_
+d^: 
+^]nU
+U*Q!
+Xn"C
+wviyG_
+wI^]R
+KhMp
+}ivE5
+^3vV
+]n4Z
+z]0Q*)
+X)6x
+ykj^
+k dz})l
+k=7\\
+(dY8U*
+vEs5(
+NUnl
+}vkyN
++-%i
+c 3?
+@;%oMs2
+Q-dA
+{g.oh
+YcS@
+fQ/F
+q>Wu
+/FB|;
+"Zvgw&
+`QSVaX
+=#6x
+fLg
+C)v8=:c
+y8rZw
+)|j|
+0Lwq
+8.$M
+.qL
+I *O
+\]!T
+kADm1
+4:`I
+m[UsX
+PEIGM
+zzh&
+?$bghO
+GXa#
+qx R!(
+LRyK9Z_R
+}2M~
+L0PJ
+w0e'L
+z)S\l
+bo`o
+_YGs
+&O1Q
+'9~l
+I:[ZP
+|Z=i3
+L"{V
+35Z^
+)+O+
+Vln3
+$e1}
+2-f$
+mV::
+K[^2~o.Gg
+Q8TNDH%
+Np^.
+Smzd
+"bRv6
+D24tK{
+Ad[*
+no)D
+s;Q*
+5(VB
+O%|?
+VJ!q<~
+:Yzh#l
+&QnR
+?!\.
+<FvE
+Y-+~*
+89<8
+Gu4+
+QXJg
+p]1/
+)QXJ
+9_[4
+`,:%
+1<1J{
+@c|/e
+2@L9
+U]_
+ElaN
+S@3P
+3qX;~
+(D$H
+7G%2
+6DMbY
+-2Jd
+s2S;n}
+5Inn
+8[MC 
+DVT0{
+:5rdl
+BJx>
+!D%m
+=<o^cL?$
+bR5v
+wkK;]fk

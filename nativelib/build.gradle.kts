@@ -44,9 +44,15 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    buildFeatures {
+        prefab = true
+    }
 }
 
 dependencies {
+    implementation("io.github.hexhacking:xdl:2.3.0")
+    implementation("com.bytedance.android:shadowhook:2.0.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

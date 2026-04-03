@@ -33,11 +33,18 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    packagingOptions {
+        pickFirst("**/libxdl.so")
+        pickFirst("**/libshadowhook.so")
+        pickFirst("**/libshadowhook_nothing.so")
+    }
 }
 
 dependencies {
 // 👇 这一行就是依赖 native 模块（核心）
     implementation(project(":nativelib"))
+    implementation(project(":nativelib2"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

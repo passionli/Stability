@@ -26,12 +26,26 @@ project("nativelib")
 # used in the AndroidManifest.xml file.
 add_library(${CMAKE_PROJECT_NAME} SHARED
     # List C/C++ source files with relative paths to this CMakeLists.txt.
-    nativelib.cpp)
+    # key_monitor.cpp
+    unwind_manul.h
+    unwind_pthread.h
+    PthreadKeyOpt.cpp
+    nativelib.cpp
+    )
+
+find_package(xdl REQUIRED CONFIG)
+find_package(shadowhook REQUIRED CONFIG)
 
 # Specifies libraries CMake should link to your target library. You
 # can link libraries from various origins, such as libraries defined in this
 # build script, prebuilt third-party libraries, or Android system libraries.
 target_link_libraries(${CMAKE_PROJECT_NAME}
     # List libraries link to the target library
+    xdl::xdl # 自动链接
+    shadowhook::shadowhook # 自动链接
     android
+    dl
     log)
+
+# 允许使用 RTLD_NEXT
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ldl")
