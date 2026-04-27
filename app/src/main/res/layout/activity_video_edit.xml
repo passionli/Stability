@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+
+    <!-- 顶部标题栏 -->
+    <RelativeLayout
+        android:id="@+id/title_bar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="视频编辑"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:padding="16dp"
+            android:layout_centerInParent="true"/>
+
+        <Button
+            android:id="@+id/btn_export"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:backgroundTint="@android:color/holo_purple"
+            android:text="导出"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:onClick="onExportClicked"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="16dp"/>
+
+    </RelativeLayout>
+
+    <!-- 视频播放器区域 -->
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/player_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/title_bar"
+        app:layout_constraintBottom_toTopOf="@id/timeline_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:show_buffering="when_playing"
+        app:use_controller="true"/>
+
+    <!-- 播放控制按钮 -->
+    <LinearLayout
+        android:id="@+id/controls_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/title_bar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/btn_play_pause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="播放/暂停"
+            android:onClick="onPlayPauseClicked"/>
+
+        <Button
+            android:id="@+id/btn_rewind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-5秒"
+            android:layout_marginStart="8dp"/>
+
+        <Button
+            android:id="@+id/btn_forward"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+5秒"
+            android:layout_marginStart="8dp"/>
+
+        <Button
+            android:id="@+id/btn_test_export"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="测试导出"
+            android:onClick="testExport"
+            android:layout_marginStart="8dp"/>
+
+    </LinearLayout>
+
+    <!-- 时间轴和缩略图容器 -->
+    <HorizontalScrollView
+        android:id="@+id/timeline_container"
+        android:layout_width="0dp"
+        android:layout_height="120dp"
+        android:scrollbars="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/music_timeline_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.example.stability.video_edit.ThumbnailTimelineView
+            android:id="@+id/thumbnail_timeline"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+    </HorizontalScrollView>
+
+    <!-- 音乐播放数据时间戳容器 -->
+    <HorizontalScrollView
+        android:id="@+id/music_timeline_container"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:scrollbars="horizontal"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/music_timeline"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:padding="8dp"/>
+
+    </HorizontalScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

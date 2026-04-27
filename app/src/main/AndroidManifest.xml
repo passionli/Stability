@@ -2,7 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -20,6 +23,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ComposeActivity"
+            android:exported="true" />
+        <activity
+            android:name=".JetpackActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ListViewActivity"
+            android:exported="true" />
+        <activity
+            android:name=".opengl.basic.OpenGLActivity"
+            android:exported="true" />
+        <activity
+            android:name=".opengl.intermediate.OpenGLIntermediateActivity"
+            android:exported="true" />
+        <activity
+            android:name=".opengl.advanced.OpenGLAdvancedActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

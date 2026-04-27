@@ -30,6 +30,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
     unwind_manul.h
     unwind_pthread.h
     PthreadKeyOpt.cpp
+    ArtJavaHook.cpp
     nativelib.cpp
     )
 

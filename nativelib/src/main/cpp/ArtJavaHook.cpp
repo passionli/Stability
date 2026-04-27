@@ -64,6 +64,11 @@ typedef void (*art_gc_Heap_AddFinalizerReference_func_type_t)(void*, void*, void
 // 返回类型: std::string
 typedef void (*art_Object_PrettyTypeOf_func_type_t)(std::string *, void*);
 
+// art::DumpNativeStack 函数类型
+// 参数: std::ostream& os, int skip_count, BacktraceMap* backtrace_map, const char* prefix, ArtMethod* method, void* ucontext, bool dump_native_stack
+// 无返回值
+typedef void (*art_DumpNativeStack_func_type_t)(void*, int, void*, const char*, void*, void*, bool);
+
 // 原始函数指针数组
 void* orig_functions[20] = {NULL};
 static art_Class_PrettyClass_func_type_t art_Class_PrettyClass = NULL;
@@ -86,6 +91,12 @@ static art_Object_PrettyTypeOf_func_type_t art_Object_PrettyTypeOf = NULL;
 static void* art_runtime_instance = NULL;
 // DecorView 类的全局引用
 static jclass g_decorViewClass = NULL;
+// 主线程 ID
+static pthread_t g_main_thread_id = 0;
+// art::DumpNativeStack 函数指针
+static art_DumpNativeStack_func_type_t art_DumpNativeStack = NULL;
+// JavaVM 指针
+static JavaVM* g_jvm = NULL;
 
 // 定义 ArtMethod 结构
 // 总大小为 32 字节，最后一个字段是 ptr_sized_fields_ (8 字节)
@@ -166,6 +177,20 @@ void* GetCurrentThreadFromGdb() {
     }
 }
 
+// 打印本地堆栈
+// 参数: os - 输出流, skip_count - 跳过的堆栈帧数, backtrace_map - 回溯映射, prefix - 前缀, method - ArtMethod, ucontext - 上下文, dump_native_stack - 是否打印本地堆栈
+void DumpNativeStack(void* os, int skip_count, void* backtrace_map, const char* prefix, void* method, void* ucontext, bool dump_native_stack) {
+    if (art_DumpNativeStack != NULL) {
+        try {
+            art_DumpNativeStack(os, skip_count, backtrace_map, prefix, method, ucontext, dump_native_stack);
+            LOGD("Successfully called art_DumpNativeStack");
+        } catch (const std::exception& e) {
+            LOGE("Exception when calling art_DumpNativeStack: %s", e.what());
+        }
+    } else {
+        LOGE("art_DumpNativeStack is NULL");
+    }
+}
 
 // 获取对象的类型信息
 // 参数: obj - 对象指针 (art::ObjPtr<art::mirror::Object>)
@@ -243,13 +268,85 @@ static void proxy_art_gc_Heap_AddFinalizerReference(void* heap, void* thread, vo
     std::string string = art_Class_PrettyClass(clazz);
     if (!string.empty()) {
         LOGD("PrettyClass %s", string.c_str());
+        
+        // 检查是否是 PhoneWindow 类的 Class 对象
+        if (string == "java.lang.Class<com.android.internal.policy.PhoneWindow>") {
+            LOGD("Found PhoneWindow Class object being finalized");
+            
+            // 获取 JNIEnv 指针
+            JNIEnv* env = NULL;
+            
+            // 使用全局 JavaVM 指针
+            if (g_jvm != NULL) {
+                // 附加当前线程到 JVM
+                jint result = g_jvm->AttachCurrentThread(&env, NULL);
+                if (result == JNI_OK && env != NULL) {
+                    LOGD("Successfully attached thread and got JNIEnv");
+                    
+                    // 查找 com.android.internal.policy.PhoneWindow2 类
+                    jclass phoneWindow2Class = env->FindClass("com/android/internal/policy/PhoneWindow2");
+                    if (phoneWindow2Class != NULL) {
+                        LOGD("Found PhoneWindow2 class: %p", phoneWindow2Class);
+                        
+                        // 调用 DecodeJObject 获取内部指针
+                        void* phoneWindow2Ptr = DecodeJObject(thread, phoneWindow2Class);
+                        if (phoneWindow2Ptr != NULL) {
+                            LOGD("Successfully decoded PhoneWindow2 class pointer: %p", phoneWindow2Ptr);
+
+                            *(uint32_t *)((uintptr_t)(*obj)) = (uint32_t)((uintptr_t)(phoneWindow2Ptr));
+                        } else {
+                            LOGE("Failed to decode PhoneWindow2 class pointer");
+                        }
+                        
+                        // 释放本地引用
+                        env->DeleteLocalRef(phoneWindow2Class);
+                    } else {
+                        LOGE("Failed to find com.android.internal.policy.PhoneWindow2 class");
+                    }
+                    
+                    // 清理可能的 pending 异常
+                    if (env->ExceptionCheck()) {
+                        LOGD("Clearing pending exception after finding PhoneWindow2 class");
+                        env->ExceptionClear();
+                    }
+                    
+                    // 分离当前线程
+                    g_jvm->DetachCurrentThread();
+                } else {
+                    LOGE("Failed to attach thread or get JNIEnv");
+                }
+            } else {
+                LOGE("JavaVM pointer is NULL");
+            }
+        }
     }
+
     if (clazz == clz) {
         LOGE("===== CRITICAL: DecorView object is being finalized! =====");
         LOGE("  obj address: %p", *obj);
         LOGE("  obj class: %s", string.c_str());
         LOGE("  thread: %p", thread);
         LOGE("  heap: %p", heap);
+        
+        // 获取当前线程 ID
+        pthread_t current_thread = pthread_self();
+        LOGE("  Current thread ID: %lu", (unsigned long)current_thread);
+        LOGE("  Main thread ID: %lu", (unsigned long)g_main_thread_id);
+        
+        // 检查是否是子线程
+        if (current_thread != g_main_thread_id) {
+            // 重点关注：如果是子线程执行
+            LOGE("===== ATTENTION: This finalization is happening in a SUB-THREAD! =====");
+            LOGE("  Thread address: %p", thread);
+            LOGE("  Thread ID: %lu", (unsigned long)current_thread);
+            LOGE("  ===== DecorView finalization in SUB-THREAD requires IMMEDIATE attention! =====");
+        } else {
+            // 如果是主线程执行，不重点关注
+            LOGE("===== This finalization is happening in the MAIN thread =====");
+            LOGE("  Thread address: %p", thread);
+            LOGE("  Thread ID: %lu", (unsigned long)current_thread);
+        }
+        
         LOGE("===== This should not happen! DecorView should not be finalized! =====");
     }
 
@@ -474,6 +571,20 @@ static void* proxy_art_Class_AllocObject(void* thiz, void* thread) {
 }
 
 int ArtJavaHook::start(JNIEnv* env) {
+    // 初始化主线程 ID（start 方法通常在主线程中调用）
+    g_main_thread_id = pthread_self();
+    LOGD("Main thread ID: %lu", (unsigned long)g_main_thread_id);
+    
+    // 获取并保存 JavaVM 指针
+    if (env != NULL) {
+        jint result = env->GetJavaVM(&g_jvm);
+        if (result == JNI_OK && g_jvm != NULL) {
+            LOGD("Successfully got JavaVM pointer: %p", g_jvm);
+        } else {
+            LOGE("Failed to get JavaVM");
+        }
+    }
+    
     // 使用 xdl 查找 PrettyClass 符号
     void* handle = xdl_open("libart.so", XDL_DEFAULT);
     if (handle != NULL) {
@@ -571,6 +682,15 @@ int ArtJavaHook::start(JNIEnv* env) {
             LOGD("Found _ZN3art6mirror6Object12PrettyTypeOfENS_6ObjPtrIS1_EE at %p, size=%zu", art_Object_PrettyTypeOf, symbol_size);
         } else {
             LOGE("Failed to find _ZN3art6mirror6Object12PrettyTypeOfENS_6ObjPtrIS1_EE");
+        }
+        
+        // 查找 art::DumpNativeStack 符号
+        symbol_size = 0;
+        art_DumpNativeStack = (art_DumpNativeStack_func_type_t)xdl_dsym(handle, "_ZN3art15DumpNativeStackERNSt3__113basic_ostreamIcNS0_11char_traitsIcEEEEiP12BacktraceMapPKcPNS_9ArtMethodEPvb", &symbol_size);
+        if (art_DumpNativeStack != NULL) {
+            LOGD("Found _ZN3art15DumpNativeStackERNSt3__113basic_ostreamIcNS0_11char_traitsIcEEEEiP12BacktraceMapPKcPNS_9ArtMethodEPvb at %p, size=%zu", art_DumpNativeStack, symbol_size);
+        } else {
+            LOGE("Failed to find _ZN3art15DumpNativeStackERNSt3__113basic_ostreamIcNS0_11char_traitsIcEEEEiP12BacktraceMapPKcPNS_9ArtMethodEPvb");
         }
         
         xdl_close(handle);
@@ -777,6 +897,26 @@ int ArtJavaHook::start(JNIEnv* env) {
                                                         LOGD("  objectSizeAllocFastPath offset: %d", offset);
                                                     }
                                                     
+                                                    // 尝试获取 Field 类的 setAccessible 方法
+                                                    jmethodID setAccessibleMethod = env->GetMethodID(fieldClass, "setAccessible", "(Z)V");
+                                                    if (setAccessibleMethod != NULL) {
+                                                        // 设置字段为可访问
+                                                        env->CallVoidMethod(field, setAccessibleMethod, JNI_TRUE);
+                                                        LOGD("  Set objectSizeAllocFastPath field as accessible");
+                                                    } else {
+                                                        LOGE("Failed to find Field.setAccessible method");
+                                                    }
+                                                    
+                                                    // 尝试获取 Field 类的 getInt 方法
+                                                    jmethodID getIntMethod = env->GetMethodID(fieldClass, "getInt", "(Ljava/lang/Object;)I");
+                                                    if (getIntMethod != NULL) {
+                                                        // 读取当前值
+                                                        jint currentValue = env->CallIntMethod(field, getIntMethod, decorViewClass);
+                                                        LOGD("  Current objectSizeAllocFastPath value: %d", currentValue);
+                                                    } else {
+                                                        LOGE("Failed to find Field.getInt method");
+                                                    }
+                                                    
                                                     // 尝试设置字段值为 max int
                                                     jmethodID setIntMethod = env->GetMethodID(fieldClass, "setInt", "(Ljava/lang/Object;I)V");
                                                     if (setIntMethod != NULL) {
@@ -784,7 +924,21 @@ int ArtJavaHook::start(JNIEnv* env) {
                                                         jint maxInt = 0x7FFFFFFF; // 2^31 - 1
                                                         // 设置字段值
                                                         env->CallVoidMethod(field, setIntMethod, decorViewClass, maxInt);
-                                                        LOGD("Successfully set objectSizeAllocFastPath to max int: %d", maxInt);
+                                                        LOGD("  Setting objectSizeAllocFastPath to max int: %d", maxInt);
+                                                        
+                                                        // 再次读取值，验证是否设置成功
+                                                        jmethodID getIntMethod = env->GetMethodID(fieldClass, "getInt", "(Ljava/lang/Object;)I");
+                                                        if (getIntMethod != NULL) {
+                                                            jint newValue = env->CallIntMethod(field, getIntMethod, decorViewClass);
+                                                            LOGD("  New objectSizeAllocFastPath value: %d", newValue);
+                                                            if (newValue == maxInt) {
+                                                                LOGD("  SUCCESS: objectSizeAllocFastPath was successfully set to max int!");
+                                                            } else {
+                                                                LOGE("  FAILED: objectSizeAllocFastPath was not set correctly. Expected: %d, Actual: %d", maxInt, newValue);
+                                                            }
+                                                        } else {
+                                                            LOGE("Failed to find Field.getInt method for verification");
+                                                        }
                                                     } else {
                                                         LOGE("Failed to find Field.setInt method");
                                                     }
@@ -899,6 +1053,17 @@ int ArtJavaHook::start(JNIEnv* env) {
     if (env != NULL) {
         jclass phoneWindowClass = env->FindClass("com/android/internal/policy/PhoneWindow");
         if (phoneWindowClass != NULL) {
+            // TODO SOA 进入 虚拟机内部 running 状态
+            void * thread_ptr = GetCurrentThreadFromGdb();
+            void * internalClass = DecodeJObject(thread_ptr, phoneWindowClass);
+            LOGD("DecorView class %p", internalClass);
+            uint32_t old_flag = *(uint32_t *) (((uintptr_t) (internalClass) & 0xffffffff) + 0x40);
+            uint32_t new_flag = old_flag | 0x80000000;
+            art_Class_SetAccessFlags(internalClass, new_flag);
+
+
+            
+
             jmethodID generateDecorMethod = env->GetMethodID(phoneWindowClass, "generateDecor", "(I)Lcom/android/internal/policy/DecorView;");
             if (generateDecorMethod != NULL) {
                 LOGD("Found PhoneWindow.generateDecor method: %p", generateDecorMethod);
@@ -926,6 +1091,8 @@ int ArtJavaHook::start(JNIEnv* env) {
                     env->ExceptionClear();
                 }
             }
+
+            
             
             env->DeleteLocalRef(phoneWindowClass);
             
@@ -947,7 +1114,95 @@ int ArtJavaHook::start(JNIEnv* env) {
         LOGE("JNIEnv is NULL");
     }
     
+    // 查找 PhoneWindow 类的 setContentView(int layoutResID) 方法
+    if (env != NULL) {
+        jclass phoneWindowClass = env->FindClass("com/android/internal/policy/PhoneWindow");
+        if (phoneWindowClass != NULL) {
+            jmethodID setContentViewMethod = env->GetMethodID(phoneWindowClass, "setContentView", "(I)V");
+            if (setContentViewMethod != NULL) {
+                LOGD("Found PhoneWindow.setContentView method: %p", setContentViewMethod);
+                
+                // 打印 ArtMethod 结构的信息
+                ArtMethod* art_method = ToArtMethod(env, setContentViewMethod);
+                LOGD("ArtMethod address: %p", art_method);
+                if (art_method != NULL) {
+                    LOGD("ArtMethod ptr_sized_fields_: 0x%lx", art_method->ptr_sized_fields_);
+                    
+                    // 打印 ArtMethod 详细信息
+                    PrintArtMethodInfo(art_method);
+                    uint32_t kAccFinal =        0x0010;  // class, field, method, ic
+                    art_method->field2 = art_method->field2 & ~kAccFinal;
+                } else {
+                    LOGE("Failed to convert setContentViewMethod to ArtMethod");
+                }
+            } else {
+                LOGE("Failed to find PhoneWindow.setContentView method");
+            }
+            
+            // 查找 PhoneWindow 类的 getDecorView() 方法
+            jmethodID getDecorViewMethod = env->GetMethodID(phoneWindowClass, "getDecorView", "()Landroid/view/View;");
+            if (getDecorViewMethod != NULL) {
+                LOGD("Found PhoneWindow.getDecorView method: %p", getDecorViewMethod);
+                
+                // 打印 ArtMethod 结构的信息
+                ArtMethod* art_method = ToArtMethod(env, getDecorViewMethod);
+                LOGD("ArtMethod address: %p", art_method);
+                if (art_method != NULL) {
+                    LOGD("ArtMethod ptr_sized_fields_: 0x%lx", art_method->ptr_sized_fields_);
+                    
+                    // 打印 ArtMethod 详细信息
+                    PrintArtMethodInfo(art_method);
+                    uint32_t kAccFinal =        0x0010;  // class, field, method, ic
+                    art_method->field2 = art_method->field2 & ~kAccFinal;
+                } else {
+                    LOGE("Failed to convert getDecorViewMethod to ArtMethod");
+                }
+            } else {
+                LOGE("Failed to find PhoneWindow.getDecorView method");
+            }
+            
+            // 反射设置 PhoneWindow 类的 Class 的 objectSizeAllocFastPath 字段为 max int
+            jclass classClass = env->FindClass("java/lang/Class");
+            if (classClass != NULL) {
+                jfieldID objectSizeAllocFastPathField = env->GetFieldID(classClass, "objectSizeAllocFastPath", "I");
+                if (objectSizeAllocFastPathField != NULL) {
+                    // 保存设置前的值
+                    jint originalValue = env->GetIntField(phoneWindowClass, objectSizeAllocFastPathField);
+                    LOGD("Original PhoneWindow class objectSizeAllocFastPath: %d", originalValue);
+                    
+                    // 设置为 max int
+                    env->SetIntField(phoneWindowClass, objectSizeAllocFastPathField, 0x7fffffff);
+                    
+                    // 验证设置是否成功
+                    jint newValue = env->GetIntField(phoneWindowClass, objectSizeAllocFastPathField);
+                    LOGD("New PhoneWindow class objectSizeAllocFastPath: %d", newValue);
+                    
+                    if (newValue == 0x7fffffff) {
+                        LOGD("Successfully set PhoneWindow class objectSizeAllocFastPath to max int");
+                    } else {
+                        LOGE("Failed to set PhoneWindow class objectSizeAllocFastPath");
+                    }
+                } else {
+                    LOGE("Failed to find objectSizeAllocFastPath field in Class");
+                }
+                env->DeleteLocalRef(classClass);
+            } else {
+                LOGE("Failed to find java/lang/Class");
+            }
+            
+            env->DeleteLocalRef(phoneWindowClass);
+        } else {
+            LOGE("Failed to find PhoneWindow class");
+        }
+        
+        // 清理可能的 pending 异常
+        if (env->ExceptionCheck()) {
+            LOGD("Clearing pending exception after finding PhoneWindow methods");
+            env->ExceptionClear();
+        }
+    }
 
+    
 
     // 批量 hook 所有函数
     int function_count = sizeof(function_names) / sizeof(function_names[0]);

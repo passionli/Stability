@@ -27,4 +27,103 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/btnKotlinLearning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Run Kotlin Learning Examples"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/javaCrash"
+        android:layout_marginTop="24dp" />
+
+    <Button
+        android:id="@+id/btnListView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ListView Example"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnKotlinLearning"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/btnDataStructures"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Data Structures Examples"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnListView"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/btnOpenGL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OpenGL Examples"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnDataStructures"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/btnMultithreading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Multithreading Examples"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnOpenGL"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/btnCpp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="C++ Examples"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnMultithreading"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/btnC"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="C Examples"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnCpp"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/btnCommunication"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Communication Examples"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnC"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/btnNetwork"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Network Examples"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnCommunication"
+        android:layout_marginTop="16dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

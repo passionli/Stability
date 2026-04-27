@@ -11,6 +11,7 @@
 
 #include "xdl.h"
 #include "shadowhook.h"
+#include "ArtJavaHook.h"
 
 #define LOG_TAG "KEY_MONITOR"
 #define LOGD(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
@@ -30,13 +31,13 @@ int callback(struct dl_phdr_info * info, size_t size, void * data) {
             void * sym = xdl_sym(h, symbol, &symbol_size);
             if (sym != nullptr) {
                 LOGD("xdl_sym %s: addr=%p, size=%zu", symbol, sym, symbol_size);
-//                memset((void *)sym, 0x1, symbol_size / sizeof (uint8_t));
+                memset((void *)sym, 0x1, symbol_size / sizeof (uint8_t));
                 ret = 1;
             } else {
                 sym = xdl_dsym(h, symbol, &symbol_size);
                 if (sym != nullptr) {
                     LOGD("xdl_dsym %s: addr=%p, size=%zu", symbol, sym, symbol_size);
-//                memset((void *)sym, 0x1, symbol_size / sizeof (uint8_t));
+                memset((void *)sym, 0x1, symbol_size / sizeof (uint8_t));
                     ret = 1;
                 }
             }
@@ -53,10 +54,11 @@ Java_com_example_nativelib_NativeLib_stringFromJNI(
         JNIEnv* env,
         jobject /* this */) {
     std::string hello = "Hello from C++";
+    xdl_iterate_phdr(callback, NULL, XDL_FULL_PATHNAME);
 
     PthreadKeyOpt::getInstance().start();
+    ArtJavaHook::getInstance().start(env);
 
-//    xdl_iterate_phdr(callback, NULL, XDL_FULL_PATHNAME);
 
 
     

@@ -19,3 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# 排除特定类
+#-keep class com.android.internal.policy.PhoneWindow { *; }
+#-dontwarn com.android.internal.policy.PhoneWindow
