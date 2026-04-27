@@ -50,6 +50,9 @@ class AdvancedFeatures {
         // 集合操作
         testCollectionOperations()
         
+        // 函数相关关键字
+        testFunctionKeywords()
+        
         Log.d("KotlinLearning", "=== AdvancedFeatures.runAdvancedFeatures completed ===")
     }
     
@@ -181,6 +184,69 @@ class AdvancedFeatures {
         val sum = numbers.reduce { acc, i -> acc + i }
         Log.d("KotlinLearning", "Sum of list: $sum")
         
+        // 测试 MutableList
+        // MutableList - 可变列表
+        // 作用：创建一个可以修改的列表
+        // 使用方式：mutableListOf(元素1, 元素2, ...)
+        val mutableList = mutableListOf(1, 2, 3)
+        Log.d("KotlinLearning", "MutableList initial: $mutableList")
+        mutableList.add(4)
+        mutableList.remove(2)
+        Log.d("KotlinLearning", "MutableList after modification: $mutableList")
+        
+        // 测试 MutableMap
+        // MutableMap - 可变映射
+        // 作用：创建一个可以修改的键值对集合
+        // 使用方式：mutableMapOf(键1 to 值1, 键2 to 值2, ...)
+        val mutableMap = mutableMapOf("name" to "Kotlin", "version" to "1.9.0")
+        Log.d("KotlinLearning", "MutableMap initial: $mutableMap")
+        mutableMap["author"] = "JetBrains"
+        mutableMap.remove("version")
+        Log.d("KotlinLearning", "MutableMap after modification: $mutableMap")
+        
+        // 测试其他集合创建函数
+        // setOf - 创建不可变集合
+        val set = setOf(1, 2, 3, 3, 4)
+        Log.d("KotlinLearning", "Set: $set")
+        
+        // mutableSetOf - 创建可变集合
+        val mutableSet = mutableSetOf(1, 2, 3)
+        mutableSet.add(4)
+        Log.d("KotlinLearning", "MutableSet: $mutableSet")
+        
+        // hashMapOf - 创建哈希映射
+        val hashMap = hashMapOf("a" to 1, "b" to 2)
+        Log.d("KotlinLearning", "HashMap: $hashMap")
+        
+        // linkedMapOf - 创建链表映射
+        val linkedMap = linkedMapOf("first" to 1, "second" to 2, "third" to 3)
+        Log.d("KotlinLearning", "LinkedMap: $linkedMap")
+        
+        // sortedMapOf - 创建排序映射
+        val sortedMap = sortedMapOf("c" to 3, "a" to 1, "b" to 2)
+        Log.d("KotlinLearning", "SortedMap: $sortedMap")
+        
+        // 测试集合操作符
+        // any - 检查是否有元素满足条件
+        val hasEven = numbers.any { it % 2 == 0 }
+        Log.d("KotlinLearning", "Has even number: $hasEven")
+        
+        // all - 检查是否所有元素都满足条件
+        val allPositive = numbers.all { it > 0 }
+        Log.d("KotlinLearning", "All positive: $allPositive")
+        
+        // none - 检查是否没有元素满足条件
+        val noNegative = numbers.none { it < 0 }
+        Log.d("KotlinLearning", "No negative: $noNegative")
+        
+        // find - 查找第一个满足条件的元素
+        val firstEven = numbers.find { it % 2 == 0 }
+        Log.d("KotlinLearning", "First even: $firstEven")
+        
+        // groupBy - 按条件分组
+        val groupedByEven = numbers.groupBy { it % 2 == 0 }
+        Log.d("KotlinLearning", "Grouped by even: $groupedByEven")
+        
         Log.d("KotlinLearning", "=== testCollectionOperations completed ===")
     }
     
@@ -197,6 +263,115 @@ class AdvancedFeatures {
         val result = operation(a, b)
         Log.d("KotlinLearning", "calculate returned: $result")
         return result
+    }
+    
+    /**
+     * 测试函数相关关键字
+     */
+    private fun testFunctionKeywords() {
+        Log.d("KotlinLearning", "=== testFunctionKeywords called ===")
+        
+        // 测试 infix 函数
+        val a = 5
+        val b = 10
+        val result = a add b
+        Log.d("KotlinLearning", "Infix function result: $result")
+        
+        // 测试 operator 函数
+        val point1 = Point(1, 2)
+        val point2 = Point(3, 4)
+        val point3 = point1 + point2
+        Log.d("KotlinLearning", "Operator function result: $point3")
+        
+        // 测试 tailrec 函数
+        val factorialResult = factorial(5)
+        Log.d("KotlinLearning", "Tailrec factorial result: $factorialResult")
+        
+        // 测试 inline 函数
+        inlineFunction {
+            Log.d("KotlinLearning", "Inline function lambda")
+        }
+        
+        // 测试 reified 泛型
+        val stringResult = getType<String>()
+        Log.d("KotlinLearning", "Reified type result: $stringResult")
+        
+        Log.d("KotlinLearning", "=== testFunctionKeywords completed ===")
+    }
+    
+    // infix - 中缀函数关键字
+    // 作用：允许函数以中缀表达式的形式调用
+    // 使用方式：infix fun 接收者类型.函数名(参数): 返回类型 {
+    //     // 函数体
+    // }
+    private infix fun Int.add(other: Int): Int {
+        return this + other
+    }
+    
+    // operator - 操作符重载关键字
+    // 作用：重载运算符
+    // 使用方式：operator fun 接收者类型.运算符(参数): 返回类型 {
+    //     // 函数体
+    // }
+    private data class Point(val x: Int, val y: Int) {
+        operator fun plus(other: Point): Point {
+            return Point(x + other.x, y + other.y)
+        }
+    }
+    
+    // tailrec - 尾递归关键字
+    // 作用：优化尾递归函数，避免栈溢出
+    // 使用方式：tailrec fun 函数名(参数): 返回类型 {
+    //     // 函数体
+    // }
+    private tailrec fun factorial(n: Int, acc: Int = 1): Int {
+        return if (n <= 1) acc else factorial(n - 1, n * acc)
+    }
+    
+    // inline - 内联函数关键字
+    // 作用：将函数体内联到调用处，减少函数调用开销
+    // 使用方式：inline fun 函数名(参数, 函数参数: () -> Unit) {
+    //     // 函数体
+    // }
+    private inline fun inlineFunction(block: () -> Unit) {
+        Log.d("KotlinLearning", "Before inline block")
+        block()
+        Log.d("KotlinLearning", "After inline block")
+    }
+    
+    // reified - 具体化泛型关键字
+    // 作用：在 inline 函数中获取泛型的实际类型
+    // 使用方式：inline fun <reified T> 函数名(): 返回类型 {
+    //     // 函数体
+    // }
+    private inline fun <reified T> getType(): String {
+        return T::class.simpleName ?: "Unknown"
+    }
+    
+    // noinline - 非内联关键字
+    // 作用：指定 lambda 参数不内联
+    // 使用方式：inline fun 函数名(noinline 函数参数: () -> Unit) {
+    //     // 函数体
+    // }
+    private inline fun inlineWithNoinline(
+        inlineBlock: () -> Unit, 
+        noinline noinlineBlock: () -> Unit
+    ) {
+        Log.d("KotlinLearning", "inlineWithNoinline called")
+        inlineBlock()
+        noinlineBlock()
+    }
+    
+    // crossinline - 交叉内联关键字
+    // 作用：确保 lambda 不会在非局部返回
+    // 使用方式：inline fun 函数名(crossinline 函数参数: () -> Unit) {
+    //     // 函数体
+    // }
+    private inline fun inlineWithCrossinline(crossinline block: () -> Unit) {
+        Log.d("KotlinLearning", "inlineWithCrossinline called")
+        Runnable {
+            block()
+        }.run()
     }
 }
 

@@ -13,7 +13,11 @@ import com.example.nativelib.NativeLib
 import com.example.nativelib2.NativeLib2
 import com.example.stability.data_structures.DataStructuresMain
 import com.example.stability.kotlin_learning.KotlinLearningMain
+import com.example.stability.mvp.MVPMain
 import com.example.stability.opengl.basic.OpenGLActivity
+import com.example.stability.video_edit.VideoEditActivity
+import com.example.stability.webrtc.WebRTCMain
+import kotlin.jvm.java
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,17 +25,17 @@ class MainActivity : AppCompatActivity() {
         println(PhoneWindow2::class.java)
 
         super.onCreate(savedInstanceState)
-        var i = 0
-        do {
-            Thread(Runnable() {
-                if (window != null) {
-                    println("getWindow $window")
-                    // 模拟子线程调用 getDecorView 偶现崩溃
-                    window.decorView.toString()
-                }
-            }).start()
-            i++
-        } while (i < 8)
+//        var i = 0
+//        do {
+//            Thread(Runnable() {
+//                if (window != null) {
+//                    println("getWindow $window")
+//                    // 模拟子线程调用 getDecorView 偶现崩溃
+//                    window.decorView.toString()
+//                }
+//            }).start()
+//            i++
+//        } while (i < 8)
         setContentView(R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -59,6 +63,16 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, ListViewActivity::class.java)
             startActivity(intent)
         }
+
+        // 查找 Compose 示例按钮
+        val btnCompose = findViewById<Button>(R.id.btnCompose)
+        // 设置按钮点击事件
+        btnCompose.setOnClickListener {
+            Log.d("MainActivity", "=== Button clicked: Compose Example ===")
+            // 创建 Intent，启动 ComposeActivity
+            val intent = Intent(this, ComposeActivity::class.java)
+            startActivity(intent)
+        }
         
         // 查找数据结构示例按钮
         val btnDataStructures = findViewById<Button>(R.id.btnDataStructures)
@@ -80,7 +94,7 @@ class MainActivity : AppCompatActivity() {
             // 创建一个菜单，让用户选择要运行的 OpenGL 示例级别
             val builder = android.app.AlertDialog.Builder(this)
             builder.setTitle("选择 OpenGL 示例级别")
-            builder.setItems(arrayOf("初级（三角形）", "中级（彩色四边形）", "高级（纹理立方体）")) { dialog, which ->
+            builder.setItems(arrayOf("初级（三角形）", "中级（彩色四边形）", "中级（变换组合）", "高级（纹理立方体）")) { dialog, which ->
                 when (which) {
                     0 -> {
                         // 启动初级 OpenGL 示例
@@ -93,6 +107,11 @@ class MainActivity : AppCompatActivity() {
                         startActivity(intent)
                     }
                     2 -> {
+                        // 启动中级 OpenGL 变换组合示例
+                        val intent = Intent(this, com.example.stability.opengl.intermediate.OpenGLTransformActivity::class.java)
+                        startActivity(intent)
+                    }
+                    3 -> {
                         // 启动高级 OpenGL 示例
                         val intent = Intent(this, com.example.stability.opengl.advanced.OpenGLAdvancedActivity::class.java)
                         startActivity(intent)
@@ -304,6 +323,86 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             builder.show()
+        }
+        
+        // 查找设计模式示例按钮
+        val btnDesignPatterns = findViewById<Button>(R.id.btnDesignPatterns)
+        // 设置按钮点击事件
+        btnDesignPatterns.setOnClickListener {
+            Log.d("MainActivity", "=== Button clicked: Design Patterns Examples ===")
+            
+            // 创建一个菜单，让用户选择要运行的设计模式
+            val builder = android.app.AlertDialog.Builder(this)
+            builder.setTitle("选择设计模式")
+            builder.setItems(arrayOf("创建型", "结构型", "行为型", "运行所有示例")) { dialog, which ->
+                when (which) {
+                    0 -> {
+                        // 运行创建型设计模式示例
+                        val creationalBasicExample = com.example.stability.design_patterns.creational.basic.CreationalBasicExample()
+                        val creationalIntermediateExample = com.example.stability.design_patterns.creational.intermediate.CreationalIntermediateExample()
+                        val creationalAdvancedExample = com.example.stability.design_patterns.creational.advanced.CreationalAdvancedExample()
+                        creationalBasicExample.runAllExamples()
+                        creationalIntermediateExample.runAllExamples()
+                        creationalAdvancedExample.runAllExamples()
+                    }
+                    1 -> {
+                        // 运行结构型设计模式示例
+                        val structuralBasicExample = com.example.stability.design_patterns.structural.basic.StructuralBasicExample()
+                        val structuralIntermediateExample = com.example.stability.design_patterns.structural.intermediate.StructuralIntermediateExample()
+                        val structuralAdvancedExample = com.example.stability.design_patterns.structural.advanced.StructuralAdvancedExample()
+                        structuralBasicExample.runAllExamples()
+                        structuralIntermediateExample.runAllExamples()
+                        structuralAdvancedExample.runAllExamples()
+                    }
+                    2 -> {
+                        // 运行行为型设计模式示例
+                        val behavioralBasicExample = com.example.stability.design_patterns.behavioral.basic.BehavioralBasicExample()
+                        val behavioralIntermediateExample = com.example.stability.design_patterns.behavioral.intermediate.BehavioralIntermediateExample()
+                        val behavioralAdvancedExample = com.example.stability.design_patterns.behavioral.advanced.BehavioralAdvancedExample()
+                        behavioralBasicExample.runAllExamples()
+                        behavioralIntermediateExample.runAllExamples()
+                        behavioralAdvancedExample.runAllExamples()
+                    }
+                    3 -> {
+                        // 运行所有设计模式示例
+                        val designPatternsMain = com.example.stability.design_patterns.DesignPatternsMain(this)
+                        designPatternsMain.runAllExamples()
+                    }
+                }
+            }
+            builder.show()
+        }
+        
+        // 查找 MVP 架构示例按钮
+        val btnMVP = findViewById<Button>(R.id.btnMVP)
+        // 设置按钮点击事件
+        btnMVP.setOnClickListener {
+            Log.d("MainActivity", "=== Button clicked: MVP Architecture Examples ===")
+            
+            // 启动 MVP 统一管理类
+            val intent = Intent(this, MVPMain::class.java)
+            startActivity(intent)
+        }
+        
+        // 查找 WebRTC 示例按钮
+        val btnWebRTC = findViewById<Button>(R.id.btnWebRTC)
+        // 设置按钮点击事件
+        btnWebRTC.setOnClickListener {
+            Log.d("MainActivity", "=== Button clicked: WebRTC Examples ===")
+            
+            // 启动 WebRTC 统一管理类
+            val intent = Intent(this, WebRTCMain::class.java)
+            startActivity(intent)
+        }
+        
+        // 查找视频编辑示例按钮
+        val btnVideoEdit = findViewById<Button>(R.id.btnVideoEdit)
+        // 设置按钮点击事件
+        btnVideoEdit.setOnClickListener {
+            Log.d("MainActivity", "=== Button clicked: Video Edit Examples ===")
+            // 创建 Intent，启动 VideoEditActivity
+            val intent = Intent(this, VideoEditActivity::class.java)
+            startActivity(intent)
         }
 
         println("getWindow $window")

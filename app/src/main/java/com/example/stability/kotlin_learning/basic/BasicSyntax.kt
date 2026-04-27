@@ -85,6 +85,89 @@ class BasicSyntax {
         val sum = add(3, 5)
         Log.d("KotlinLearning", "sum: $sum")
         
+        // 循环
+        // while - 循环关键字
+        // 作用：当条件为真时，重复执行代码块
+        // 使用方式：while (条件) {
+        //     // 循环体
+        // }
+        Log.d("KotlinLearning", "while 循环示例:")
+        var count = 1
+        while (count <= 3) {
+            Log.d("KotlinLearning", "count: $count")
+            count++
+        }
+        
+        // do-while - 循环关键字
+        // 作用：先执行一次代码块，然后当条件为真时重复执行
+        // 使用方式：do {
+        //     // 循环体
+        // } while (条件)
+        Log.d("KotlinLearning", "do-while 循环示例:")
+        var i = 1
+        do {
+            Log.d("KotlinLearning", "i: $i")
+            i++
+        } while (i <= 3)
+        
+        // 异常处理
+        // try-catch-finally - 异常处理关键字
+        // 作用：捕获和处理异常
+        // 使用方式：try {
+        //     // 可能抛出异常的代码
+        // } catch (e: 异常类型) {
+        //     // 异常处理代码
+        // } finally {
+        //     // 无论是否异常都会执行的代码
+        // }
+        Log.d("KotlinLearning", "异常处理示例:")
+        try {
+            val result = 10 / 0
+            Log.d("KotlinLearning", "result: $result")
+        } catch (e: ArithmeticException) {
+            Log.d("KotlinLearning", "捕获到异常: ${e.message}")
+        } finally {
+            Log.d("KotlinLearning", "finally 块执行")
+        }
+        
+        // throw - 抛出异常关键字
+        // 作用：主动抛出异常
+        // 使用方式：throw 异常对象
+        Log.d("KotlinLearning", "抛出异常示例:")
+        try {
+            throw IllegalArgumentException("参数错误")
+        } catch (e: IllegalArgumentException) {
+            Log.d("KotlinLearning", "捕获到异常: ${e.message}")
+        }
+        
+        // 类型检查和转换
+        // is - 类型检查操作符
+        // 作用：检查对象是否为指定类型
+        // 使用方式：对象 is 类型
+        val obj: Any = "Hello"
+        if (obj is String) {
+            Log.d("KotlinLearning", "obj 是 String 类型: ${obj.length}")
+        }
+        
+        // as - 类型转换操作符
+        // 作用：将对象转换为指定类型
+        // 使用方式：对象 as 类型
+        val str = obj as String
+        Log.d("KotlinLearning", "类型转换: $str")
+        
+        // lateinit - 延迟初始化关键字
+        // 作用：声明一个非空类型的变量，但延迟初始化
+        // 使用方式：lateinit var 变量名: 类型
+        lateinit var lateinitVar: String
+        lateinitVar = "Late initialized"
+        Log.d("KotlinLearning", "lateinit 变量: $lateinitVar")
+        
+        // val - 不可变变量（在函数中使用）
+        // 作用：声明一个不可变（只读）的变量，值一旦赋值就不能更改
+        // 注意：const 只能在顶层或伴生对象中使用
+        val MAX_VALUE = 100
+        Log.d("KotlinLearning", "常量: $MAX_VALUE")
+        
         Log.d("KotlinLearning", "=== BasicSyntax.runBasicSyntax completed ===")
     }
     

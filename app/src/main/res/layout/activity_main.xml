@@ -7,123 +7,182 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/javaCrash"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="JavaCrash!"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/nativeCrash"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="NativeCrash!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/btnKotlinLearning"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Run Kotlin Learning Examples"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/javaCrash"
-        android:layout_marginTop="24dp" />
+            <TextView
+                android:id="@+id/javaCrash"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="JavaCrash!"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btnListView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ListView Example"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnKotlinLearning"
-        android:layout_marginTop="16dp" />
+            <TextView
+                android:id="@+id/nativeCrash"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NativeCrash!"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/javaCrash"
+                android:layout_marginTop="16dp" />
 
-    <Button
-        android:id="@+id/btnDataStructures"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Data Structures Examples"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnListView"
-        android:layout_marginTop="16dp" />
+            <Button
+                android:id="@+id/btnKotlinLearning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Run Kotlin Learning Examples"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/nativeCrash"
+                android:layout_marginTop="24dp" />
 
-    <Button
-        android:id="@+id/btnOpenGL"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="OpenGL Examples"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnDataStructures"
-        android:layout_marginTop="16dp" />
+            <Button
+                android:id="@+id/btnListView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ListView Example"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnKotlinLearning"
+                android:layout_marginTop="16dp" />
 
-    <Button
-        android:id="@+id/btnMultithreading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Multithreading Examples"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnOpenGL"
-        android:layout_marginTop="16dp" />
+            <Button
+                android:id="@+id/btnCompose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Compose Example"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnListView"
+                android:layout_marginTop="16dp" />                
 
-    <Button
-        android:id="@+id/btnCpp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="C++ Examples"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnMultithreading"
-        android:layout_marginTop="16dp" />
+            <Button
+                android:id="@+id/btnDataStructures"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Data Structures Examples"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnCompose"
+                android:layout_marginTop="16dp" />
 
-    <Button
-        android:id="@+id/btnC"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="C Examples"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnCpp"
-        android:layout_marginTop="16dp" />
+            <Button
+                android:id="@+id/btnOpenGL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OpenGL Examples"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnDataStructures"
+                android:layout_marginTop="16dp" />
 
-    <Button
-        android:id="@+id/btnCommunication"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Communication Examples"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnC"
-        android:layout_marginTop="16dp" />
+            <Button
+                android:id="@+id/btnMultithreading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Multithreading Examples"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnOpenGL"
+                android:layout_marginTop="16dp" />
 
-    <Button
-        android:id="@+id/btnNetwork"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Network Examples"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnCommunication"
-        android:layout_marginTop="16dp" />
+            <Button
+                android:id="@+id/btnCpp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="C++ Examples"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnMultithreading"
+                android:layout_marginTop="16dp" />
+
+            <Button
+                android:id="@+id/btnC"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="C Examples"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnCpp"
+                android:layout_marginTop="16dp" />
+
+            <Button
+                android:id="@+id/btnCommunication"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Communication Examples"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnC"
+                android:layout_marginTop="16dp" />
+
+            <Button
+                android:id="@+id/btnNetwork"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Network Examples"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnCommunication"
+                android:layout_marginTop="16dp" />
+
+            <Button
+                android:id="@+id/btnDesignPatterns"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Design Patterns Examples"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnNetwork"
+                android:layout_marginTop="16dp" />
+
+            <Button
+                android:id="@+id/btnMVP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MVP Architecture Examples"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnDesignPatterns"
+                android:layout_marginTop="16dp" />
+
+            <Button
+                android:id="@+id/btnWebRTC"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="WebRTC Examples"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnMVP"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp" />
+
+            <Button
+                android:id="@+id/btnVideoEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Video Edit Examples"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnWebRTC"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

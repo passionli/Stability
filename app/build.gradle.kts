@@ -86,8 +86,8 @@ android {
             signingConfig = signingConfigs.getByName("release")
             // 使用名为 "release" 的签名配置
 
-            isMinifyEnabled = true
-            // 启用代码混淆
+            isMinifyEnabled = false
+            // 关闭代码混淆
             
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -184,11 +184,24 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     // 依赖 ViewModel KTX 库
     
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    // 依赖 ViewModel Compose 库，用于在 Compose 中使用 ViewModel
+    
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
     // 依赖 LiveData KTX 库
     
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     // 依赖 Lifecycle Runtime KTX 库
+    
+    // Media3 (ExoPlayer) 视频播放依赖
+    implementation("androidx.media3:media3-exoplayer:1.2.1")
+    // 依赖 Media3 ExoPlayer 库，用于视频播放
+    
+    implementation("androidx.media3:media3-ui:1.2.1")
+    // 依赖 Media3 UI 库，用于视频播放界面
+    
+    implementation("androidx.media3:media3-common:1.2.1")
+    // 依赖 Media3 Common 库
     
     testImplementation(libs.junit)
     // 测试依赖 JUnit 库

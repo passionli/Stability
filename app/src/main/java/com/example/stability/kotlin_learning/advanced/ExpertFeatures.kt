@@ -50,6 +50,9 @@ class ExpertFeatures {
         // 测试委托
         testDelegation()
         
+        // 测试高级特性关键字
+        testAdvancedKeywords()
+        
         Log.d("KotlinLearning", "=== ExpertFeatures.runExpertFeatures completed ===")
     }
     
@@ -164,6 +167,57 @@ class ExpertFeatures {
         Log.d("KotlinLearning", "Retrieved value: $value")
         
         Log.d("KotlinLearning", "=== testDelegation completed ===")
+    }
+    
+    /**
+     * 测试高级特性关键字
+     */
+    private fun testAdvancedKeywords() {
+        Log.d("KotlinLearning", "=== testAdvancedKeywords called ===")
+        
+        // 测试 typealias
+        val user = UserType("John", 30)
+        Log.d("KotlinLearning", "Typealias user: $user")
+        
+        // 测试 annotation
+        val annotatedClass = AnnotatedClass()
+        Log.d("KotlinLearning", "Annotated class: $annotatedClass")
+        
+        // 测试 abstract class
+        val concreteImpl = ConcreteImplementation()
+        concreteImpl.abstractMethod()
+        concreteImpl.concreteMethod()
+        
+        // 测试 final class
+        val finalClass = FinalClass()
+        finalClass.doSomething()
+        
+        // 测试 sealed class
+        val success = ApiResult.Success("Data loaded successfully")
+        val error = ApiResult.Error("Failed to load data")
+        handleApiResult(success)
+        handleApiResult(error)
+        
+        // 测试 Java 互操作注解
+        val javaInterop = JavaInteropExample()
+        Log.d("KotlinLearning", "JavaInteropExample.publicField: ${javaInterop.publicField}")
+        Log.d("KotlinLearning", "JavaInteropExample.staticMethod(): ${JavaInteropExample.staticMethod()}")
+        Log.d("KotlinLearning", "JavaInteropExample.STATIC_FIELD: ${JavaInteropExample.STATIC_FIELD}")
+        Log.d("KotlinLearning", "JavaInteropExample.overloadedMethod(1): ${javaInterop.overloadedMethod(1)}")
+        Log.d("KotlinLearning", "JavaInteropExample.overloadedMethod(1, \"custom\"): ${javaInterop.overloadedMethod(1, "custom")}")
+        Log.d("KotlinLearning", "JavaInteropExample.overloadedMethod(1, \"custom\", false): ${javaInterop.overloadedMethod(1, "custom", false)}")
+        
+        Log.d("KotlinLearning", "=== testAdvancedKeywords completed ===")
+    }
+    
+    /**
+     * 处理 API 结果
+     */
+    private fun handleApiResult(result: ApiResult) {
+        when (result) {
+            is ApiResult.Success -> Log.d("KotlinLearning", "API Success: ${result.data}")
+            is ApiResult.Error -> Log.d("KotlinLearning", "API Error: ${result.message}")
+        }
     }
     
     /**
@@ -295,5 +349,96 @@ class DataSourceWrapper(private val delegate: DataSource) : DataSource by delega
         // 调用委托的方法
         delegate.saveData(key, value)
         Log.d("KotlinLearning", "DataSourceWrapper.saveData completed")
+    }
+}
+
+// typealias - 类型别名关键字
+// 作用：为现有类型创建一个新的名称
+// 使用方式：typealias 新名称 = 现有类型
+typealias UserType = Pair<String, Int>
+
+// annotation - 注解关键字
+// 作用：创建一个自定义注解
+// 使用方式：annotation class 注解名
+annotation class MyAnnotation
+
+// 带有注解的类
+@MyAnnotation
+class AnnotatedClass
+
+// abstract - 抽象类关键字
+// 作用：创建一个不能直接实例化的类，用于作为基类
+// 使用方式：abstract class 类名 {
+//     abstract fun 抽象方法()
+//     // 可以有具体方法
+// }
+abstract class AbstractClass {
+    abstract fun abstractMethod()
+    
+    fun concreteMethod() {
+        Log.d("KotlinLearning", "AbstractClass.concreteMethod called")
+    }
+}
+
+// 具体实现类
+class ConcreteImplementation : AbstractClass() {
+    override fun abstractMethod() {
+        Log.d("KotlinLearning", "ConcreteImplementation.abstractMethod called")
+    }
+}
+
+// final - 最终类关键字
+// 作用：创建一个不能被继承的类
+// 使用方式：final class 类名 {
+//     // 类成员
+// }
+final class FinalClass {
+    fun doSomething() {
+        Log.d("KotlinLearning", "FinalClass.doSomething called")
+    }
+}
+
+// sealed - 密封类关键字
+// 作用：创建一个受限的类层次结构，子类必须在同一个文件中定义
+// 使用方式：sealed class 类名 {
+//     子类1
+//     子类2
+//     ...
+// }
+sealed class ApiResult {
+    data class Success(val data: String) : ApiResult()
+    data class Error(val message: String) : ApiResult()
+}
+
+// Java 互操作示例类
+class JavaInteropExample {
+    // @JvmField - Java 字段注解
+    // 作用：将 Kotlin 属性暴露为 Java 字段
+    // 使用方式：@JvmField val 字段名: 类型 = 值
+    @JvmField
+    val publicField: String = "Public Field"
+    
+    // @JvmStatic - Java 静态方法注解
+    // 作用：将 Kotlin 伴生对象方法暴露为 Java 静态方法
+    // 使用方式：companion object {
+    //     @JvmStatic
+    //     fun 方法名() { ... }
+    // }
+    companion object {
+        @JvmStatic
+        fun staticMethod(): String {
+            return "Static Method"
+        }
+        
+        @JvmField
+        val STATIC_FIELD: String = "Static Field"
+    }
+    
+    // @JvmOverloads - Java 重载注解
+    // 作用：为 Kotlin 函数生成 Java 重载方法
+    // 使用方式：@JvmOverloads fun 函数名(参数1: 类型 = 默认值, 参数2: 类型 = 默认值) { ... }
+    @JvmOverloads
+    fun overloadedMethod(a: Int, b: String = "default", c: Boolean = true): String {
+        return "a: $a, b: $b, c: $c"
     }
 }

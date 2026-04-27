@@ -8,9 +8,13 @@ package com.example.stability.kotlin_learning.intermediate
 // 使用方式：import 包名.类名
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.supervisorScope
+import kotlinx.coroutines.withTimeout
 
 /**
  * Kotlin 协程示例
@@ -76,6 +80,9 @@ class Coroutines {
             job1.join()
             job2.join()
             
+            // 测试协程高级特性
+            testAdvancedCoroutines()
+            
             Log.d("KotlinLearning", "runBlocking completed, thread: ${Thread.currentThread().id}")
         }
         
@@ -134,5 +141,137 @@ class Coroutines {
         return kotlinx.coroutines.withContext(dispatcher) {
             block()
         }
+    }
+    
+    /**
+     * 测试协程高级特性
+     */
+    private suspend fun testAdvancedCoroutines() {
+        Log.d("KotlinLearning", "=== testAdvancedCoroutines called ===")
+        
+        // 测试 async/await
+        testAsyncAwait()
+        
+        // 测试 coroutineScope
+        testCoroutineScope()
+        
+        // 测试 supervisorScope
+        testSupervisorScope()
+        
+        // 测试 withTimeout
+        testWithTimeout()
+        
+        Log.d("KotlinLearning", "=== testAdvancedCoroutines completed ===")
+    }
+    
+    /**
+     * 测试 async/await
+     */
+    private suspend fun testAsyncAwait() {
+        Log.d("KotlinLearning", "=== testAsyncAwait called ===")
+        
+        // async - 协程构建器
+        // 作用：启动一个异步协程，返回 Deferred 对象
+        // 使用方式：val deferred = async { 协程代码 }
+        // await - 等待函数
+        // 作用：等待 Deferred 对象完成并返回结果
+        // 使用方式：val result = deferred.await()
+        coroutineScope {
+            val deferred1 = async {
+                Log.d("KotlinLearning", "Async 1 started")
+                delay(1000)
+                Log.d("KotlinLearning", "Async 1 completed")
+                42
+            }
+            
+            val deferred2 = async {
+                Log.d("KotlinLearning", "Async 2 started")
+                delay(1500)
+                Log.d("KotlinLearning", "Async 2 completed")
+                "Hello"
+            }
+            
+            val result1 = deferred1.await()
+            val result2 = deferred2.await()
+            Log.d("KotlinLearning", "Async results: $result1, $result2")
+        }
+        
+        Log.d("KotlinLearning", "=== testAsyncAwait completed ===")
+    }
+    
+    /**
+     * 测试 coroutineScope
+     */
+    private suspend fun testCoroutineScope() {
+        Log.d("KotlinLearning", "=== testCoroutineScope called ===")
+        
+        // coroutineScope - 协程作用域构建器
+        // 作用：创建一个协程作用域，等待所有子协程完成
+        // 使用方式：coroutineScope { 协程代码 }
+        coroutineScope {
+            launch {
+                Log.d("KotlinLearning", "CoroutineScope launch 1 started")
+                delay(1000)
+                Log.d("KotlinLearning", "CoroutineScope launch 1 completed")
+            }
+            
+            launch {
+                Log.d("KotlinLearning", "CoroutineScope launch 2 started")
+                delay(1500)
+                Log.d("KotlinLearning", "CoroutineScope launch 2 completed")
+            }
+            
+            Log.d("KotlinLearning", "CoroutineScope body")
+        }
+        
+        Log.d("KotlinLearning", "=== testCoroutineScope completed ===")
+    }
+    
+    /**
+     * 测试 supervisorScope
+     */
+    private suspend fun testSupervisorScope() {
+        Log.d("KotlinLearning", "=== testSupervisorScope called ===")
+        
+        // supervisorScope - 监督协程作用域构建器
+        // 作用：创建一个监督协程作用域，子协程失败不会影响其他子协程
+        // 使用方式：supervisorScope { 协程代码 }
+        supervisorScope {
+            launch {
+                Log.d("KotlinLearning", "SupervisorScope launch 1 started")
+                delay(1000)
+                throw Exception("Test exception")
+            }
+            
+            launch {
+                Log.d("KotlinLearning", "SupervisorScope launch 2 started")
+                delay(1500)
+                Log.d("KotlinLearning", "SupervisorScope launch 2 completed")
+            }
+        }
+        
+        Log.d("KotlinLearning", "=== testSupervisorScope completed ===")
+    }
+    
+    /**
+     * 测试 withTimeout
+     */
+    private suspend fun testWithTimeout() {
+        Log.d("KotlinLearning", "=== testWithTimeout called ===")
+        
+        // withTimeout - 超时函数
+        // 作用：设置协程执行的超时时间
+        // 使用方式：withTimeout(毫秒) { 协程代码 }
+        try {
+            withTimeout(1000) {
+                Log.d("KotlinLearning", "withTimeout started")
+                delay(1500)
+                Log.d("KotlinLearning", "withTimeout completed")
+            }
+        } catch (e: kotlinx.coroutines.TimeoutCancellationException) {
+            Log.d("KotlinLearning", "Timeout exception caught: ${e.message}")
+        }
+        
+        Log.d("KotlinLearning", "=== testWithTimeout completed ===")
     }
 }

@@ -67,6 +67,77 @@ object Singleton {
     }
 }
 
+// 枚举类
+// enum class - 枚举类关键字
+// 作用：创建一个枚举类型，包含一组常量
+// 使用方式：enum class 枚举名 {
+//     常量1,
+//     常量2,
+//     ...
+// }
+enum class Direction {
+    NORTH, SOUTH, EAST, WEST
+}
+
+// 包含伴生对象的类
+// companion object - 伴生对象关键字
+// 作用：在类中创建一个与类关联的单例对象
+// 使用方式：class 类名 {
+//     companion object {
+//         // 伴生对象成员
+//     }
+// }
+class Company {
+    // init - 初始化块关键字
+    // 作用：在创建对象时执行的代码块
+    // 使用方式：class 类名 {
+    //     init {
+    //         // 初始化代码
+    //     }
+    // }
+    init {
+        Log.d("KotlinLearning", "Company 初始化块执行")
+    }
+    
+    companion object {
+        const val COMPANY_NAME = "Tech Corp"
+        fun create(): Company {
+            return Company()
+        }
+    }
+}
+
+// 内部类
+// inner class - 内部类关键字
+// 作用：创建一个可以访问外部类成员的嵌套类
+// 使用方式：class 外部类 {
+//     inner class 内部类 {
+//         // 内部类成员
+//     }
+// }
+class OuterClass {
+    private val outerProperty = "Outer Property"
+    
+    inner class InnerClass {
+        fun getOuterProperty(): String {
+            return outerProperty
+        }
+    }
+}
+
+// 延迟初始化
+// by lazy - 延迟初始化关键字
+// 作用：延迟初始化属性，第一次访问时才初始化
+// 使用方式：val 变量名: 类型 by lazy {
+//     初始化代码
+// }
+class LazyExample {
+    val expensiveProperty by lazy {
+        Log.d("KotlinLearning", "初始化 expensiveProperty")
+        "Expensive Value"
+    }
+}
+
 /**
  * 类和对象示例类
  */
@@ -100,6 +171,35 @@ class ClassesAndObjects {
         // 使用单例对象
         Log.d("KotlinLearning", "Using singleton:")
         Singleton.doSomething()
+        
+        // 测试枚举类
+        Log.d("KotlinLearning", "\n测试枚举类:")
+        val direction = Direction.NORTH
+        Log.d("KotlinLearning", "Direction: $direction")
+        
+        // 测试伴生对象
+        Log.d("KotlinLearning", "\n测试伴生对象:")
+        Log.d("KotlinLearning", "Company name: ${Company.COMPANY_NAME}")
+        val company = Company.create()
+        Log.d("KotlinLearning", "Created company: $company")
+        
+        // 测试内部类
+        Log.d("KotlinLearning", "\n测试内部类:")
+        val outer = OuterClass()
+        val inner = outer.InnerClass()
+        val outerProperty = inner.getOuterProperty()
+        Log.d("KotlinLearning", "Outer property from inner class: $outerProperty")
+        
+        // 测试延迟初始化
+        Log.d("KotlinLearning", "\n测试延迟初始化:")
+        val lazyExample = LazyExample()
+        Log.d("KotlinLearning", "LazyExample created")
+        // 第一次访问触发初始化
+        val value = lazyExample.expensiveProperty
+        Log.d("KotlinLearning", "Expensive property value: $value")
+        // 第二次访问使用缓存的值
+        val value2 = lazyExample.expensiveProperty
+        Log.d("KotlinLearning", "Expensive property value (second access): $value2")
         
         Log.d("KotlinLearning", "=== ClassesAndObjects.runClassesAndObjects completed ===")
     }
