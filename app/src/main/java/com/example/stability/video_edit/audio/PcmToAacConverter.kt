@@ -217,7 +217,9 @@ class PcmToAacConverter {
                                             encoderOutputBuffer.position(bufferInfo.offset)
                                             encoderOutputBuffer.limit(bufferInfo.offset + bufferInfo.size)
                                             encoderOutputBuffer.get(aacData)
-                                            
+
+                                            // 打印写入的 AAC 数据大小和时间戳
+//                                            android.util.Log.d(TAG, "写入 AAC 数据大小: ${bufferInfo.size}, 时间戳: ${bufferInfo.presentationTimeUs} us")
                                             outputStream.write(aacData)
                                             totalBytesWritten += bufferInfo.size
                                             

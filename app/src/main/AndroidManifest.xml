@@ -60,6 +60,15 @@
         <activity
             android:name=".video_edit.VideoEditActivity"
             android:exported="true" />
+        <activity
+            android:name=".video_edit.VideoPlayerActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="video/mp4" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

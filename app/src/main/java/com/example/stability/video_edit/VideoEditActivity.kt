@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -25,6 +26,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 /**
  * 视频编辑页面
@@ -34,6 +36,7 @@ import kotlinx.coroutines.withContext
  * 2. 页面底部显示视频时间戳和对应的缩略图
  */
 class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
+    private val TAG = "VideoEditActivity"
 
     private var videoPlayer: ExoPlayer? = null
     private var musicPlayer: ExoPlayer? = null
@@ -64,8 +67,8 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
         
         // 检查 intent 额外参数
         val isExportMode = intent?.getBooleanExtra("export", false)
-        android.util.Log.d("VideoEditActivity", "onCreate: isExportMode = $isExportMode")
-        android.util.Log.d("VideoEditActivity", "onCreate: intent = $intent")
+        Log.d("VideoEditActivity", "onCreate: isExportMode = $isExportMode")
+        Log.d("VideoEditActivity", "onCreate: intent = $intent")
         
         initViews()
         setupPlayer()
@@ -75,7 +78,7 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
         
         // 检查是否需要自动导出
         if (isExportMode == true) {
-            android.util.Log.d("VideoEditActivity", "自动导出模式启动")
+            Log.d("VideoEditActivity", "自动导出模式启动")
             // 延迟执行导出，确保权限检查和文件准备完成
             Handler().postDelayed({
                 showExportDialog()
@@ -87,7 +90,7 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
      * 测试导出功能的方法
      */
     fun testExport(view: android.view.View) {
-        android.util.Log.d("VideoEditActivity", "testExport: 开始测试导出功能")
+        Log.d("VideoEditActivity", "testExport: 开始测试导出功能")
         showExportDialog()
     }
 
@@ -108,7 +111,7 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
      * 拷贝 raw 目录下的文件到外部存储的 Download 目录，并进行格式转换
      */
     private fun copyRawFilesToExternalStorage() {
-        android.util.Log.d("VideoEditActivity", "开始拷贝文件到外部存储...")
+        Log.d("VideoEditActivity", "开始拷贝文件到外部存储...")
         
         // 在后台线程执行文件拷贝和转换
         CoroutineScope(Dispatchers.IO).launch {
@@ -119,7 +122,7 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
                 // 拷贝并转换音频文件：MP3 -> PCM -> AAC
                 copyAndConvertAudioFile(R.raw.suzume_no_tojimari, "suzume_no_tojimari")
                 
-                android.util.Log.d("VideoEditActivity", "文件拷贝和转换完成")
+                Log.d("VideoEditActivity", "文件拷贝和转换完成")
                 
                 // 转换完成后，在主线程加载视频
                 withContext(Dispatchers.Main) {
@@ -127,7 +130,7 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
                     
                     // 检查是否需要自动导出
                     if (intent?.getBooleanExtra("export", false) == true) {
-                        android.util.Log.d("VideoEditActivity", "自动导出模式启动")
+                        Log.d("VideoEditActivity", "自动导出模式启动")
                         // 延迟执行导出，确保视频加载完成
                         Handler().postDelayed({
                             showExportDialog()
@@ -135,7 +138,7 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
                     }
                 }
             } catch (e: Exception) {
-                android.util.Log.e("VideoEditActivity", "文件处理失败: ${e.message}")
+                Log.e("VideoEditActivity", "文件处理失败: ${e.message}")
                 // 即使失败也尝试加载视频
                 withContext(Dispatchers.Main) {
                     loadVideo()
@@ -155,7 +158,7 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
             
             // 检查文件是否已经存在
             if (targetFile.exists()) {
-                android.util.Log.d("VideoEditActivity", "文件已存在: ${targetFile.absolutePath}")
+                Log.d("VideoEditActivity", "文件已存在: ${targetFile.absolutePath}")
                 return
             }
             
@@ -174,11 +177,11 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
             inputStream.close()
             outputStream.close()
             
-            android.util.Log.d("VideoEditActivity", "文件拷贝成功: ${targetFile.absolutePath}")
-            android.util.Log.d("VideoEditActivity", "文件大小: ${targetFile.length()} bytes")
+            Log.d("VideoEditActivity", "文件拷贝成功: ${targetFile.absolutePath}")
+            Log.d("VideoEditActivity", "文件大小: ${targetFile.length()} bytes")
             
         } catch (e: Exception) {
-            android.util.Log.e("VideoEditActivity", "拷贝文件失败 ($fileName): ${e.message}")
+            Log.e("VideoEditActivity", "拷贝文件失败 ($fileName): ${e.message}")
         }
     }
 
@@ -194,14 +197,14 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
             // 检查 AAC 文件是否已经存在
             val aacFile = java.io.File(appDir, "$baseFileName.aac")
             if (aacFile.exists()) {
-                android.util.Log.d("VideoEditActivity", "AAC 文件已存在: ${aacFile.absolutePath}")
+                Log.d("VideoEditActivity", "AAC 文件已存在: ${aacFile.absolutePath}")
 //                return
             }
             
             // 拷贝 MP3 文件
             val mp3File = java.io.File(appDir, "$baseFileName.mp3")
             if (true) {
-                android.util.Log.d("VideoEditActivity", "开始拷贝 MP3 文件...")
+                Log.d("VideoEditActivity", "开始拷贝 MP3 文件...")
                 val inputStream = resources.openRawResource(rawResId)
                 val outputStream = java.io.FileOutputStream(mp3File)
                 
@@ -214,16 +217,16 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
                 inputStream.close()
                 outputStream.close()
                 
-                android.util.Log.d("VideoEditActivity", "MP3 文件拷贝成功: ${mp3File.absolutePath}")
-                android.util.Log.d("VideoEditActivity", "MP3 文件大小: ${mp3File.length()} bytes")
+                Log.d("VideoEditActivity", "MP3 文件拷贝成功: ${mp3File.absolutePath}")
+                Log.d("VideoEditActivity", "MP3 文件大小: ${mp3File.length()} bytes")
             } else {
-                android.util.Log.d("VideoEditActivity", "MP3 文件已存在: ${mp3File.absolutePath}")
+                Log.d("VideoEditActivity", "MP3 文件已存在: ${mp3File.absolutePath}")
             }
             
             // 转换 MP3 到 PCM
             val pcmFile = java.io.File(appDir, "$baseFileName.pcm")
             if (true) {
-                android.util.Log.d("VideoEditActivity", "开始转换 MP3 到 PCM...")
+                Log.d("VideoEditActivity", "开始转换 MP3 到 PCM...")
                 
                 val mp3ToPcmConverter = Mp3ToPcmConverter()
                 val pcmResult = mp3ToPcmConverter.convertMp3ToPcmSync(mp3File.absolutePath, appDir.absolutePath)
@@ -232,20 +235,20 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
                     // 重命名 PCM 文件
                     val tempPcmFile = java.io.File(pcmResult.outputPath)
                     if (tempPcmFile.renameTo(pcmFile)) {
-                        android.util.Log.d("VideoEditActivity", "MP3 到 PCM 转换成功: ${pcmFile.absolutePath}")
+                        Log.d("VideoEditActivity", "MP3 到 PCM 转换成功: ${pcmFile.absolutePath}")
                     } else {
-                        android.util.Log.d("VideoEditActivity", "PCM 文件已在: ${tempPcmFile.absolutePath}")
+                        Log.d("VideoEditActivity", "PCM 文件已在: ${tempPcmFile.absolutePath}")
                     }
                 } else {
-                    android.util.Log.e("VideoEditActivity", "MP3 到 PCM 转换失败: ${pcmResult.errorMessage}")
+                    Log.e("VideoEditActivity", "MP3 到 PCM 转换失败: ${pcmResult.errorMessage}")
                     return
                 }
             } else {
-                android.util.Log.d("VideoEditActivity", "PCM 文件已存在: ${pcmFile.absolutePath}")
+                Log.d("VideoEditActivity", "PCM 文件已存在: ${pcmFile.absolutePath}")
             }
             
             // 转换 PCM 到 AAC
-            android.util.Log.d("VideoEditActivity", "开始转换 PCM 到 AAC...")
+            Log.d("VideoEditActivity", "开始转换 PCM 到 AAC...")
             
             val pcmToAacConverter = PcmToAacConverter()
             val aacResult = pcmToAacConverter.convertPcmToAacSync(
@@ -255,16 +258,16 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
             )
             
             if (aacResult.success) {
-                android.util.Log.d("VideoEditActivity", "PCM 到 AAC 转换成功: ${aacFile.absolutePath}")
+                Log.d("VideoEditActivity", "PCM 到 AAC 转换成功: ${aacFile.absolutePath}")
                 
                 // 保留 PCM 文件，用于导出时直接编码
-                android.util.Log.d("VideoEditActivity", "保留 PCM 文件: ${pcmFile.absolutePath}")
+                Log.d("VideoEditActivity", "保留 PCM 文件: ${pcmFile.absolutePath}")
             } else {
-                android.util.Log.e("VideoEditActivity", "PCM 到 AAC 转换失败: ${aacResult.errorMessage}")
+                Log.e("VideoEditActivity", "PCM 到 AAC 转换失败: ${aacResult.errorMessage}")
             }
             
         } catch (e: Exception) {
-            android.util.Log.e("VideoEditActivity", "音频文件转换失败 ($baseFileName): ${e.message}")
+            Log.e("VideoEditActivity", "音频文件转换失败 ($baseFileName): ${e.message}")
         }
     }
 
@@ -291,9 +294,9 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
             val videoPerm = checkSelfPermission(android.Manifest.permission.READ_MEDIA_VIDEO)
             val audioPerm = checkSelfPermission(android.Manifest.permission.READ_MEDIA_AUDIO)
             
-            android.util.Log.d("VideoEditActivity", "Android 13+ 权限检查:")
-            android.util.Log.d("VideoEditActivity", "READ_MEDIA_VIDEO: ${if (videoPerm == android.content.pm.PackageManager.PERMISSION_GRANTED) "GRANTED" else "DENIED"}")
-            android.util.Log.d("VideoEditActivity", "READ_MEDIA_AUDIO: ${if (audioPerm == android.content.pm.PackageManager.PERMISSION_GRANTED) "GRANTED" else "DENIED"}")
+            Log.d("VideoEditActivity", "Android 13+ 权限检查:")
+            Log.d("VideoEditActivity", "READ_MEDIA_VIDEO: ${if (videoPerm == android.content.pm.PackageManager.PERMISSION_GRANTED) "GRANTED" else "DENIED"}")
+            Log.d("VideoEditActivity", "READ_MEDIA_AUDIO: ${if (audioPerm == android.content.pm.PackageManager.PERMISSION_GRANTED) "GRANTED" else "DENIED"}")
             
             return videoPerm == android.content.pm.PackageManager.PERMISSION_GRANTED &&
                    audioPerm == android.content.pm.PackageManager.PERMISSION_GRANTED
@@ -301,8 +304,8 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
             // Android 12- 只需要 READ_EXTERNAL_STORAGE 权限（写入到应用私有目录不需要权限）
             val readPerm = checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE)
             
-            android.util.Log.d("VideoEditActivity", "Android 12- 权限检查:")
-            android.util.Log.d("VideoEditActivity", "READ_EXTERNAL_STORAGE: ${if (readPerm == android.content.pm.PackageManager.PERMISSION_GRANTED) "GRANTED" else "DENIED"}")
+            Log.d("VideoEditActivity", "Android 12- 权限检查:")
+            Log.d("VideoEditActivity", "READ_EXTERNAL_STORAGE: ${if (readPerm == android.content.pm.PackageManager.PERMISSION_GRANTED) "GRANTED" else "DENIED"}")
             
             return readPerm == android.content.pm.PackageManager.PERMISSION_GRANTED
         }
@@ -427,11 +430,11 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
         
         exoPlayer.addListener(object : Player.Listener {
             override fun onPlaybackStateChanged(playbackState: Int) {
-                android.util.Log.d("VideoEditActivity", "Video player state: $playbackState")
+                Log.d("VideoEditActivity", "Video player state: $playbackState")
                 when (playbackState) {
                     Player.STATE_READY -> {
                         videoDuration = exoPlayer.duration
-                        android.util.Log.d("VideoEditActivity", "Video duration: $videoDuration ms")
+                        Log.d("VideoEditActivity", "Video duration: $videoDuration ms")
                         updateThumbnailTimeline()
                     }
                     Player.STATE_ENDED -> {
@@ -439,10 +442,10 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
                         musicPlayer?.stop()
                     }
                     Player.STATE_IDLE -> {
-                        android.util.Log.d("VideoEditActivity", "Video player idle state")
+                        Log.d("VideoEditActivity", "Video player idle state")
                     }
                     Player.STATE_BUFFERING -> {
-                        android.util.Log.d("VideoEditActivity", "Video player buffering state")
+                        Log.d("VideoEditActivity", "Video player buffering state")
                     }
                 }
             }
@@ -465,16 +468,16 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
         val musicExoPlayer = ExoPlayer.Builder(this).build()
         musicExoPlayer.addListener(object : Player.Listener {
             override fun onPlaybackStateChanged(playbackState: Int) {
-                android.util.Log.d("VideoEditActivity", "Music player state: $playbackState")
+                Log.d("VideoEditActivity", "Music player state: $playbackState")
                 if (playbackState == Player.STATE_READY) {
                     musicDuration = musicExoPlayer.duration
-                    android.util.Log.d("VideoEditActivity", "Music duration: $musicDuration ms")
+                    Log.d("VideoEditActivity", "Music duration: $musicDuration ms")
                     // 基于音乐时长更新音乐时间戳
                     updateMusicTimelineByDuration(musicDuration)
                     musicTimelineUpdated = true
                 } else if (playbackState == Player.STATE_IDLE && !musicTimelineUpdated) {
                     // 如果音乐加载失败且时间戳尚未更新，使用默认时长显示时间戳
-                    android.util.Log.d("VideoEditActivity", "Music loading failed, using default duration")
+                    Log.d("VideoEditActivity", "Music loading failed, using default duration")
                     updateMusicTimelineByDuration(24000) // 默认24秒
                 }
             }
@@ -489,7 +492,7 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
         
         // 检查视频文件是否存在（在应用私有目录）
         val videoFile = java.io.File(appDir, "sample_video_v1.mp4")
-        android.util.Log.d("VideoEditActivity", "Video file exists: ${videoFile.exists()}, size: ${if (videoFile.exists()) videoFile.length() else 0} bytes")
+        Log.d("VideoEditActivity", "Video file exists: ${videoFile.exists()}, size: ${if (videoFile.exists()) videoFile.length() else 0} bytes")
         
         // 读取视频文件的前 4 个字节（用于验证文件格式）
         if (videoFile.exists()) {
@@ -503,8 +506,8 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
                 if (videoBytesRead > 0) {
                     val videoHeaderHex = videoHeader.take(videoBytesRead).joinToString(" ") { String.format("%02X", it) }
                     val videoHeaderAscii = videoHeader.take(videoBytesRead).map { if (it in 32..126) it.toInt().toChar() else '.' }.joinToString("")
-                    android.util.Log.d("VideoEditActivity", "Video first $videoBytesRead bytes (hex): $videoHeaderHex")
-                    android.util.Log.d("VideoEditActivity", "Video first $videoBytesRead bytes (ascii): $videoHeaderAscii")
+                    Log.d("VideoEditActivity", "Video first $videoBytesRead bytes (hex): $videoHeaderHex")
+                    Log.d("VideoEditActivity", "Video first $videoBytesRead bytes (ascii): $videoHeaderAscii")
                     
                     // 根据文件头识别文件类型
                     val videoMagicNumber = when {
@@ -512,23 +515,23 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
                         videoHeaderHex.startsWith("00 00 00") -> "Possible MP4/MOV"
                         else -> "Unknown"
                     }
-                    android.util.Log.d("VideoEditActivity", "Video format guess: $videoMagicNumber")
+                    Log.d("VideoEditActivity", "Video format guess: $videoMagicNumber")
                 }
             } catch (e: Exception) {
-                android.util.Log.e("VideoEditActivity", "Error reading video header: ${e.message}")
+                Log.e("VideoEditActivity", "Error reading video header: ${e.message}")
             }
         }
         
         // 加载视频文件（从应用私有目录）- 使用 file:// 格式
         val videoUri = Uri.fromFile(videoFile)
-        android.util.Log.d("VideoEditActivity", "Loading video from: $videoUri")
+        Log.d("VideoEditActivity", "Loading video from: $videoUri")
         val videoMediaItem = MediaItem.fromUri(videoUri)
         videoPlayer?.setMediaItem(videoMediaItem)
         videoPlayer?.prepare()
         
         // 检查音乐文件是否存在（在应用私有目录）
         val musicFile = java.io.File(appDir, "suzume_no_tojimari.aac")
-        android.util.Log.d("VideoEditActivity", "Music file exists: ${musicFile.exists()}, size: ${if (musicFile.exists()) musicFile.length() else 0} bytes")
+        Log.d("VideoEditActivity", "Music file exists: ${musicFile.exists()}, size: ${if (musicFile.exists()) musicFile.length() else 0} bytes")
         
         // 读取音频文件的前 4 个字节（用于验证文件格式）
         if (musicFile.exists()) {
@@ -542,8 +545,8 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
                 if (musicBytesRead > 0) {
                     val musicHeaderHex = musicHeader.take(musicBytesRead).joinToString(" ") { String.format("%02X", it) }
                     val musicHeaderAscii = musicHeader.take(musicBytesRead).map { if (it in 32..126) it.toInt().toChar() else '.' }.joinToString("")
-                    android.util.Log.d("VideoEditActivity", "Music first $musicBytesRead bytes (hex): $musicHeaderHex")
-                    android.util.Log.d("VideoEditActivity", "Music first $musicBytesRead bytes (ascii): $musicHeaderAscii")
+                    Log.d("VideoEditActivity", "Music first $musicBytesRead bytes (hex): $musicHeaderHex")
+                    Log.d("VideoEditActivity", "Music first $musicBytesRead bytes (ascii): $musicHeaderAscii")
                     
                     // 根据文件头识别文件类型
                     val musicMagicNumber = when {
@@ -555,10 +558,10 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
                         musicHeaderHex.startsWith("21 11 45") -> "AAC (Raw)"
                         else -> "Unknown"
                     }
-                    android.util.Log.d("VideoEditActivity", "Music format guess: $musicMagicNumber")
+                    Log.d("VideoEditActivity", "Music format guess: $musicMagicNumber")
                 }
             } catch (e: Exception) {
-                android.util.Log.e("VideoEditActivity", "Error reading music header: ${e.message}")
+                Log.e("VideoEditActivity", "Error reading music header: ${e.message}")
             }
         }
         
@@ -566,15 +569,15 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
         try {
             // 尝试 1: 使用 file:// 格式
             val musicUri1 = Uri.fromFile(musicFile)
-            android.util.Log.d("VideoEditActivity", "Trying music URI (file://): $musicUri1")
+            Log.d("VideoEditActivity", "Trying music URI (file://): $musicUri1")
             val musicMediaItem1 = MediaItem.fromUri(musicUri1)
             musicPlayer?.setMediaItem(musicMediaItem1)
             musicPlayer?.prepare()
-            android.util.Log.d("VideoEditActivity", "Music loaded with file:// URI")
+            Log.d("VideoEditActivity", "Music loaded with file:// URI")
         } catch (e1: Exception) {
-            android.util.Log.e("VideoEditActivity", "Error loading music with file:// URI: ${e1.message}")
+            Log.e("VideoEditActivity", "Error loading music with file:// URI: ${e1.message}")
             // 音乐加载失败，使用默认时长 24 秒
-            android.util.Log.d("VideoEditActivity", "Music loading failed, using default duration")
+            Log.d("VideoEditActivity", "Music loading failed, using default duration")
             updateMusicTimelineByDuration(24000) // 默认24秒
         }
         
@@ -620,21 +623,21 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
     private fun extractThumbnail(videoUri: Uri, timeMs: Long): Bitmap? {
         val retriever = MediaMetadataRetriever()
         return try {
-            android.util.Log.d("VideoEditActivity", "提取缩略图，URI: $videoUri, 时间: $timeMs ms")
+            Log.d("VideoEditActivity", "提取缩略图，URI: $videoUri, 时间: $timeMs ms")
             retriever.setDataSource(this, videoUri)
             // 获取指定时间的帧作为缩略图
             val bitmap = retriever.getFrameAtTime(timeMs * 1000, MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
-            android.util.Log.d("VideoEditActivity", "缩略图提取结果: ${if (bitmap != null) "成功" else "失败"}")
+            Log.d("VideoEditActivity", "缩略图提取结果: ${if (bitmap != null) "成功" else "失败"}")
             bitmap
         } catch (e: Exception) {
-            android.util.Log.e("VideoEditActivity", "提取缩略图失败: ${e.message}")
+            Log.e("VideoEditActivity", "提取缩略图失败: ${e.message}")
             e.printStackTrace()
             null
         } finally {
             try {
                 retriever.release()
             } catch (e: Exception) {
-                android.util.Log.e("VideoEditActivity", "释放 MediaMetadataRetriever 失败: ${e.message}")
+                Log.e("VideoEditActivity", "释放 MediaMetadataRetriever 失败: ${e.message}")
                 e.printStackTrace()
             }
         }
@@ -660,7 +663,7 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
         val videoFile = java.io.File(filesDir, "sample_video_v1.mp4")
         val videoUri = Uri.fromFile(videoFile)
         val thumbnailCount = (videoDuration / thumbnailInterval + 1).toInt()
-        android.util.Log.d("VideoEditActivity", "Thumbnail count: $thumbnailCount, interval: $thumbnailInterval")
+        Log.d("VideoEditActivity", "Thumbnail count: $thumbnailCount, interval: $thumbnailInterval")
         val thumbnails = mutableListOf<ThumbnailInfo>()
         
         // 异步提取缩略图
@@ -743,7 +746,7 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
         musicTimeline?.removeAllViews()
         
         val musicCount = (duration / thumbnailInterval + 1).toInt()
-        android.util.Log.d("VideoEditActivity", "Music timeline count: $musicCount")
+        Log.d("VideoEditActivity", "Music timeline count: $musicCount")
         
         for (i in 0 until musicCount) {
             val timeMs = i * thumbnailInterval
@@ -852,8 +855,8 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
             val hasAudio = try {
                 val audioDuration = retriever.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION)
                 val hasAudioTrack = retriever.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_HAS_AUDIO)
-                android.util.Log.d("VideoEditActivity", "音频时长: $audioDuration")
-                android.util.Log.d("VideoEditActivity", "是否有音频轨道: $hasAudioTrack")
+                Log.d("VideoEditActivity", "音频时长: $audioDuration")
+                Log.d("VideoEditActivity", "是否有音频轨道: $hasAudioTrack")
                 hasAudioTrack == "yes" || audioDuration != null
             } catch (e: Exception) {
                 false
@@ -877,8 +880,8 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
                 val videoWidth = retrieverVideo.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)
                 val videoHeight = retrieverVideo.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)
                 val hasVideoTrack = retrieverVideo.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_HAS_VIDEO)
-                android.util.Log.d("VideoEditActivity", "视频分辨率: ${videoWidth}x${videoHeight}")
-                android.util.Log.d("VideoEditActivity", "是否有视频轨道: $hasVideoTrack")
+                Log.d("VideoEditActivity", "视频分辨率: ${videoWidth}x${videoHeight}")
+                Log.d("VideoEditActivity", "是否有视频轨道: $hasVideoTrack")
                 hasVideoTrack == "yes" || (videoWidth != null && videoHeight != null)
             } catch (e: Exception) {
                 false
@@ -900,7 +903,7 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
             return ValidationResult(true, "导出文件验证成功\n文件大小: %.2f MB\n包含音频和视频数据".format(fileSizeMB))
             
         } catch (e: Exception) {
-            android.util.Log.e("VideoEditActivity", "验证导出结果失败: ${e.message}")
+            Log.e("VideoEditActivity", "验证导出结果失败: ${e.message}")
             e.printStackTrace()
             return ValidationResult(false, "验证过程出错: ${e.message}")
         }
@@ -943,141 +946,97 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
 
                 dialog.dismiss()
                 if (validationResult.isSuccess) {
-                    android.widget.Toast.makeText(
-                        this@VideoEditActivity,
-                        "导出成功: $outputPath\n${validationResult.message}",
-                        android.widget.Toast.LENGTH_LONG
-                    ).show()
+                    val text = "导出成功: $outputPath\n${validationResult.message}"
+                    Log.d(TAG, "showExportDialog: $text")
+                    // 使用显式 Intent 启动 VideoPlayerActivity
+                    val intent = android.content.Intent(this@VideoEditActivity, VideoPlayerActivity::class.java)
+                    intent.putExtra("video_path", outputPath)
+                    startActivity(intent)
                 } else {
-                    android.widget.Toast.makeText(
-                        this@VideoEditActivity,
-                        "导出完成但验证失败: ${validationResult.message}",
-                        android.widget.Toast.LENGTH_LONG
-                    ).show()
+                    val text = "导出完成但验证失败: ${validationResult.message}"
+                    Log.d(TAG, "showExportDialog: $text")
                 }
             } catch (e: Exception) {
                 dialog.dismiss()
-                android.widget.Toast.makeText(
-                    this@VideoEditActivity,
-                    "导出失败: ${e.message}",
-                    android.widget.Toast.LENGTH_LONG
-                ).show()
+                val text = "导出失败: ${e.message}"
+                Log.d(TAG, "showExportDialog: $text")
             }
         }
     }
 
+    /**
+     * 导出视频和音频合成新文件
+     * @param progressBar 进度条，用于显示导出进度
+     * @param progressText 进度文本，用于显示当前进度百分比
+     * @param statusText 状态文本，用于显示当前操作状态
+     * @return 导出文件的绝对路径
+     */
     private fun exportVideoWithAudio(
         progressBar: ProgressBar,
         progressText: TextView,
         statusText: TextView
     ): String {
-        // 创建临时文件路径
-        val outputDir = getExternalFilesDir(null)
+        // 创建临时文件路径，使用时间戳确保文件名唯一
+        val outputDir = getExternalFilesDir(null) // 获取应用外部存储目录
         val outputFile = java.io.File(outputDir, "exported_video_${System.currentTimeMillis()}.mp4")
 
-        // 更新UI（在主线程）
+        // 更新UI（在主线程），显示准备导出的状态
         Handler(Looper.getMainLooper()).post {
             statusText.text = "正在准备导出..."
             progressBar.progress = 0
         }
 
         try {
-            // 获取视频和音频资源（从应用私有目录）- 使用 file:// 格式
-            val videoFile = java.io.File(filesDir, "sample_video_v1.mp4")
-            val audioFile = java.io.File(filesDir, "suzume_no_tojimari.aac")
-            val pcmFile = java.io.File(filesDir, "suzume_no_tojimari.pcm")
+            // 获取视频和音频资源（从应用私有目录）
+            val videoFile = java.io.File(filesDir, "sample_video_v1.mp4") // 视频文件
+            val pcmFile = java.io.File(filesDir, "suzume_no_tojimari.pcm") // PCM 音频文件
             
-            // 验证文件存在性
-            android.util.Log.d("VideoEditActivity", "视频文件存在: ${videoFile.exists()}, 大小: ${if (videoFile.exists()) videoFile.length() else 0} bytes")
-            android.util.Log.d("VideoEditActivity", "音频文件存在: ${audioFile.exists()}, 大小: ${if (audioFile.exists()) audioFile.length() else 0} bytes")
-            android.util.Log.d("VideoEditActivity", "PCM 文件存在: ${pcmFile.exists()}, 大小: ${if (pcmFile.exists()) pcmFile.length() else 0} bytes")
+            // 验证文件存在性并记录日志
+            Log.d("VideoEditActivity", "视频文件存在: ${videoFile.exists()}, 大小: ${if (videoFile.exists()) videoFile.length() else 0} bytes")
+            Log.d("VideoEditActivity", "PCM 文件存在: ${pcmFile.exists()}, 大小: ${if (pcmFile.exists()) pcmFile.length() else 0} bytes")
             
+            // 检查视频文件是否存在
             if (!videoFile.exists()) {
                 throw java.io.IOException("视频文件不存在: ${videoFile.absolutePath}")
             }
 
-            val videoUri = Uri.fromFile(videoFile)
-            android.util.Log.d("VideoEditActivity", "Exporting video from: $videoUri")
+            val videoUri = Uri.fromFile(videoFile) // 转换为 URI 格式
+            Log.d("VideoEditActivity", "Exporting video from: $videoUri")
 
-            // 更新UI（在主线程）
+            // 更新UI（在主线程），显示处理视频的状态
             Handler(Looper.getMainLooper()).post {
                 statusText.text = "正在处理视频..."
                 progressBar.progress = 30
             }
 
             // 提取视频轨道（不含音频）
-            val videoExtractor = android.media.MediaExtractor()
-            videoExtractor.setDataSource(this, videoUri, null)
+            val videoExtractor = android.media.MediaExtractor() // 创建媒体提取器
+            videoExtractor.setDataSource(this, videoUri, null) // 设置数据源
             
-            var videoTrackIndex = -1
-            var videoFormat: android.media.MediaFormat? = null
+            var videoTrackIndex = -1 // 视频轨道索引
+            var videoFormat: android.media.MediaFormat? = null // 视频格式
             
+            // 遍历所有轨道，找到视频轨道
             for (i in 0 until videoExtractor.trackCount) {
-                val format = videoExtractor.getTrackFormat(i)
-                val mime = format.getString(android.media.MediaFormat.KEY_MIME)
-                if (mime?.startsWith("video/") == true) {
-                    videoFormat = format
-                    videoExtractor.selectTrack(i)
+                val format = videoExtractor.getTrackFormat(i) // 获取轨道格式
+                val mime = format.getString(android.media.MediaFormat.KEY_MIME) // 获取 MIME 类型
+                if (mime?.startsWith("video/") == true) { // 检查是否为视频轨道
+                    videoFormat = format // 保存视频格式
+                    // 打印视频轨道格式
+                    Log.d("VideoEditActivity", "视频轨道格式: $format")
+                    videoExtractor.selectTrack(i) // 选择视频轨道
                     break
                 }
             }
 
             // 提取音频轨道格式
-            var audioTrackIndex = -1
-            var audioFormat: android.media.MediaFormat? = null
-            
-            try {
-                // 直接使用 PCM 文件进行编码
-                if (pcmFile.exists() && pcmFile.length() > 0) {
-                    android.util.Log.d("VideoEditActivity", "使用 PCM 文件进行编码: ${pcmFile.absolutePath}")
-                    
-                    // 配置 AAC 编码器
-                    val sampleRate = 44100
-                    val channelCount = 2
-                    val bitRate = 128000
-                    
-                    val encoder = android.media.MediaCodec.createEncoderByType("audio/mp4a-latm")
-                    val aacFormat = android.media.MediaFormat.createAudioFormat(
-                        "audio/mp4a-latm",
-                        sampleRate,
-                        channelCount
-                    )
-                    aacFormat.setInteger(android.media.MediaFormat.KEY_BIT_RATE, bitRate)
-                    aacFormat.setInteger(android.media.MediaFormat.KEY_AAC_PROFILE, android.media.MediaCodecInfo.CodecProfileLevel.AACObjectLC)
-                    aacFormat.setInteger(android.media.MediaFormat.KEY_MAX_INPUT_SIZE, 1024 * 1024)
-                    
-                    encoder.configure(aacFormat, null, null, android.media.MediaCodec.CONFIGURE_FLAG_ENCODE)
-                    encoder.start()
-                    
-                    // 获取编码器输出格式（包含音频轨道信息）
-                    var formatChanged = false
-                    while (!formatChanged) {
-                        val encoderOutputIndex = encoder.dequeueOutputBuffer(android.media.MediaCodec.BufferInfo(), 10000)
-                        when (encoderOutputIndex) {
-                            android.media.MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {
-                                audioFormat = encoder.outputFormat
-                                android.util.Log.d("VideoEditActivity", "编码器输出格式: ${audioFormat?.getString(android.media.MediaFormat.KEY_MIME)}")
-                                formatChanged = true
-                            }
-                            android.media.MediaCodec.INFO_TRY_AGAIN_LATER -> {}
-                            else -> {
-                                if (encoderOutputIndex >= 0) {
-                                    encoder.releaseOutputBuffer(encoderOutputIndex, false)
-                                }
-                            }
-                        }
-                    }
-                    
-                    encoder.stop()
-                    encoder.release()
-                    
-                } else {
-                    android.util.Log.e("VideoEditActivity", "PCM 文件不存在或为空: ${pcmFile.absolutePath}")
-                }
-            } catch (e: Exception) {
-                android.util.Log.e("VideoEditActivity", "音频格式获取失败: ${e.message}")
-                e.printStackTrace()
-            }
+            var audioTrackIndex = -1 // 音频轨道索引
+            var audioFormat: android.media.MediaFormat? = null // 音频格式
+
+            // 获取音频格式，使用 PCM 文件
+            audioFormat = getAudioFormat(pcmFile)
+            // 打印音频格式
+            Log.d("VideoEditActivity", "音频格式: $audioFormat")
 
             // 检查是否至少有一个轨道可用
             if (videoFormat == null) {
@@ -1089,73 +1048,78 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
             
             // 添加视频轨道
             videoTrackIndex = muxer.addTrack(videoFormat)
-            android.util.Log.d("VideoEditActivity", "添加视频轨道成功，索引: $videoTrackIndex")
+            Log.d("VideoEditActivity", "添加视频轨道成功，索引: $videoTrackIndex")
             
-            // 添加音频轨道
+            // 添加音频轨道（如果音频格式不为空）
             if (audioFormat != null) {
                 audioTrackIndex = muxer.addTrack(audioFormat)
-                android.util.Log.d("VideoEditActivity", "添加音频轨道成功，索引: $audioTrackIndex")
+                Log.d("VideoEditActivity", "添加音频轨道成功，索引: $audioTrackIndex")
             }
 
             // 启动 MediaMuxer
             muxer.start()
-            android.util.Log.d("VideoEditActivity", "MediaMuxer 启动成功")
+            Log.d("VideoEditActivity", "MediaMuxer 启动成功")
 
-            // 更新UI（在主线程）
+            // 更新UI（在主线程），显示处理音频的状态
             Handler(Looper.getMainLooper()).post {
                 progressBar.progress = 50
                 statusText.text = "正在处理音频..."
             }
 
-            // 编码并写入音频轨道
+            // 编码并写入音频轨道（如果音频轨道索引有效且 PCM 文件存在）
             if (audioTrackIndex != -1 && pcmFile.exists() && pcmFile.length() > 0) {
                 try {
                     // 重新配置并启动编码器
-                    val sampleRate = 44100
-                    val channelCount = 2
-                    val bitRate = 128000
+                    val sampleRate = 44100 // 采样率
+                    val channelCount = 2 // 声道数
+                    val bitRate = 128000 // 比特率
                     
+                    // 创建 AAC 编码器
                     val encoder = android.media.MediaCodec.createEncoderByType("audio/mp4a-latm")
+                    // 创建音频格式
                     val aacFormat = android.media.MediaFormat.createAudioFormat(
                         "audio/mp4a-latm",
                         sampleRate,
                         channelCount
                     )
+                    // 配置音频格式参数
                     aacFormat.setInteger(android.media.MediaFormat.KEY_BIT_RATE, bitRate)
                     aacFormat.setInteger(android.media.MediaFormat.KEY_AAC_PROFILE, android.media.MediaCodecInfo.CodecProfileLevel.AACObjectLC)
                     aacFormat.setInteger(android.media.MediaFormat.KEY_MAX_INPUT_SIZE, 1024 * 1024)
                     
+                    // 配置编码器
                     encoder.configure(aacFormat, null, null, android.media.MediaCodec.CONFIGURE_FLAG_ENCODE)
-                    encoder.start()
+                    encoder.start() // 启动编码器
                     
                     // 打开 PCM 文件
                     val inputStream = java.io.FileInputStream(pcmFile)
-                    val bufferInfo = android.media.MediaCodec.BufferInfo()
+                    val bufferInfo = android.media.MediaCodec.BufferInfo() // 用于存储编码后的数据信息
                     
-                    var inputDone = false
-                    var outputDone = false
-                    var presentationTimeUs = 0L
+                    var inputDone = false // 输入是否完成
+                    var outputDone = false // 输出是否完成
+                    var presentationTimeUs = 0L // 时间戳（微秒）
                     
                     // 计算每帧的时间戳增量
                     val frameSize = channelCount * 2 // 16bit = 2 bytes per sample
                     val samplesPerFrame = 1024 // AAC 通常一帧 1024 个样本
                     val timePerFrame = (samplesPerFrame * 1000000L) / sampleRate
                     
-                    android.util.Log.d("VideoEditActivity", "开始编码 PCM 到 AAC...")
-                    android.util.Log.d("VideoEditActivity", "MediaMuxer 状态: 已启动")
+                    Log.d("VideoEditActivity", "开始编码 PCM 到 AAC...")
+                    Log.d("VideoEditActivity", "MediaMuxer 状态: 已启动")
                     
+                    // 编码循环
                     while (!outputDone) {
                         // 向编码器输入数据
                         if (!inputDone) {
-                            val inputIndex = encoder.dequeueInputBuffer(10000)
+                            val inputIndex = encoder.dequeueInputBuffer(10000) // 获取输入缓冲区
                             if (inputIndex >= 0) {
-                                val encoderInputBuffer = encoder.getInputBuffer(inputIndex)
+                                val encoderInputBuffer = encoder.getInputBuffer(inputIndex) // 获取输入缓冲区
                                 if (encoderInputBuffer != null) {
-                                    encoderInputBuffer.clear()
+                                    encoderInputBuffer.clear() // 清空缓冲区
                                     
-                                    val bufferSize = encoderInputBuffer.capacity()
-                                    val inputBuffer = ByteArray(bufferSize)
-                                    val bytesRead = inputStream.read(inputBuffer)
+                                    val bufferSize = encoderInputBuffer.capacity() // 缓冲区容量
+                                    val inputBuffer = ByteArray(bufferSize) // 创建字节数组
+                                    val bytesRead = inputStream.read(inputBuffer) // 从 PCM 文件读取数据
                                     
                                     if (bytesRead < 0) {
                                         // 输入结束，发送结束标记
@@ -1167,11 +1131,13 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
                                             android.media.MediaCodec.BUFFER_FLAG_END_OF_STREAM
                                         )
                                         inputDone = true
-                                        android.util.Log.d("VideoEditActivity", "PCM 数据读取完成")
+                                        Log.d("VideoEditActivity", "PCM 数据读取完成")
                                     } else {
                                         // 处理实际读取的数据
-                                        encoderInputBuffer.put(inputBuffer, 0, bytesRead)
-                                        
+                                        encoderInputBuffer.put(inputBuffer, 0, bytesRead) // 将数据放入输入缓冲区
+
+                                        Log.d(TAG, "exportVideoWithAudio: queueInputBuffer $bytesRead 字节")
+                                        // 提交输入缓冲区
                                         encoder.queueInputBuffer(
                                             inputIndex,
                                             0,
@@ -1189,14 +1155,14 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
                         }
                         
                         // 从编码器获取输出
-                        val encoderOutputIndex = encoder.dequeueOutputBuffer(bufferInfo, 10000)
+                        val encoderOutputIndex = encoder.dequeueOutputBuffer(bufferInfo, 10000) // 获取输出缓冲区
                         when (encoderOutputIndex) {
                             android.media.MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED -> {}
                             android.media.MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {}
                             android.media.MediaCodec.INFO_TRY_AGAIN_LATER -> {}
                             else -> {
                                 if (encoderOutputIndex >= 0) {
-                                    val encoderOutputBuffer = encoder.getOutputBuffer(encoderOutputIndex)
+                                    val encoderOutputBuffer = encoder.getOutputBuffer(encoderOutputIndex) // 获取输出缓冲区
                                     if (encoderOutputBuffer != null) {
                                         if (bufferInfo.flags and android.media.MediaCodec.BUFFER_FLAG_CODEC_CONFIG != 0) {
                                             // 这是编解码器配置数据，跳过
@@ -1207,13 +1173,15 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
                                                 // 写入编码后的数据到 muxer
                                                 encoderOutputBuffer.position(bufferInfo.offset)
                                                 encoderOutputBuffer.limit(bufferInfo.offset + bufferInfo.size)
+                                                // 打印写入的音频数据大小和时间戳
+//                                                Log.d(TAG, "exportVideoWithAudio: 写入音频数据大小: ${bufferInfo.size}, 时间戳: ${bufferInfo.presentationTimeUs} us")
                                                 muxer.writeSampleData(audioTrackIndex, encoderOutputBuffer, bufferInfo)
                                             } catch (e: Exception) {
-                                                android.util.Log.e("VideoEditActivity", "写入音频数据失败: ${e.message}")
+                                                Log.e("VideoEditActivity", "写入音频数据失败: ${e.message}")
                                                 // 继续处理，不影响视频导出
                                             }
                                         }
-                                        encoder.releaseOutputBuffer(encoderOutputIndex, false)
+                                        encoder.releaseOutputBuffer(encoderOutputIndex, false) // 释放输出缓冲区
                                         if (bufferInfo.flags and android.media.MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0) {
                                             outputDone = true
                                         }
@@ -1228,35 +1196,35 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
                     encoder.stop()
                     encoder.release()
                     
-                    android.util.Log.d("VideoEditActivity", "音频编码完成")
+                    Log.d("VideoEditActivity", "音频编码完成")
                 } catch (e: Exception) {
-                    android.util.Log.e("VideoEditActivity", "音频处理失败: ${e.message}")
+                    Log.e("VideoEditActivity", "音频处理失败: ${e.message}")
                     e.printStackTrace()
                     // 音频处理失败，继续处理视频
                     audioTrackIndex = -1
                 }
             }
 
-            // 更新UI（在主线程）
+            // 更新UI（在主线程），显示合成的状态
             Handler(Looper.getMainLooper()).post {
                 progressBar.progress = 70
                 statusText.text = "正在合成..."
             }
 
             // 写入视频数据
-            val buffer = java.nio.ByteBuffer.allocate(1024 * 1024)
-            val bufferInfo = android.media.MediaCodec.BufferInfo()
+            val buffer = java.nio.ByteBuffer.allocate(1024 * 1024) // 创建缓冲区
+            val bufferInfo = android.media.MediaCodec.BufferInfo() // 用于存储视频数据信息
 
             // 写入视频轨道
-            var totalVideoSamples = 0
-            var processedVideoSamples = 0
+            var totalVideoSamples = 0 // 总视频样本数
+            var processedVideoSamples = 0 // 已处理视频样本数
             
             // 先计算总样本数
             while (true) {
-                val sampleSize = videoExtractor.readSampleData(buffer, 0)
-                if (sampleSize < 0) break
-                totalVideoSamples++
-                videoExtractor.advance()
+                val sampleSize = videoExtractor.readSampleData(buffer, 0) // 读取样本数据
+                if (sampleSize < 0) break // 读取完成
+                totalVideoSamples++ // 增加样本数
+                videoExtractor.advance() // 前进到下一个样本
             }
             
             // 重置视频提取器
@@ -1264,17 +1232,20 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
 
             // 写入视频数据
             while (true) {
-                val sampleSize = videoExtractor.readSampleData(buffer, 0)
-                if (sampleSize < 0) break
+                val sampleSize = videoExtractor.readSampleData(buffer, 0) // 读取样本数据
+                if (sampleSize < 0) break // 读取完成
 
+                // 设置缓冲区信息
                 bufferInfo.offset = 0
                 bufferInfo.size = sampleSize
                 bufferInfo.presentationTimeUs = videoExtractor.sampleTime
                 bufferInfo.flags = videoExtractor.sampleFlags
-
+                // 打印写入的视频数据大小
+//                Log.d(TAG, "exportVideoWithAudio: 写入视频数据大小: ${bufferInfo.size}")
+                // 写入数据到 muxer
                 muxer.writeSampleData(videoTrackIndex, buffer, bufferInfo)
-                videoExtractor.advance()
-                processedVideoSamples++
+                videoExtractor.advance() // 前进到下一个样本
+                processedVideoSamples++ // 增加已处理样本数
 
                 // 计算视频进度
                 val videoProgress = if (totalVideoSamples > 0) {
@@ -1282,23 +1253,23 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
                 } else {
                     20 // 最大进度
                 }
-                val currentProgress = 30 + videoProgress
+                val currentProgress = 30 + videoProgress // 计算当前总进度
                 
                 // 更新UI（在主线程）
                 Handler(Looper.getMainLooper()).post {
-                    progressBar.progress = currentProgress.coerceIn(30, 70)
+                    progressBar.progress = currentProgress.coerceIn(30, 70) // 确保进度在 30-70 之间
                 }
             }
 
             // 音频已经在转换过程中写入，不需要单独处理
             if (audioTrackIndex != -1) {
-                android.util.Log.d("VideoEditActivity", "音频已经在转换过程中写入完成")
+                Log.d("VideoEditActivity", "音频已经在转换过程中写入完成")
             } else {
                 // 音频转换失败，跳过音频轨道
-                android.util.Log.d("VideoEditActivity", "音频转换失败，跳过音频轨道")
+                Log.d("VideoEditActivity", "音频转换失败，跳过音频轨道")
             }
 
-            // 更新UI（在主线程）
+            // 更新UI（在主线程），显示导出完成的状态
             Handler(Looper.getMainLooper()).post {
                 progressBar.progress = 100
                 statusText.text = if (audioTrackIndex != -1) "导出完成!" else "导出完成（仅视频）!"
@@ -1309,35 +1280,36 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
             muxer.release()
             videoExtractor.release()
 
-            android.util.Log.d("VideoEditActivity", "视频导出成功: ${outputFile.absolutePath}")
+            Log.d("VideoEditActivity", "视频导出成功: ${outputFile.absolutePath}")
             return outputFile.absolutePath
         } catch (e: Exception) {
-            android.util.Log.e("VideoEditActivity", "导出过程中出现错误: ${e.message}")
+            Log.e("VideoEditActivity", "导出过程中出现错误: ${e.message}")
             e.printStackTrace()
             
             // 尝试只导出视频
             try {
-                android.util.Log.d("VideoEditActivity", "尝试只导出视频...")
+                Log.d("VideoEditActivity", "尝试只导出视频...")
                 
                 // 创建新的 MediaMuxer
                 val muxer = MediaMuxer(outputFile.absolutePath, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
                 
                 // 提取视频轨道
-                val videoExtractor = android.media.MediaExtractor()
-                val videoFile = java.io.File(filesDir, "sample_video_v1.mp4")
+                val videoExtractor = android.media.MediaExtractor() // 创建媒体提取器
+                val videoFile = java.io.File(filesDir, "sample_video_v1.mp4") // 视频文件
                 if (!videoFile.exists()) {
                     throw java.io.IOException("视频文件不存在: ${videoFile.absolutePath}")
                 }
-                val videoUri = Uri.fromFile(videoFile)
-                videoExtractor.setDataSource(this, videoUri, null)
+                val videoUri = Uri.fromFile(videoFile) // 转换为 URI 格式
+                videoExtractor.setDataSource(this, videoUri, null) // 设置数据源
                 
-                var videoTrackIndex = -1
+                var videoTrackIndex = -1 // 视频轨道索引
+                // 遍历所有轨道，找到视频轨道
                 for (i in 0 until videoExtractor.trackCount) {
-                    val format = videoExtractor.getTrackFormat(i)
-                    val mime = format.getString(android.media.MediaFormat.KEY_MIME)
-                    if (mime?.startsWith("video/") == true) {
-                        videoTrackIndex = muxer.addTrack(format)
-                        videoExtractor.selectTrack(i)
+                    val format = videoExtractor.getTrackFormat(i) // 获取轨道格式
+                    val mime = format.getString(android.media.MediaFormat.KEY_MIME) // 获取 MIME 类型
+                    if (mime?.startsWith("video/") == true) { // 检查是否为视频轨道
+                        videoTrackIndex = muxer.addTrack(format) // 添加视频轨道
+                        videoExtractor.selectTrack(i) // 选择视频轨道
                         break
                     }
                 }
@@ -1347,20 +1319,23 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
                     muxer.start()
                     
                     // 写入视频数据
-                    val buffer = java.nio.ByteBuffer.allocate(1024 * 1024)
-                    val bufferInfo = android.media.MediaCodec.BufferInfo()
+                    val buffer = java.nio.ByteBuffer.allocate(1024 * 1024) // 创建缓冲区
+                    val bufferInfo = android.media.MediaCodec.BufferInfo() // 用于存储视频数据信息
                     
+                    // 读取并写入视频数据
                     while (true) {
-                        val sampleSize = videoExtractor.readSampleData(buffer, 0)
-                        if (sampleSize < 0) break
+                        val sampleSize = videoExtractor.readSampleData(buffer, 0) // 读取样本数据
+                        if (sampleSize < 0) break // 读取完成
                         
+                        // 设置缓冲区信息
                         bufferInfo.offset = 0
                         bufferInfo.size = sampleSize
                         bufferInfo.presentationTimeUs = videoExtractor.sampleTime
                         bufferInfo.flags = videoExtractor.sampleFlags
                         
+                        // 写入数据到 muxer
                         muxer.writeSampleData(videoTrackIndex, buffer, bufferInfo)
-                        videoExtractor.advance()
+                        videoExtractor.advance() // 前进到下一个样本
                     }
                     
                     // 完成合成
@@ -1368,25 +1343,94 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
                     muxer.release()
                     videoExtractor.release()
                     
-                    // 更新UI（在主线程）
+                    // 更新UI（在主线程），显示仅视频导出完成的状态
                     Handler(Looper.getMainLooper()).post {
                         progressBar.progress = 100
                         statusText.text = "导出完成（仅视频）!"
                     }
                     
-                    android.util.Log.d("VideoEditActivity", "仅视频导出成功: ${outputFile.absolutePath}")
+                    Log.d("VideoEditActivity", "仅视频导出成功: ${outputFile.absolutePath}")
                     return outputFile.absolutePath
                 } else {
                     throw java.io.IOException("无法找到视频轨道")
                 }
                 
             } catch (innerE: Exception) {
-                android.util.Log.e("VideoEditActivity", "仅视频导出也失败: ${innerE.message}")
+                Log.e("VideoEditActivity", "仅视频导出也失败: ${innerE.message}")
                 innerE.printStackTrace()
-                outputFile.delete()
-                throw innerE
+                outputFile.delete() // 删除失败的输出文件
+                throw innerE // 抛出异常
             }
         }
+    }
+
+    private fun getAudioFormat(
+        pcmFile: File
+    ): MediaFormat? {
+        var audioFormat: android.media.MediaFormat? = null
+        try {
+            // 直接使用 PCM 文件进行编码
+            if (pcmFile.exists() && pcmFile.length() > 0) {
+                Log.d("VideoEditActivity", "使用 PCM 文件进行编码: ${pcmFile.absolutePath}")
+
+                // 配置 AAC 编码器
+                val sampleRate = 44100
+                val channelCount = 2
+                val bitRate = 128000
+
+                val encoder = MediaCodec.createEncoderByType("audio/mp4a-latm")
+                val aacFormat = MediaFormat.createAudioFormat(
+                    "audio/mp4a-latm",
+                    sampleRate,
+                    channelCount
+                )
+                aacFormat.setInteger(MediaFormat.KEY_BIT_RATE, bitRate)
+                aacFormat.setInteger(
+                    MediaFormat.KEY_AAC_PROFILE,
+                    MediaCodecInfo.CodecProfileLevel.AACObjectLC
+                )
+                aacFormat.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 1024 * 1024)
+
+                // 打印编码器配置信息
+                Log.d("VideoEditActivity", "编码器配置信息: $aacFormat")
+                encoder.configure(aacFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
+                encoder.start()
+
+                // 获取编码器输出格式（包含音频轨道信息）
+                var formatChanged = false
+                while (!formatChanged) {
+                    val encoderOutputIndex =
+                        encoder.dequeueOutputBuffer(MediaCodec.BufferInfo(), 10000)
+                    when (encoderOutputIndex) {
+                        MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {
+                            audioFormat = encoder.outputFormat
+                            Log.d(
+                                "VideoEditActivity",
+                                "编码器输出格式: ${audioFormat?.getString(MediaFormat.KEY_MIME)}"
+                            )
+                            formatChanged = true
+                        }
+
+                        MediaCodec.INFO_TRY_AGAIN_LATER -> {}
+                        else -> {
+                            if (encoderOutputIndex >= 0) {
+                                encoder.releaseOutputBuffer(encoderOutputIndex, false)
+                            }
+                        }
+                    }
+                }
+
+                encoder.stop()
+                encoder.release()
+
+            } else {
+                Log.e("VideoEditActivity", "PCM 文件不存在或为空: ${pcmFile.absolutePath}")
+            }
+        } catch (e: Exception) {
+            Log.e("VideoEditActivity", "音频格式获取失败: ${e.message}")
+            e.printStackTrace()
+        }
+        return audioFormat
     }
 }
 
