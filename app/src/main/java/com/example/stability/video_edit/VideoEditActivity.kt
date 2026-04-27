@@ -1,5 +1,6 @@
 package com.example.stability.video_edit
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
 import android.media.MediaMuxer
@@ -14,6 +15,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
@@ -61,6 +63,10 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
 
     private val PERMISSION_REQUEST_CODE = 1001
 
+    private val VIDEO_SELECTION_REQUEST_CODE = 1002
+
+    private var selectedVideoPath: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_edit)
@@ -92,6 +98,83 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
     fun testExport(view: android.view.View) {
         Log.d("VideoEditActivity", "testExport: 开始测试导出功能")
         showExportDialog()
+    }
+
+    fun onSelectVideoClicked(view: android.view.View) {
+        Log.d("VideoEditActivity", "onSelectVideoClicked: 打开视频选择页面")
+        val intent = Intent(this, MediaSelectionActivity::class.java)
+        startActivityForResult(intent, VIDEO_SELECTION_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == VIDEO_SELECTION_REQUEST_CODE && resultCode == RESULT_OK) {
+            val videoPath = data?.getStringExtra(MediaSelectionActivity.EXTRA_SELECTED_MEDIA_PATH)
+            val mediaType = data?.getStringExtra(MediaSelectionActivity.EXTRA_SELECTED_MEDIA_TYPE)
+            Log.d("VideoEditActivity", "onActivityResult: 视频路径 = $videoPath, 类型 = $mediaType")
+            if (videoPath != null) {
+                selectedVideoPath = videoPath
+                loadSelectedVideo(videoPath)
+            }
+        }
+    }
+
+    private fun loadSelectedVideo(videoPath: String) {
+        Log.d("VideoEditActivity", "loadSelectedVideo: 开始加载视频 = $videoPath")
+        try {
+            // 检查是否是内容 URI
+            if (videoPath.startsWith("content://")) {
+                // 直接使用内容 URI
+                val mediaItem = MediaItem.fromUri(videoPath)
+                videoPlayer?.let { player ->
+                    player.setMediaItem(mediaItem)
+                    player.prepare()
+                    Log.d("VideoEditActivity", "视频加载成功，准备播放")
+                    updateThumbnailTimelineForVideo(videoPath)
+                }
+            } else {
+                // 处理文件路径
+                val videoFile = File(videoPath)
+                if (!videoFile.exists()) {
+                    Log.e("VideoEditActivity", "视频文件不存在: $videoPath")
+                    return
+                }
+                videoPlayer?.let { player ->
+                    val mediaItem = MediaItem.fromUri(Uri.fromFile(videoFile))
+                    player.setMediaItem(mediaItem)
+                    player.prepare()
+                    Log.d("VideoEditActivity", "视频加载成功，准备播放")
+                    updateThumbnailTimelineForVideo(videoPath)
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("VideoEditActivity", "加载视频失败: ${e.message}")
+        }
+    }
+
+    private fun updateThumbnailTimelineForVideo(videoPath: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val retriever = MediaMetadataRetriever()
+                if (videoPath.startsWith("content://")) {
+                    // 使用内容 URI
+                    retriever.setDataSource(this@VideoEditActivity, Uri.parse(videoPath))
+                } else {
+                    // 使用文件路径
+                    retriever.setDataSource(videoPath)
+                }
+                val durationStr = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+                val duration = durationStr?.toLongOrNull() ?: 0L
+                withContext(Dispatchers.Main) {
+                    videoDuration = duration
+                    Log.d("VideoEditActivity", "视频时长: $videoDuration ms")
+                    updateThumbnailTimeline()
+                }
+                retriever.release()
+            } catch (e: Exception) {
+                Log.e("VideoEditActivity", "获取视频信息失败: ${e.message}")
+            }
+        }
     }
 
     /**

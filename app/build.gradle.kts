@@ -171,6 +171,9 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     // 依赖 Compose Material3 库
     
+    implementation("androidx.compose.material:material-icons-extended")
+    // 依赖 Material Icons 库，用于图标
+    
     implementation("androidx.activity:activity-compose:1.9.0")
     // 依赖 Activity Compose 库，用于在 Activity 中使用 Compose
     
@@ -211,4 +214,8 @@ dependencies {
     
     androidTestImplementation(libs.androidx.espresso.core)
     // Android 测试依赖 Espresso 核心库
+
+    // Coil 图片加载库
+    implementation("io.coil-kt:coil-compose:2.5.0")
+    // 依赖 Coil Compose 库，用于加载图片
 }
