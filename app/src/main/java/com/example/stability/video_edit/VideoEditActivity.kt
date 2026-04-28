@@ -15,12 +15,10 @@ import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.ui.PlayerView
 import com.example.stability.R
 import com.example.stability.video_edit.audio.Mp3ToPcmConverter
 import com.example.stability.video_edit.audio.PcmToAacConverter
@@ -42,7 +40,7 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
 
     private var videoPlayer: ExoPlayer? = null
     private var musicPlayer: ExoPlayer? = null
-    private var playerView: PlayerView? = null
+    private var grayscaleView: GrayscaleTextureView? = null
     private var thumbnailTimeline: ThumbnailTimelineView? = null
     private var timelineContainer: android.widget.HorizontalScrollView? = null
     private var musicTimelineContainer: android.widget.HorizontalScrollView? = null
@@ -443,7 +441,7 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
     }
     
     private fun initViews() {
-        playerView = findViewById(R.id.player_view)
+        grayscaleView = findViewById(R.id.grayscale_view)
         thumbnailTimeline = findViewById(R.id.thumbnail_timeline)
         timelineContainer = findViewById(R.id.timeline_container)
         musicTimelineContainer = findViewById(R.id.music_timeline_container)
@@ -453,10 +451,21 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
         thumbnailTimeline?.setThumbnailClickListener(this)
         
         // 添加触摸事件监听器，实现双指缩放
-        playerView?.setOnTouchListener { v, event ->
+        grayscaleView?.setOnTouchListener { v, event ->
             handleTouchEvent(event)
             true
         }
+        
+        // 设置 OpenGL renderer 就绪监听器
+        grayscaleView?.setOnRendererReadyListener(object : GrayscaleTextureView.OnRendererReadyListener {
+            override fun onRendererReady() {
+                // 使用 Handler 将操作切换到主线程（ExoPlayer 必须在主线程中访问）
+                Handler(Looper.getMainLooper()).post {
+                    Log.d(TAG, "OpenGL renderer ready, setting video surface")
+                    videoPlayer?.setVideoSurface(grayscaleView?.getSurface())
+                }
+            }
+        })
     }
     
     /**
@@ -483,8 +492,8 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
                         scaleFactor = kotlin.math.max(minScale, kotlin.math.min(scaleFactor, maxScale))
                         
                         // 应用缩放
-                        playerView?.scaleX = scaleFactor
-                        playerView?.scaleY = scaleFactor
+                        grayscaleView?.scaleX = scaleFactor
+                        grayscaleView?.scaleY = scaleFactor
                         
                         lastDistance = currentDistance
                     }
@@ -509,7 +518,8 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
     private fun setupPlayer() {
         // 初始化视频播放器
         val exoPlayer = ExoPlayer.Builder(this).build()
-        playerView?.player = exoPlayer
+        
+        // 视频输出将在 OpenGL renderer 就绪后通过回调设置
         
         exoPlayer.addListener(object : Player.Listener {
             override fun onPlaybackStateChanged(playbackState: Int) {

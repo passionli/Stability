@@ -206,6 +206,9 @@ dependencies {
     implementation("androidx.media3:media3-common:1.2.1")
     // 依赖 Media3 Common 库
     
+    implementation("androidx.media3:media3-effect:1.2.1")
+    // 依赖 Media3 Effect 库，用于视频滤镜效果
+    
     testImplementation(libs.junit)
     // 测试依赖 JUnit 库
     
