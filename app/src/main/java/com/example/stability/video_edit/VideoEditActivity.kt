@@ -1070,20 +1070,51 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
         }
 
         try {
-            // 获取视频和音频资源（从应用私有目录）
-            val videoFile = java.io.File(filesDir, "sample_video_v1.mp4") // 视频文件
+            // 获取视频和音频资源
+            val videoFile: java.io.File
+            val videoUri: Uri
+            val currentVideoPath = selectedVideoPath // 使用局部变量避免智能转换问题
+            
+            // 使用当前选择的视频路径，如果没有选择则使用默认视频
+            if (currentVideoPath != null) {
+                Log.d("VideoEditActivity", "使用选择的视频路径: $currentVideoPath")
+                if (currentVideoPath.startsWith("content://")) {
+                    // 直接使用内容 URI
+                    videoUri = Uri.parse(currentVideoPath)
+                    videoFile = java.io.File("") // 内容 URI 不需要文件对象
+                } else {
+                    // 使用文件路径
+                    videoFile = java.io.File(currentVideoPath)
+                    videoUri = Uri.fromFile(videoFile)
+                }
+            } else {
+                // 使用默认视频文件（从应用私有目录）
+                Log.d("VideoEditActivity", "使用默认视频文件")
+                videoFile = java.io.File(filesDir, "sample_video_v1.mp4")
+                videoUri = Uri.fromFile(videoFile)
+            }
+            
             val pcmFile = java.io.File(filesDir, "suzume_no_tojimari.pcm") // PCM 音频文件
             
             // 验证文件存在性并记录日志
-            Log.d("VideoEditActivity", "视频文件存在: ${videoFile.exists()}, 大小: ${if (videoFile.exists()) videoFile.length() else 0} bytes")
+            if (currentVideoPath != null && !currentVideoPath.startsWith("content://")) {
+                Log.d("VideoEditActivity", "视频文件存在: ${videoFile.exists()}, 大小: ${if (videoFile.exists()) videoFile.length() else 0} bytes")
+            } else if (currentVideoPath != null && currentVideoPath.startsWith("content://")) {
+                Log.d("VideoEditActivity", "视频 URI: $videoUri")
+            } else {
+                // 使用默认视频文件的情况
+                Log.d("VideoEditActivity", "视频文件存在: ${videoFile.exists()}, 大小: ${if (videoFile.exists()) videoFile.length() else 0} bytes")
+            }
             Log.d("VideoEditActivity", "PCM 文件存在: ${pcmFile.exists()}, 大小: ${if (pcmFile.exists()) pcmFile.length() else 0} bytes")
             
-            // 检查视频文件是否存在
-            if (!videoFile.exists()) {
+            // 检查视频文件是否存在（非内容 URI 情况）
+            if (currentVideoPath != null && !currentVideoPath.startsWith("content://") && !videoFile.exists()) {
+                throw java.io.IOException("视频文件不存在: ${videoFile.absolutePath}")
+            } else if (currentVideoPath == null && !videoFile.exists()) {
+                // 使用默认视频文件的情况
                 throw java.io.IOException("视频文件不存在: ${videoFile.absolutePath}")
             }
 
-            val videoUri = Uri.fromFile(videoFile) // 转换为 URI 格式
             Log.d("VideoEditActivity", "Exporting video from: $videoUri")
 
             // 更新UI（在主线程），显示处理视频的状态
@@ -1094,7 +1125,13 @@ class VideoEditActivity : AppCompatActivity(), OnThumbnailClickListener {
 
             // 提取视频轨道（不含音频）
             val videoExtractor = android.media.MediaExtractor() // 创建媒体提取器
-            videoExtractor.setDataSource(this, videoUri, null) // 设置数据源
+            if (currentVideoPath != null && currentVideoPath.startsWith("content://")) {
+                // 使用内容 URI 设置数据源
+                videoExtractor.setDataSource(this, videoUri, null) // 设置数据源
+            } else {
+                // 使用文件路径设置数据源
+                videoExtractor.setDataSource(videoFile.absolutePath) // 设置数据源
+            }
             
             var videoTrackIndex = -1 // 视频轨道索引
             var videoFormat: android.media.MediaFormat? = null // 视频格式
