@@ -12,6 +12,7 @@
 #include "xdl.h"
 #include "shadowhook.h"
 #include "ArtJavaHook.h"
+#include "NativeCrashMonitor.h"
 
 #define LOG_TAG "KEY_MONITOR"
 #define LOGD(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
@@ -58,6 +59,7 @@ Java_com_example_nativelib_NativeLib_stringFromJNI(
 
     PthreadKeyOpt::getInstance().start();
     ArtJavaHook::getInstance().start(env);
+    NativeCrashMonitor::getInstance().start(env);
 
 
 

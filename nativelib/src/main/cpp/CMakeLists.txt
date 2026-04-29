@@ -31,6 +31,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
     unwind_pthread.h
     PthreadKeyOpt.cpp
     ArtJavaHook.cpp
+    NativeCrashMonitor.cpp
     nativelib.cpp
     )
 
