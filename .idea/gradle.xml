@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/nativelib" />
             <option value="$PROJECT_DIR$/nativelib2" />
+            <option value="$PROJECT_DIR$/online_coding" />
           </set>
         </option>
       </GradleProjectSettings>

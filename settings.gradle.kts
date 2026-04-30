@@ -84,3 +84,5 @@ include(":nativelib")
 // 包含 nativelib 模块
 include(":nativelib2")
 // 包含 nativelib2 模块
+include(":online_coding")
+// 包含 online_coding 模块

@@ -73,6 +73,9 @@
         <activity
             android:name=".video_edit.MediaSelectionActivity"
             android:exported="true" />
+        <activity
+            android:name=".anr.examples.AnrActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

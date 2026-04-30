@@ -404,6 +404,16 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, VideoEditActivity::class.java)
             startActivity(intent)
         }
+        
+        // 查找 ANR 演示按钮
+        val btnANR = findViewById<Button>(R.id.btnANR)
+        // 设置按钮点击事件
+        btnANR.setOnClickListener {
+            Log.d("MainActivity", "=== Button clicked: ANR Demo ===")
+            // 创建 Intent，启动 AnrActivity
+            val intent = Intent(this, com.example.stability.anr.examples.AnrActivity::class.java)
+            startActivity(intent)
+        }
 
         println("getWindow $window")
 
