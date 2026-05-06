@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- 标题 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="💥 OOM 经典示例"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- 说明文字 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="选择一个示例来触发 OOM："
+        android:textSize="14sp"
+        android:layout_marginBottom="12dp"/>
+
+    <!-- 示例列表 -->
+    <ListView
+        android:id="@+id/lv_examples"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@color/design_default_color_background"
+        android:dividerHeight="8dp"/>
+
+    <!-- 运行按钮 -->
+    <Button
+        android:id="@+id/btn_run"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="运行示例"
+        android:layout_marginTop="16dp"
+        android:enabled="false"/>
+
+    <!-- 状态显示 -->
+    <TextView
+        android:id="@+id/tv_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="请选择一个 OOM 示例"
+        android:textSize="14sp"
+        android:padding="12dp"
+        android:background="@color/white"
+        android:layout_marginTop="12dp"/>
+
+</LinearLayout>

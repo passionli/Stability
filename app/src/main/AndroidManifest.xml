@@ -76,6 +76,12 @@
         <activity
             android:name=".anr.examples.AnrActivity"
             android:exported="true" />
+        <activity
+            android:name=".oom.examples.OomActivity"
+            android:exported="true" />
+        <activity
+            android:name=".oom.examples.OomExamplesActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

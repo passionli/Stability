@@ -415,6 +415,16 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // 查找 OOM 示例按钮
+        val btnOOM = findViewById<Button>(R.id.btnOOM)
+        // 设置按钮点击事件
+        btnOOM.setOnClickListener {
+            Log.d("MainActivity", "=== Button clicked: OOM Examples ===")
+            // 创建 Intent，启动 OomExamplesActivity
+            val intent = Intent(this, com.example.stability.oom.examples.OomExamplesActivity::class.java)
+            startActivity(intent)
+        }
+
         println("getWindow $window")
 
 //        Handler().postDelayed({
