@@ -54,4 +54,81 @@
         android:background="@color/gray"
         android:textColor="@android:color/white"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/gray"
+        android:layout_marginVertical="24dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Classic ANR Scenarios"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/network_main_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Network on Main Thread"
+        android:textSize="16sp"
+        android:layout_marginBottom="12dp"
+        android:background="@color/design_default_color_error"/>
+
+    <Button
+        android:id="@+id/db_main_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Database on Main Thread"
+        android:textSize="16sp"
+        android:layout_marginBottom="12dp"
+        android:background="@color/design_default_color_error"/>
+
+    <Button
+        android:id="@+id/deadlock_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Deadlock Demo"
+        android:textSize="16sp"
+        android:layout_marginBottom="12dp"
+        android:background="@color/design_default_color_error"/>
+
+    <Button
+        android:id="@+id/recursive_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Infinite Recursion"
+        android:textSize="16sp"
+        android:layout_marginBottom="12dp"
+        android:background="@color/design_default_color_error"/>
+
+    <Button
+        android:id="@+id/busy_loop_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Busy Loop"
+        android:textSize="16sp"
+        android:layout_marginBottom="12dp"
+        android:background="@color/design_default_color_error"/>
+
+    <Button
+        android:id="@+id/message_queue_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Message Queue Block"
+        android:textSize="16sp"
+        android:layout_marginBottom="12dp"
+        android:background="@color/design_default_color_error"/>
+
+    <Button
+        android:id="@+id/large_list_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Large List Processing"
+        android:textSize="16sp"
+        android:layout_marginBottom="12dp"
+        android:background="@color/design_default_color_error"/>
+
 </LinearLayout>
