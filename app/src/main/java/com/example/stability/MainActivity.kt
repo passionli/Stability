@@ -419,10 +419,28 @@ class MainActivity : AppCompatActivity() {
         val btnOOM = findViewById<Button>(R.id.btnOOM)
         // 设置按钮点击事件
         btnOOM.setOnClickListener {
-            Log.d("MainActivity", "=== Button clicked: OOM Examples ===")
-            // 创建 Intent，启动 OomExamplesActivity
-            val intent = Intent(this, com.example.stability.oom.examples.OomExamplesActivity::class.java)
-            startActivity(intent)
+            Log.d("MainActivity", "=== Button clicked: OOM & Memory Leak Examples ===")
+            
+            // 创建一个菜单，让用户选择要运行的内存相关示例
+            val builder = android.app.AlertDialog.Builder(this)
+            builder.setTitle("选择内存相关示例")
+            builder.setItems(arrayOf("OOM 示例", "内存泄漏检测（LeakCanary）")) { dialog, which ->
+                when (which) {
+                    0 -> {
+                        // 启动 OOM 示例 Activity
+                        Log.d("MainActivity", "=== Starting OOM Examples ===")
+                        val intent = Intent(this, com.example.stability.oom.examples.OomExamplesActivity::class.java)
+                        startActivity(intent)
+                    }
+                    1 -> {
+                        // 启动 LeakCanary 内存泄漏检测 Activity
+                        Log.d("MainActivity", "=== Starting LeakCanary Memory Leak Detection ===")
+                        val intent = Intent(this, com.example.stability.oom.examples.LeakActivity::class.java)
+                        startActivity(intent)
+                    }
+                }
+            }
+            builder.show()
         }
 
         println("getWindow $window")

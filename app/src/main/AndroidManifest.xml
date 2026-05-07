@@ -82,6 +82,9 @@
         <activity
             android:name=".oom.examples.OomExamplesActivity"
             android:exported="true" />
+        <activity
+            android:name=".oom.examples.LeakActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

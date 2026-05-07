@@ -221,4 +221,7 @@ dependencies {
     // Coil 图片加载库
     implementation("io.coil-kt:coil-compose:2.5.0")
     // 依赖 Coil Compose 库，用于加载图片
+    
+    // LeakCanary 内存泄漏检测框架（仅在 debug 版本集成）
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:${libs.versions.leakcanary.get()}")
 }

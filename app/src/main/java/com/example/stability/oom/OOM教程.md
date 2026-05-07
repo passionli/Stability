@@ -11,10 +11,11 @@
 3. [OOM 触发机制](#oom-触发机制)
 4. [OOM 内存分析](#oom-内存分析)
 5. [OOM 预防策略](#oom-预防策略)
-6. [OOM 监控方案](#oom-监控方案)
-7. [经典 OOM 例子](#经典-oom-例子)
-8. [代码示例](#代码示例)
-9. [常见问题解答](#常见问题解答)
+6. [LeakCanary 内存泄漏检测框架](#leakcanary-内存泄漏检测框架)
+7. [OOM 监控方案](#oom-监控方案)
+8. [经典 OOM 例子](#经典-oom-例子)
+9. [代码示例](#代码示例)
+10. [常见问题解答](#常见问题解答)
 
 ---
 
@@ -420,7 +421,226 @@ class NetworkRequestPool {
 
 ---
 
-## 🎯 6. OOM 监控方案
+## 🎯 6. LeakCanary 内存泄漏检测框架
+
+### 6.1 LeakCanary 简介
+
+**LeakCanary** 是 Square 公司开源的一款 Android 内存泄漏检测工具，能够自动检测应用中的内存泄漏并提供详细的泄漏路径分析。
+
+**核心功能**：
+- 自动检测 Activity/Fragment 内存泄漏
+- 自动生成堆转储文件
+- 提供详细的泄漏路径分析
+- 友好的 UI 界面展示泄漏信息
+- 支持自定义泄漏检测
+
+**检测原理**：
+```
+LeakCanary 检测流程：
+┌─────────────────────────────────────────────────┐
+│  Activity/Fragment 销毁                         │
+│         ↓                                       │
+│  LeakCanary 开始观察对象                        │
+│         ↓                                       │
+│  等待 GC 触发（默认 5 秒）                      │
+│         ↓                                       │
+│  检查对象是否被回收                             │
+│         ↓                                       │
+│  ┌─────────────┬───────────────────────────┐    │
+│  │ 已回收      │ 未回收（可能泄漏）         │    │
+│  │    ↓       │       ↓                   │    │
+│  │ 忽略        │ 触发堆转储               │    │
+│  │            │       ↓                   │    │
+│  │            │ 分析堆转储文件             │    │
+│  │            │       ↓                   │    │
+│  │            │ 生成泄漏报告               │    │
+│  │            │       ↓                   │    │
+│  │            │ 显示通知                   │    │
+│  └─────────────┴───────────────────────────┘    │
+└─────────────────────────────────────────────────┘
+```
+
+### 6.2 LeakCanary 集成
+
+**步骤1：添加依赖**
+
+在 `gradle/libs.versions.toml` 中添加版本定义：
+```toml
+leakcanary = "2.12"
+```
+
+在 `app/build.gradle.kts` 中添加依赖：
+```kotlin
+debugImplementation("com.squareup.leakcanary:leakcanary-android:${libs.versions.leakcanary.get()}")
+```
+
+**步骤2：初始化 LeakCanary**
+
+在 `Application` 类中初始化：
+```kotlin
+class MyApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        
+        // 检查是否是分析进程
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            return
+        }
+        
+        // 配置并安装 LeakCanary
+        LeakCanary.config = LeakCanary.config.copy(
+            dumpHeap = true,
+            watchDurationMillis = 5000,
+            showLeakDisplayActivityLauncherIcon = true
+        )
+        
+        LeakCanary.install(this)
+    }
+}
+```
+
+### 6.3 LeakCanary 管理类
+
+创建 `LeakCanaryManager` 封装配置和操作：
+
+```kotlin
+object LeakCanaryManager {
+    
+    private var refWatcher: RefWatcher? = null
+    
+    fun initialize(context: Context) {
+        if (LeakCanary.isInAnalyzerProcess(context)) {
+            return
+        }
+        
+        refWatcher = LeakCanary.install(context.applicationContext as Application)
+        
+        // 自定义配置
+        LeakCanary.config = LeakCanary.config.copy(
+            watchDurationMillis = 5000,
+            maxStoredHeapDumps = 10
+        )
+    }
+    
+    // 手动观察对象
+    fun watch(watchedReference: Any, referenceName: String) {
+        refWatcher?.watch(watchedReference, referenceName)
+    }
+    
+    // 获取状态
+    fun getStatus(): String {
+        return "LeakCanary Status..."
+    }
+}
+```
+
+### 6.4 常见内存泄漏场景
+
+| 场景 | 原因 | 解决方案 |
+|------|------|---------|
+| **静态引用泄漏** | 静态变量持有 Activity | 使用 WeakReference 或 Application Context |
+| **Handler 泄漏** | 匿名内部类持有外部类引用 | 使用静态内部类 + WeakReference |
+| **监听器泄漏** | 注册后未注销 | 在合适的生命周期方法中注销 |
+| **线程泄漏** | 线程持有 Activity 引用 | 使用静态内部类或 WeakReference |
+| **单例泄漏** | 持有 Activity 而非 Application | 使用 Application Context |
+
+### 6.5 泄漏示例代码
+
+**场景1：静态引用泄漏**
+```kotlin
+object LeakySingleton {
+    // ❌ 错误：静态变量持有 Activity
+    private var context: Context? = null
+    
+    fun init(context: Context) {
+        this.context = context  // 泄漏！
+    }
+}
+```
+
+**场景2：Handler 泄漏**
+```kotlin
+class LeakyActivity : AppCompatActivity() {
+    // ❌ 错误：匿名内部类 Handler
+    private val handler = Handler(Looper.getMainLooper()) { msg ->
+        // 处理消息
+        true
+    }
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // 延迟消息持有 Activity 引用
+        handler.postDelayed({ /* ... */ }, 60000)
+    }
+}
+```
+
+**正确的 Handler 实现**
+```kotlin
+class SafeActivity : AppCompatActivity() {
+    // ✅ 正确：静态内部类 + WeakReference
+    private class SafeHandler(
+        private val activityRef: WeakReference<SafeActivity>
+    ) : Handler(Looper.getMainLooper()) {
+        
+        override fun handleMessage(msg: Message) {
+            val activity = activityRef.get()
+            activity?.let {
+                // 安全处理
+            }
+        }
+    }
+    
+    private val handler = SafeHandler(WeakReference(this))
+    
+    override fun onDestroy() {
+        handler.removeCallbacksAndMessages(null)
+        super.onDestroy()
+    }
+}
+```
+
+### 6.6 LeakCanary 使用技巧
+
+**1. 过滤已知泄漏**
+```kotlin
+LeakCanary.config = LeakCanary.config.copy(
+    referenceMatchers = appDefaultReferenceMatchers + listOf(
+        // 忽略某些已知泄漏
+        LibraryLeakReferenceMatcher("com.some.library.Class")
+    )
+)
+```
+
+**2. 自定义泄漏分析**
+```kotlin
+val leakAnalyzer = object : HeapAnalyzer() {
+    override fun analyze(heapDump: HeapDump): AnalysisResult {
+        // 自定义分析逻辑
+        return super.analyze(heapDump)
+    }
+}
+```
+
+**3. 查看泄漏报告**
+- 检测到泄漏时，LeakCanary 会显示通知
+- 点击通知查看详细的泄漏路径
+- 可以通过 Launcher 图标直接打开 LeakCanary
+
+### 6.7 测试泄漏示例
+
+本项目提供了 `LeakActivity` 用于测试各种泄漏场景：
+
+```kotlin
+class LeakActivity : AppCompatActivity() {
+    // 提供 UI 界面选择和触发不同的泄漏场景
+    // 包括：静态引用泄漏、Handler 泄漏、监听器泄漏等
+}
+```
+
+---
+
+## 🎯 7. OOM 监控方案
 
 ### 方案一：内存监控
 
