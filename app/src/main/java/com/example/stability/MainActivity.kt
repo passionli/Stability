@@ -17,6 +17,7 @@ import com.example.stability.mvp.MVPMain
 import com.example.stability.opengl.basic.OpenGLActivity
 import com.example.stability.video_edit.VideoEditActivity
 import com.example.stability.webrtc.WebRTCMain
+import com.example.stability.arouter.ARouterMainActivity
 import kotlin.jvm.java
 
 class MainActivity : AppCompatActivity() {
@@ -53,7 +54,7 @@ class MainActivity : AppCompatActivity() {
             // 运行所有 Kotlin 学习示例
             kotlinLearningMain.runAllExamples()
         }
-        
+
         // 查找 ListView 示例按钮
         val btnListView = findViewById<Button>(R.id.btnListView)
         // 设置按钮点击事件
@@ -73,7 +74,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, ComposeActivity::class.java)
             startActivity(intent)
         }
-        
+
         // 查找数据结构示例按钮
         val btnDataStructures = findViewById<Button>(R.id.btnDataStructures)
         // 设置按钮点击事件
@@ -84,13 +85,13 @@ class MainActivity : AppCompatActivity() {
             // 运行所有数据结构示例
             dataStructuresMain.runAllExamples()
         }
-        
+
         // 查找 OpenGL 示例按钮
         val btnOpenGL = findViewById<Button>(R.id.btnOpenGL)
         // 设置按钮点击事件
         btnOpenGL.setOnClickListener {
             Log.d("MainActivity", "=== Button clicked: OpenGL Examples ===")
-            
+
             // 创建一个菜单，让用户选择要运行的 OpenGL 示例级别
             val builder = android.app.AlertDialog.Builder(this)
             builder.setTitle("选择 OpenGL 示例级别")
@@ -120,13 +121,13 @@ class MainActivity : AppCompatActivity() {
             }
             builder.show()
         }
-        
+
         // 查找多线程示例按钮
         val btnMultithreading = findViewById<Button>(R.id.btnMultithreading)
         // 设置按钮点击事件
         btnMultithreading.setOnClickListener {
             Log.d("MainActivity", "=== Button clicked: Multithreading Examples ===")
-            
+
             // 创建一个菜单，让用户选择要运行的多线程示例级别
             val builder = android.app.AlertDialog.Builder(this)
             builder.setTitle("选择多线程示例级别")
@@ -156,13 +157,13 @@ class MainActivity : AppCompatActivity() {
             }
             builder.show()
         }
-        
+
         // 查找 C++ 示例按钮
         val btnCpp = findViewById<Button>(R.id.btnCpp)
         // 设置按钮点击事件
         btnCpp.setOnClickListener {
             Log.d("MainActivity", "=== Button clicked: C++ Examples ===")
-            
+
             // 创建一个菜单，让用户选择要运行的 C++ 示例级别
             val builder = android.app.AlertDialog.Builder(this)
             builder.setTitle("选择 C++ 示例级别")
@@ -192,13 +193,13 @@ class MainActivity : AppCompatActivity() {
             }
             builder.show()
         }
-        
+
         // 查找 C 语言示例按钮
         val btnC = findViewById<Button>(R.id.btnC)
         // 设置按钮点击事件
         btnC.setOnClickListener {
             Log.d("MainActivity", "=== Button clicked: C Examples ===")
-            
+
             // 创建一个菜单，让用户选择要运行的 C 语言示例级别
             val builder = android.app.AlertDialog.Builder(this)
             builder.setTitle("选择 C 语言示例级别")
@@ -228,13 +229,13 @@ class MainActivity : AppCompatActivity() {
             }
             builder.show()
         }
-        
+
         // 查找通信协议示例按钮
         val btnCommunication = findViewById<Button>(R.id.btnCommunication)
         // 设置按钮点击事件
         btnCommunication.setOnClickListener {
             Log.d("MainActivity", "=== Button clicked: Communication Examples ===")
-            
+
             // 创建一个菜单，让用户选择要运行的通信协议
             val builder = android.app.AlertDialog.Builder(this)
             builder.setTitle("选择通信协议")
@@ -276,13 +277,13 @@ class MainActivity : AppCompatActivity() {
             }
             builder.show()
         }
-        
+
         // 查找网络协议示例按钮
         val btnNetwork = findViewById<Button>(R.id.btnNetwork)
         // 设置按钮点击事件
         btnNetwork.setOnClickListener {
             Log.d("MainActivity", "=== Button clicked: Network Examples ===")
-            
+
             // 创建一个菜单，让用户选择要运行的网络协议
             val builder = android.app.AlertDialog.Builder(this)
             builder.setTitle("选择网络协议")
@@ -324,13 +325,13 @@ class MainActivity : AppCompatActivity() {
             }
             builder.show()
         }
-        
+
         // 查找设计模式示例按钮
         val btnDesignPatterns = findViewById<Button>(R.id.btnDesignPatterns)
         // 设置按钮点击事件
         btnDesignPatterns.setOnClickListener {
             Log.d("MainActivity", "=== Button clicked: Design Patterns Examples ===")
-            
+
             // 创建一个菜单，让用户选择要运行的设计模式
             val builder = android.app.AlertDialog.Builder(this)
             builder.setTitle("选择设计模式")
@@ -372,29 +373,29 @@ class MainActivity : AppCompatActivity() {
             }
             builder.show()
         }
-        
+
         // 查找 MVP 架构示例按钮
         val btnMVP = findViewById<Button>(R.id.btnMVP)
         // 设置按钮点击事件
         btnMVP.setOnClickListener {
             Log.d("MainActivity", "=== Button clicked: MVP Architecture Examples ===")
-            
+
             // 启动 MVP 统一管理类
             val intent = Intent(this, MVPMain::class.java)
             startActivity(intent)
         }
-        
+
         // 查找 WebRTC 示例按钮
         val btnWebRTC = findViewById<Button>(R.id.btnWebRTC)
         // 设置按钮点击事件
         btnWebRTC.setOnClickListener {
             Log.d("MainActivity", "=== Button clicked: WebRTC Examples ===")
-            
+
             // 启动 WebRTC 统一管理类
             val intent = Intent(this, WebRTCMain::class.java)
             startActivity(intent)
         }
-        
+
         // 查找视频编辑示例按钮
         val btnVideoEdit = findViewById<Button>(R.id.btnVideoEdit)
         // 设置按钮点击事件
@@ -404,7 +405,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, VideoEditActivity::class.java)
             startActivity(intent)
         }
-        
+
         // 查找 ANR 演示按钮
         val btnANR = findViewById<Button>(R.id.btnANR)
         // 设置按钮点击事件
@@ -420,7 +421,7 @@ class MainActivity : AppCompatActivity() {
         // 设置按钮点击事件
         btnOOM.setOnClickListener {
             Log.d("MainActivity", "=== Button clicked: OOM & Memory Leak Examples ===")
-            
+
             // 创建一个菜单，让用户选择要运行的内存相关示例
             val builder = android.app.AlertDialog.Builder(this)
             builder.setTitle("选择内存相关示例")
@@ -441,6 +442,16 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             builder.show()
+        }
+
+        // 查找 ARouter 示例按钮
+        val btnARouter = findViewById<Button>(R.id.btnARouter)
+        // 设置按钮点击事件
+        btnARouter.setOnClickListener {
+            Log.d("MainActivity", "=== Button clicked: ARouter Examples ===")
+            // 使用 Intent 直接启动 ARouterMainActivity
+            val intent = Intent(this, ARouterMainActivity::class.java)
+            startActivity(intent)
         }
 
         println("getWindow $window")

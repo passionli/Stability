@@ -11,6 +11,7 @@
 .DS_Store
 /build
 /apktool/build
+/online_coding/build
 /captures
 .externalNativeBuild
 .cxx

@@ -23,3 +23,13 @@
 # 排除特定类
 #-keep class com.android.internal.policy.PhoneWindow { *; }
 #-dontwarn com.android.internal.policy.PhoneWindow
+
+# ARouter 路由框架混淆规则
+-keep public class com.alibaba.android.arouter.routes.**{*;}
+-keep public class com.alibaba.android.arouter.facade.**{*;}
+-keep class * implements com.alibaba.android.arouter.facade.template.ISyringe{*;}
+-keep class * implements com.alibaba.android.arouter.facade.template.IProvider{*;}
+-keep class * implements com.alibaba.android.arouter.facade.template.IInterceptor{*;}
+-keep class * implements com.alibaba.android.arouter.facade.template.IProviderGroup{*;}
+-keep class * implements com.alibaba.android.arouter.facade.template.IRouteGroup{*;}
+-dontwarn com.alibaba.android.arouter.**

@@ -1,12 +1,6 @@
 plugins {
-    // 插件配置
     alias(libs.plugins.android.application)
-    // 应用 Android 应用插件
-    // 使用别名引用插件，版本在 libs.versions.toml 中定义
-    
     alias(libs.plugins.kotlin.compose)
-    // 应用 Kotlin Compose 插件
-    // 用于支持 Compose UI 开发
 }
 
 android {
@@ -24,28 +18,23 @@ android {
     }
 
     defaultConfig {
-        // 默认配置
         applicationId = "com.example.stability"
-        // 应用 ID，用于在 Google Play 商店中唯一标识应用
-        
         minSdk = 24
-        // 最低支持的 Android SDK 版本
-        
         targetSdk = 36
-        // 目标 Android SDK 版本
-        
         versionCode = 1
-        // 版本代码，用于应用更新
-        
         versionName = "1.0"
-        // 版本名称，显示给用户
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        // 测试运行器
 
         externalNativeBuild {
             cmake {
                 cppFlags += "-std=c++17"
+            }
+        }
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments["AROUTER_MODULE_NAME"] = project.name
             }
         }
     }
@@ -224,4 +213,13 @@ dependencies {
     
     // LeakCanary 内存泄漏检测框架（仅在 debug 版本集成）
     debugImplementation("com.squareup.leakcanary:leakcanary-android:${libs.versions.leakcanary.get()}")
+
+    // ARouter 路由框架
+    implementation(libs.arouter.api) {
+        exclude(group = "com.android.support")
+        exclude(group = "com.android.support:support-compat")
+        exclude(group = "com.android.support:support-media-compat")
+        exclude(group = "com.android.support:versionedparcelable")
+    }
+    annotationProcessor(libs.arouter.compiler)
 }

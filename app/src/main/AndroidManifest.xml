@@ -85,6 +85,25 @@
         <activity
             android:name=".oom.examples.LeakActivity"
             android:exported="true" />
+        
+        <activity
+            android:name=".arouter.ARouterMainActivity"
+            android:exported="true" />
+        <activity
+            android:name=".arouter.SimpleActivity"
+            android:exported="false" />
+        <activity
+            android:name=".arouter.WithParamsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".arouter.BundleActivity"
+            android:exported="false" />
+        <activity
+            android:name=".arouter.GroupTestActivity"
+            android:exported="false" />
+        <activity
+            android:name=".arouter.UriTestActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
