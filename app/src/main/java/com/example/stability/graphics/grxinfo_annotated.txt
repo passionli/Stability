@@ -1,0 +1,228 @@
+# ============================================================
+# adb shell dumpsys gfxinfo 输出文件
+# 这个命令用于获取应用的图形性能信息
+# 
+# 文件用途:
+# --------
+# 1. 分析应用的帧渲染性能
+# 2. 检测卡顿(jank)问题
+# 3. 查看内存使用情况
+# 4. 调试UI渲染问题
+# ============================================================
+
+# ============================================================
+# 一、应用图形加速信息头部
+# ============================================================
+
+Applications Graphics Acceleration Info:
+
+# 系统运行时间(毫秒)
+# Uptime: 系统启动后的运行时间(不包括深度睡眠)
+# Realtime: 实际时间(包括深度睡眠)
+Uptime: 544831038 Realtime: 544831038
+
+# ============================================================
+# 二、进程级图形信息
+# ============================================================
+
+# 分隔线: 表示以下是特定进程的图形信息
+# pid=19925: 进程ID
+# com.example.stability: 应用包名
+** Graphics info for pid 19925 [com.example.stability] **
+
+Stats since: 540692982212424ns  # 统计起始时间(纳秒)
+
+# 帧渲染统计
+Total frames rendered: 0          # 渲染的总帧数
+Janky frames: 0 (0.00%)          # 卡顿帧数(超过16.67ms的帧)及占比
+Janky frames (legacy): 0 (0.00%) # 旧版卡顿统计(超过16ms的帧)
+
+# 帧时间百分位数(单位:毫秒)
+# 这些值表示在对应百分位数的帧渲染耗时
+50th percentile: 4950ms          # 50%的帧耗时 <= 4950ms
+90th percentile: 4950ms          # 90%的帧耗时 <= 4950ms
+95th percentile: 4950ms          # 95%的帧耗时 <= 4950ms
+99th percentile: 4950ms          # 99%的帧耗时 <= 4950ms
+
+# 各类问题帧计数
+Number Missed Vsync: 0           # 错过Vsync信号的帧数
+Number High input latency: 0     # 高输入延迟帧数
+Number Slow UI thread: 0         # UI线程慢帧数
+Number Slow bitmap uploads: 0    # 位图上传慢帧数
+Number Slow issue draw commands: 0 # 绘制命令慢帧数
+Number Frame deadline missed: 0  # 错过帧截止期限的帧数
+Number Frame deadline missed (legacy): 0 # 旧版统计
+
+# 帧耗时直方图(统计各耗时区间的帧数)
+HISTOGRAM: 5ms=0 6ms=0 7ms=0 8ms=0 9ms=0 10ms=0 11ms=0 12ms=0 13ms=0 14ms=0 15ms=0 16ms=0 17ms=0 18ms=0 19ms=0 20ms=0 21ms=0 22ms=0 23ms=0 24ms=0 25ms=0 26ms=0 27ms=0 28ms=0 29ms=0 30ms=0 31ms=0 32ms=0 34ms=0 36ms=0 38ms=0 40ms=0 42ms=0 44ms=0 46ms=0 48ms=0 53ms=0 57ms=0 61ms=0 65ms=0 69ms=0 73ms=0 77ms=0 81ms=0 85ms=0 89ms=0 93ms=0 97ms=0 101ms=0 105ms=0 109ms=0 113ms=0 117ms=0 121ms=0 125ms=0 129ms=0 133ms=0 150ms=0 200ms=0 250ms=0 300ms=0 350ms=0 400ms=0 450ms=0 500ms=0 550ms=0 600ms=0 650ms=0 700ms=0 750ms=0 800ms=0 850ms=0 900ms=0 950ms=0 1000ms=0 1050ms=0 1100ms=0 1150ms=0 1200ms=0 1250ms=0 1300ms=0 1350ms=0 1400ms=0 1450ms=0 1500ms=0 1550ms=0 1600ms=0 1650ms=0 1700ms=0 1750ms=0 1800ms=0 1850ms=0 1900ms=0 1950ms=0 2000ms=0 2050ms=0 2100ms=0 2150ms=0 2200ms=0 2250ms=0 2300ms=0 2350ms=0 2400ms=0 2450ms=0 2500ms=0 2550ms=0 2600ms=0 2650ms=0 2700ms=0 2750ms=0 2800ms=0 2850ms=0 2900ms=0 2950ms=0 3000ms=0 3050ms=0 3100ms=0 3150ms=0 3200ms=0 3250ms=0 3300ms=0 3350ms=0 3400ms=0 3450ms=0 3500ms=0 3550ms=0 3600ms=0 3650ms=0 3700ms=0 3750ms=0 3800ms=0 3850ms=0 3900ms=0 3950ms=0 4000ms=0 4050ms=0 4100ms=0 4150ms=0 4200ms=0 4250ms=0 4300ms=0 4350ms=0 4400ms=0 4450ms=0 4500ms=0 4550ms=0 4600ms=0 4650ms=0 4700ms=0 4750ms=0 4800ms=0 4850ms=0 4900ms=0 4950ms=0
+
+# GPU帧耗时百分位数(单位:毫秒)
+50th gpu percentile: 4950ms
+90th gpu percentile: 4950ms
+95th gpu percentile: 4950ms
+99th gpu percentile: 4950ms
+
+# GPU帧耗时直方图
+GPU HISTOGRAM: 1ms=0 2ms=0 3ms=0 4ms=0 5ms=0 6ms=0 7ms=0 8ms=0 9ms=0 10ms=0 11ms=0 12ms=0 13ms=0 14ms=0 15ms=0 16ms=0 17ms=0 18ms=0 19ms=0 20ms=0 21ms=0 22ms=0 23ms=0 24ms=0 25ms=0 4950ms=0
+
+# ============================================================
+# 三、渲染管线和内存信息
+# ============================================================
+
+Pipeline=Skia (OpenGL)           # 使用Skia渲染引擎,基于OpenGL
+
+# CPU缓存信息
+CPU Caches:
+  Glyph Cache: 84.14 KB (1 entry)  # 字形缓存:84.14KB,1个条目
+  Glyph Count: 10                   # 字形数量:10个
+
+# CPU内存使用总量
+Total CPU memory usage:
+  86156 bytes, 84.14 KB (0.00 bytes is purgeable)  # 总CPU内存
+
+# GPU缓存信息
+GPU Caches:
+  Other:
+    Other: 5.01 KB (1 entry)       # 其他缓存
+  Image:
+    Texture: 183.05 KB (2 entries) # 纹理缓存
+  Scratch:
+    Buffer Object: 112.00 KB (3 entries)  # 缓冲区对象
+    RenderTarget: 8.77 MB (1 entry)       # 渲染目标
+    Texture: 2.00 MB (2 entries)          # 纹理
+
+# GPU内存使用总量
+Total GPU memory usage:
+  11595960 bytes, 11.06 MB (9.01 MB is purgeable)  # 总GPU内存
+
+# ============================================================
+# 四、MainActivity 的详细帧统计
+# ============================================================
+
+Profile data in ms:
+
+# 视图根节点信息
+# visibility=8: 视图可见性状态(8表示可见)
+	com.example.stability/com.example.stability.MainActivity/android.view.ViewRootImpl@a071cc0 (visibility=8)
+
+Window: com.example.stability/com.example.stability.MainActivity
+
+Stats since: 530958415015509ns    # 统计起始时间
+Total frames rendered: 100         # 渲染总帧数:100帧
+Janky frames: 0 (0.00%)           # 卡顿帧数:0
+Janky frames (legacy): 41 (41.00%) # 旧版卡顿帧数:41帧(41%)
+
+# 帧时间百分位数
+50th percentile: 16ms             # 中位数:16ms
+90th percentile: 32ms             # 90%帧耗时 <= 32ms
+95th percentile: 69ms             # 95%帧耗时 <= 69ms
+99th percentile: 900ms            # 99%帧耗时 <= 900ms
+
+# 问题帧计数
+Number Missed Vsync: 0
+Number High input latency: 41     # 高输入延迟:41帧
+Number Slow UI thread: 0
+Number Slow bitmap uploads: 0
+Number Slow issue draw commands: 0
+Number Frame deadline missed: 0
+Number Frame deadline missed (legacy): 11
+
+# MainActivity的帧耗时直方图
+HISTOGRAM: 5ms=2 6ms=2 7ms=4 8ms=5 9ms=8 10ms=7 11ms=10 12ms=3 13ms=2 14ms=4 15ms=3 16ms=1 17ms=8 18ms=8 19ms=7 20ms=5 21ms=3 22ms=3 23ms=0 24ms=1 25ms=0 26ms=0 27ms=0 28ms=0 29ms=1 30ms=0 31ms=2 32ms=2 34ms=0 36ms=0 38ms=0 40ms=0 42ms=0 44ms=0 46ms=0 48ms=2 53ms=0 57ms=0 61ms=2 65ms=0 69ms=1 73ms=0 77ms=0 81ms=0 85ms=0 89ms=0 93ms=0 97ms=0 101ms=0 105ms=0 109ms=0 113ms=0 117ms=0 121ms=0 125ms=0 129ms=0 133ms=0 150ms=2 200ms=0 250ms=0 300ms=0 350ms=0 400ms=0 450ms=0 500ms=0 550ms=0 600ms=0 650ms=0 700ms=1 800ms=0 850ms=0 900ms=1 950ms=0 1000ms=0 1050ms=0 1100ms=0 1150ms=0 1200ms=0 1250ms=0 1300ms=0 1350ms=0 1400ms=0 1450ms=0 1500ms=0 1550ms=0 1600ms=0 1650ms=0 1700ms=0 1750ms=0 1800ms=0 1850ms=0 1900ms=0 1950ms=0 2000ms=0 2050ms=0 2100ms=0 2150ms=0 2200ms=0 2250ms=0 2300ms=0 2350ms=0 2400ms=0 2450ms=0 2500ms=0 2550ms=0 2600ms=0 2650ms=0 2700ms=0 2750ms=0 2800ms=0 2850ms=0 2900ms=0 2950ms=0 3000ms=0 3050ms=0 3100ms=0 3150ms=0 3200ms=0 3250ms=0 3300ms=0 3350ms=0 3400ms=0 3450ms=0 3500ms=0 3550ms=0 3600ms=0 3650ms=0 3700ms=0 3750ms=0 3800ms=0 3850ms=0 3900ms=0 3950ms=0 4000ms=0 4050ms=0 4100ms=0 4150ms=0 4200ms=0 4250ms=0 4300ms=0 4350ms=0 4400ms=0 4450ms=0 4500ms=0 4550ms=0 4600ms=0 4650ms=0 4700ms=0 4750ms=0 4800ms=0 4850ms=0 4900ms=0 4950ms=0
+
+# GPU帧耗时百分位数
+50th gpu percentile: 4950ms
+90th gpu percentile: 4950ms
+95th gpu percentile: 4950ms
+99th gpu percentile: 4950ms
+
+GPU HISTOGRAM: 1ms=0 2ms=0 3ms=0 4ms=0 5ms=0 6ms=0 7ms=0 8ms=0 9ms=0 10ms=0 11ms=0 12ms=0 13ms=0 14ms=0 15ms=0 16ms=0 17ms=0 18ms=0 19ms=0 20ms=0 21ms=0 22ms=0 23ms=0 24ms=0 25ms=0 4950ms=0
+
+# ============================================================
+# 五、帧时间线数据(PROFILEDATA)
+# ============================================================
+
+---PROFILEDATA---
+
+# 列标题说明(单位:纳秒):
+# Flags: 帧标志位(1=首次绘制,2=SurfaceControl)
+# FrameTimelineVsyncId: 帧时间线Vsync ID
+# IntendedVsync: 预期Vsync时间
+# Vsync: 实际Vsync时间
+# InputEventId: 输入事件ID
+# HandleInputStart: 开始处理输入时间
+# AnimationStart: 开始动画时间
+# PerformTraversalsStart: 开始执行遍历时间(measure/layout/draw)
+# DrawStart: 开始绘制时间
+# FrameDeadline: 帧截止时间
+# FrameInterval: 帧间隔(通常16666666ns=16.67ms)
+# FrameStartTime: 帧开始时间
+# SyncQueued: 同步入队时间
+# SyncStart: 同步开始时间
+# IssueDrawCommandsStart: 开始发出绘制命令时间
+# SwapBuffers: 交换缓冲区时间
+# FrameCompleted: 帧完成时间
+# DequeueBufferDuration: 出队缓冲区耗时
+# QueueBufferDuration: 入队缓冲区耗时
+# GpuCompleted: GPU完成时间
+# SwapBuffersCompleted: 交换缓冲区完成时间
+# DisplayPresentTime: 显示呈现时间
+
+Flags,FrameTimelineVsyncId,IntendedVsync,Vsync,InputEventId,HandleInputStart,AnimationStart,PerformTraversalsStart,DrawStart,FrameDeadline,FrameInterval,FrameStartTime,SyncQueued,SyncStart,IssueDrawCommandsStart,SwapBuffers,FrameCompleted,DequeueBufferDuration,QueueBufferDuration,GpuCompleted,SwapBuffersCompleted,DisplayPresentTime,
+
+# 示例帧数据解释(第一帧):
+# 1,3437934,530958131459894,530958431459882,0,530958443048009,530958443050300,530958443166217,530958736247092,530958148126560,530958443003967,16666666,530958835225884,530958841017967,530958841318467,530958993699426,530959047329176,9084,25552458,-1,530959047329176,0,
+# - Flags=1: 首次绘制帧
+# - FrameTimelineVsyncId=3437934: 帧ID
+# - 帧间隔=16666666ns: 标准60fps帧间隔
+# - DequeueBufferDuration=9084ns: 出队耗时约9微秒
+# - QueueBufferDuration=25552458ns: 入队耗时约25.6毫秒
+
+# 以下是详细的帧时间线数据(共约100帧)
+1,3437934,530958131459894,530958431459882,0,530958443048009,530958443050300,530958443166217,530958736247092,530958148126560,530958443003967,16666666,530958835225884,530958841017967,530958841318467,530958993699426,530959047329176,9084,25552458,-1,530959047329176,0,
+0,3437970,530958448126548,530959081459856,0,530959095840551,530959095843134,530959114280259,530959114421426,530958464793214,530959095729092,16666666,530959133695842,530959134836342,530959134909717,530959142430217,530959151561134,3958,2761875,-1,530959151561134,0,
+0,3438026,530959114793188,530959131459854,0,530959144759134,530959144760384,530959147499342,530959147729842,530959131459854,530959144751634,16666666,530959150496384,530959151571051,530959151672634,530959153045301,530959254586259,97652666,2043917,-1,530959254586259,0,
+0,3438033,530959164793186,530959198126518,0,530959208477509,530959208478426,530959208685134,530959208987717,530959181459852,530959208471509,16666666,530959273332009,530959273443217,530959273665134,530959275237051,530959316798092,32093875,4019750,-1,530959316798092,0,
+0,3438039,530959231459850,530959264793182,0,530959274893426,530959274894426,530959275418134,530959275488384,530959248126516,530959274887717,16666666,530959281979551,530959316805134,530959316867759,530959322825301,530959328752717,306917,544125,-1,530959328752717,0,
+0,3438045,530959281459848,530959314793180,0,530959329636717,530959329638009,530959330619342,530959330747217,530959298126514,530959329629551,16666666,530959339701467,530959339859342,530959339922051,530959344449884,530959350362051,3709,900750,-1,530959350362051,0,
+0,3438049,530959331459846,530959331459846,0,530959341062759,530959341063967,530959342419134,530959342474009,530959348126512,530959341056717,16666666,530959344479342,530959350428301,530959350675592,530959352341592,530959368897551,11454542,1725333,-1,530959368897551,0,
+0,3438051,530959348126512,530959348126512,0,530959351214801,530959351215759,530959351533426,530959351581967,530959364793178,530959351207426,16666666,530959353235384,530959368906134,530959369048259,530959370957217,530959397771759,22015625,221125,-1,530959397771759,0,
+# ... (更多帧数据省略)
+
+# ============================================================
+# 六、ARouterMainActivity 的详细帧统计
+# ============================================================
+
+	com.example.stability/com.example.stability.arouter.ARouterMainActivity/android.view.ViewRootImpl@c49edf9 (visibility=0)
+Window: com.example.stability/com.example.stability.arouter.ARouterMainActivity
+Stats since: 530980683262769ns
+Total frames rendered: 65          # 渲染总帧数:65帧
+Janky frames: 0 (0.00%)           # 卡顿帧数:0
+Janky frames (legacy): 27 (41.54%) # 旧版卡顿帧数:27帧(41.54%)
+
+# 帧时间百分位数
+50th percentile: 16ms             # 中位数:16ms
+90th percentile: 18ms             # 90%帧耗时 <= 18ms
+95th percentile: 19ms             # 95%帧耗时 <= 19ms
+99th percentile: 93ms             # 99%帧耗时 <= 93ms
+
+# 问题帧计数
+Number Missed Vsync: 0
+Number High input latency: 34     # 高输入延迟:34帧
+Number Slow UI thread: 0
+Number Slow bitmap uploads: 0
+Number Slow issue draw commands: 0
+Number Frame deadline missed: 0
+Number Frame deadline missed (legacy): 2
+
+# ============================================================
+# 总结
+# ============================================================
+
+# 从这份日志可以看出:
+# 1. MainActivity渲染了100帧,ARouterMainActivity渲染了65帧
+# 2. 虽然没有现代意义上的janky帧,但旧版统计显示有41%的帧超过16ms
+# 3. 主要问题是高输入延迟(High input latency),有41帧受影响
+# 4. GPU内存使用约11MB,CPU内存约84KB
+# 5. 渲染引擎使用Skia(OpenGL)
+# ============================================================

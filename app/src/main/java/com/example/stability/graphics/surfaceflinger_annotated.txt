@@ -1,0 +1,367 @@
+# ============================================================
+# SurfaceFlinger 调试信息文件
+# 这个文件是通过命令: adb shell dumpsys SurfaceFlinger 生成的
+# 
+# SurfaceFlinger 是什么?
+# ----------------------
+# SurfaceFlinger 是 Android 系统的核心图形服务,负责:
+# 1. 管理所有应用的显示图层(Layer)
+# 2. 将多个图层合成为最终显示画面
+# 3. 与硬件显示控制器(HWC)通信
+# 4. 同步 VSYNC 信号确保流畅显示
+# 
+# 这个文件包含了系统显示的所有底层信息,帮助开发者诊断显示问题
+# ============================================================
+
+# ============================================================
+# 一、构建配置信息
+# ============================================================
+
+# SurfaceFlinger 在编译时设置的配置参数
+Build configuration: [sf PRESENT_TIME_OFFSET=0 FORCE_HWC_FOR_RBG_TO_YUV=0 MAX_VIRT_DISPLAY_DIM=0 RUNNING_WITHOUT_SYNC_FRAMEWORK=0 NUM_FRAMEBUFFER_SURFACE_BUFFERS=2]
+# 各项参数说明:
+# - PRESENT_TIME_OFFSET=0       : 显示时间偏移(0表示无偏移)
+# - FORCE_HWC_FOR_RBG_TO_YUV=0  : 是否强制用硬件处理颜色转换(0=否)
+# - MAX_VIRT_DISPLAY_DIM=0      : 最大虚拟显示器尺寸(0=无限制)
+# - RUNNING_WITHOUT_SYNC_FRAMEWORK=0 : 是否脱离同步框架运行(0=否)
+# - NUM_FRAMEBUFFER_SURFACE_BUFFERS=2 : 帧缓冲数量(2=双缓冲)
+
+# ============================================================
+# 二、显示设备信息
+# ============================================================
+
+Display identification data:
+# 显示设备的唯一标识信息
+# Display ID: 4619827259835644672 (HWC display 0)
+# - port=0          : 显示端口号
+# - pnpId=GGL       : 即插即用设备标识(GGL=Google Graphics Library)
+# - displayName     : 显示设备名称(EMU_display_0=模拟器显示)
+Display 4619827259835644672 (HWC display 0): port=0 pnpId=GGL displayName="EMU_display_0"
+
+# ============================================================
+# 三、广色域与色彩管理
+# ============================================================
+
+Wide-Color information:
+Device has wide color built-in display: 0  # 是否支持广色域显示: 否(0)
+Device uses color management: 1            # 是否启用色彩管理: 是(1)
+DisplayColorSetting: Managed               # 色彩设置模式: 系统管理
+Display 4619827259835644672 color modes:
+    ColorMode::NATIVE (0)                 # 原生色彩模式(ID=0)
+    Current color mode: ColorMode::NATIVE (0)  # 当前使用原生模式
+
+# ============================================================
+# 四、同步配置
+# ============================================================
+
+# 使用 EGL_KHR_fence_sync 扩展进行 GPU 同步操作
+# 这是 OpenGL ES 的标准同步机制
+Sync configuration: [using: EGL_KHR_fence_sync]
+
+# ============================================================
+# 五、调度器状态
+# ============================================================
+
+Scheduler:
++  Idle timer: off              # 空闲计时器: 关闭
++  Touch timer: off             # 触摸计时器: 关闭
++  Content detection: off       # 内容检测: 关闭
+   LayerHistory{size=93, active=0}  # 图层历史记录: 共93条,0条活跃
+
+# 帧率覆盖设置(用于调试)
+Frame Rate Overrides (backdoor): {}  # 后门方式覆盖: 无
+Frame Rate Overrides (setFrameRate): {}  # API方式覆盖: 无
+
+# 屏幕状态统计
+ScreenOff: 0d00:00:00.006       # 屏幕关闭累计时间: 约6毫秒
+60.00fps: 6d07:20:56.980        # 60fps运行累计时间: 约6天7小时
+
+# ============================================================
+# 六、VSYNC 时序参数 (单位: 纳秒)
+# ============================================================
+
+# VSYNC 是垂直同步信号,确保画面流畅不撕裂
+# 60fps 下,每个帧的时间约为 16.67毫秒(16666666纳秒)
+
+# 时序参数说明:
+# app phase       : 应用渲染阶段的时间偏移
+# app duration    : 应用渲染的可用时间窗口
+# SF phase        : SurfaceFlinger合成阶段的时间偏移
+# SF duration     : SurfaceFlinger合成的可用时间窗口
+# early app       : 提前渲染阶段(用于高优先级任务)
+# HWC min duration: 硬件合成器最小耗时
+# present offset  : 画面显示偏移
+# VSYNC period    : VSYNC信号周期
+
+           app phase:      1000000 ns         SF phase:      1000000 ns
+           app duration:  16666666 ns         SF duration:  15666666 ns
+     early app phase:      1000000 ns       early SF phase:      1000000 ns
+     early app duration:  16666666 ns       early SF duration:  15666666 ns
+  GL early app phase:      1000000 ns	GL early SF phase:      1000000 ns
+  GL early app duration:  16666666 ns	GL early SF duration:  15666666 ns
+       HWC min duration:         0 ns
+      present offset:         0 ns         VSYNC period:  16666666 ns
+
+# ============================================================
+# 七、显示模式规格
+# ============================================================
+
+# DisplayManager 期望的显示模式
+DesiredDisplayModeSpecs (DisplayManager): default mode ID: 0, allowGroupSwitching = 0, primary range: [0.00fps 60.00fps], app request range: [0.00fps inffps]
+# - default mode ID=0      : 默认模式ID
+# - allowGroupSwitching=0  : 不允许模式组切换
+# - primary range          : 主帧率范围 [0-60fps]
+# - app request range      : 应用请求范围 [0-无穷]
+
+# 当前显示模式详情
+Current mode: {id=0, hwcId=0, fps=60.00, width=1080, height=2340 group=-1}
+# - id=0          : 模式ID
+# - hwcId=0       : 硬件合成器模式ID
+# - fps=60.00     : 刷新率60帧/秒
+# - width=1080    : 屏幕宽度(像素)
+# - height=2340   : 屏幕高度(像素)
+# - group=-1      : 无分组
+
+Refresh rates:
+	{id=0, hwcId=0, fps=60.00, width=1080, height=2340 group=-1}  # 支持的刷新率列表
+Supports Frame Rate Override: no  # 是否支持帧率覆盖: 否
+
+(mode override by backdoor: no)  # 后门覆盖: 否
+
+# ============================================================
+# 八、应用端 VSYNC 状态
+# ============================================================
+
+# 应用层的 VSYNC 连接状态
+app: state=Idle VSyncState={displayId=4619827259835644672, count=1373820}
+# - state=Idle         : 当前状态空闲
+# - displayId          : 显示设备ID
+# - count=1373820      : VSYNC信号计数(已发生的次数)
+
+  pending events (count=0):      # 待处理事件数: 0
+  connections (count=19):        # 已建立的VSYNC连接数: 19个
+    Connection{0xb40000748ce6e850, VSyncRequest::None}  # 每个连接的地址和请求状态
+    Connection{0xb40000748ce718b0, VSyncRequest::None}
+    Connection{0xb40000748ce6fed0, VSyncRequest::None}
+    Connection{0xb40000748ce70c50, VSyncRequest::None}
+    Connection{0xb40000748ce6f030, VSyncRequest::None}
+    Connection{0xb40000748ce70b30, VSyncRequest::None}
+    Connection{0xb40000748ce75d50, VSyncRequest::None}
+    Connection{0xb40000748ce73050, VSyncRequest::None}
+    Connection{0xb40000748ce73a70, VSyncRequest::None}
+    Connection{0xb40000748ce72630, VSyncRequest::None}
+    Connection{0xb40000748ce73710, VSyncRequest::None}
+    Connection{0xb40000748ce74fd0, VSyncRequest::None}
+    Connection{0xb40000748ce73950, VSyncRequest::None}
+    Connection{0xb40000748ce759f0, VSyncRequest::None}
+    Connection{0xb40000748ce78c90, VSyncRequest::None}
+    Connection{0xb40000748ce77df0, VSyncRequest::None}
+    Connection{0xb40000748ce7d130, VSyncRequest::None}
+    Connection{0xb40000748ce769b0, VSyncRequest::None}
+    Connection{0xb40000748ce757b0, VSyncRequest::None}
+
+# ============================================================
+# 九、VSYNC 核心组件状态
+# ============================================================
+
+# VSyncReactor: 处理VSYNC信号的核心组件
+VSyncReactor:
+VsyncReactor in use                    # 正在使用
+Has 0 unfired fences                   # 未触发的同步栅栏: 0
+mInternalIgnoreFences=0                # 内部忽略栅栏数: 0
+mExternalIgnoreFences=1                # 外部忽略栅栏数: 1
+mMoreSamplesNeeded=0                   # 是否需要更多采样: 否
+mPeriodConfirmationInProgress=0        # 是否正在确认周期: 否
+mPeriodTransitioningTo=nullptr         # 正在过渡的周期: 无
+No Last HW vsync                       # 无最近硬件VSYNC记录
+
+# VSyncTracker: 追踪VSYNC周期
+VSyncTracker:
+	mIdealPeriod=16.67                   # 理想周期: 16.67毫秒(60fps)
+	Refresh Rate Map:                    # 刷新率映射表
+		For ideal period 16.67ms: period = 16.67ms, intercept = 0
+
+# VSyncDispatch: 分发VSYNC信号给各个监听者
+VSyncDispatch:
+	Timer:
+		DebugState: Waiting              # 定时器状态: 等待中
+	mTimerSlack: 0.50ms                  # 定时器松弛时间: 0.5毫秒
+	mMinVsyncDistance: 3.00ms            # 最小VSYNC间隔: 3毫秒
+	mIntendedWakeupTime: 9222826754048.00ms from now  # 预期唤醒时间
+	mLastTimerCallback: 18211.04ms ago    # 上次定时器回调: 约18秒前
+	mLastTimerSchedule: 18211.02ms ago    # 上次定时器调度: 约18秒前
+	
+	Callbacks:                           # 注册的回调函数
+		sf:                              # SurfaceFlinger回调
+			workDuration: 15.67ms readyDuration: 0.00ms earliestVsync: -81396.84ms relative to now
+			mLastDispatchTime: 21380.18ms ago
+		appSf:                           # 应用+SurfaceFlinger回调
+			workDuration: 16.67ms readyDuration: 15.67ms earliestVsync: -13879346.00ms relative to now
+			mLastDispatchTime: 13879346.00ms ago
+		app:                             # 应用回调
+			workDuration: 16.67ms readyDuration: 15.67ms earliestVsync: -18180.18ms relative to now
+			mLastDispatchTime: 18180.19ms ago
+
+# ============================================================
+# 十、静态屏幕统计
+# ============================================================
+
+# 统计屏幕长时间不刷新的状态分布
+Static screen stats:
+  < 1 frames: 11828.544 s (2.2%)    # 连续小于1帧静止: 约3.3小时(2.2%)
+  < 2 frames: 16787.172 s (3.1%)    # 连续小于2帧静止: 约4.7小时(3.1%)
+  < 3 frames: 5385.248 s (1.0%)     # 连续小于3帧静止: 约1.5小时(1.0%)
+  < 4 frames: 498.796 s (0.1%)      # 连续小于4帧静止: 约8分钟(0.1%)
+  < 5 frames: 60.653 s (0.0%)       # 连续小于5帧静止: 约1分钟(0.0%)
+  < 6 frames: 61.532 s (0.0%)       # 连续小于6帧静止: 约1分钟(0.0%)
+  < 7 frames: 55.371 s (0.0%)       # 连续小于7帧静止: 约1分钟(0.0%)
+  7+ frames: 510157.562 s (93.6%)   # 连续7帧以上静止: 约5.9天(93.6%)
+
+# ============================================================
+# 十一、丢帧统计
+# ============================================================
+
+Total missed frame count: 9099       # 总丢帧数: 9099帧
+HWC missed frame count: 9099         # 硬件合成器丢帧: 9099帧
+GPU missed frame count: 0            # GPU丢帧: 0帧
+
+# ============================================================
+# 十二、可见图层信息
+# ============================================================
+
+Visible layers (count = 95)           # 当前可见图层数量: 95个
+GraphicBufferProducers: 0, max 4096   # GraphicBuffer生产者: 0个(最大4096)
+
+# ============================================================
+# 十三、合成图层详情
+# ============================================================
+
+Composition layers
+
+# 图层1: 我们的应用主界面
+* Layer 0xb40000756cfdb330 (com.example.stability/com.example.stability.arouter.ARouterMainActivity#0)
+      isSecure=false                    # 是否安全图层: 否
+      geomUsesSourceCrop=true           # 使用源裁剪: 是
+      geomBufferUsesDisplayInverseTransform=false  # 不使用显示反转变换
+      geomLayerTransform (ROT_0) (IDENTITY)        # 无旋转,恒等变换
+      geomBufferSize=[0 0 1080 2340]   # 缓冲区尺寸: 1080x2340
+      geomContentCrop=[0 0 1080 2340]  # 内容裁剪区域
+      geomCrop=[0 0 -1 -1]             # 裁剪区域(-1表示无限制)
+      geomBufferTransform=0             # 缓冲区变换: 无
+      geomLayerBounds=[0.000000 0.000000 1080.000000 2340.000000]  # 图层边界
+      shadowRadius=0.000000             # 阴影半径: 0
+      blend=NONE (1)                    # 混合模式: 无
+      alpha=1.000000                    # 透明度: 完全不透明
+      backgroundBlurRadius=0            # 背景模糊: 无
+      composition type=DEVICE (2)       # 合成类型: 硬件合成(DEVICE)
+      buffer: slot=62 buffer=0xb40000748ce7ae50  # 缓冲区槽位和地址
+      sideband stream=0x0               # 边带流: 无
+      color=[0.000000 0.000000 0.000000]  # 颜色: 黑色
+      isOpaque=true                     # 是否不透明: 是
+      hasProtectedContent=false         # 是否有受保护内容: 否
+      isColorspaceAgnostic=false        # 是否颜色空间无关: 否
+      dataspace=UNKNOWN (0)             # 数据空间: 未知
+      hdr metadata types=0              # HDR元数据类型: 无
+      colorTransform=[[1.000,0.000,0.000,0.000][0.000,1.000,0.000,0.000][0.000,0.000,1.000,0.000][0.000,0.000,0.000,1.000]]
+
+# 图层2: 状态栏(显示时间、电量等)
+* Layer 0xb40000756cf555c0 (StatusBar#0)
+      isSecure=false geomUsesSourceCrop=true geomBufferUsesDisplayInverseTransform=false geomLayerTransform (ROT_0) (IDENTITY)
+      geomBufferSize=[0 0 1080 145]    # 状态栏高度: 145像素
+      geomContentCrop=[0 0 1080 145]
+      geomCrop=[0 0 -1 -1] geomBufferTransform=0 
+      geomLayerBounds=[0.000000 0.000000 1080.000000 145.000000]
+      shadowRadius=0.000000 
+      blend=PREMULTIPLIED (2)           # 混合模式: 预乘alpha
+      alpha=1.000000 backgroundBlurRadius=0 composition type=DEVICE (2) 
+      buffer: slot=62 buffer=0xb40000748ce6d530 
+
+# 图层3: 导航栏(底部虚拟按键)
+* Layer 0xb40000756cf5b0e0 (NavigationBar0#0)
+      geomBufferSize=[0 0 1080 132]    # 导航栏高度: 132像素
+      geomLayerBounds=[0.000000 0.000000 1080.000000 132.000000]
+      blend=PREMULTIPLIED (2) alpha=1.000000 composition type=DEVICE (2) 
+
+# 图层4-5: 屏幕装饰覆盖层(圆角/刘海屏适配)
+* Layer 0xb40000756cf33300 (ScreenDecorOverlay#0)      # 顶部装饰
+* Layer 0xb40000756cf52830 (ScreenDecorOverlayBottom#0) # 底部装饰
+
+# ============================================================
+# 十四、显示设备详情
+# ============================================================
+
+Displays (1 entries)
++ DisplayDevice{4619827259835644672, internal, primary, "EMU_display_0"}
+   powerMode=On (2)                    # 电源模式: 开启
+   activeMode={id=0, hwcId=0, width=1080, height=2340, refreshRate=60.00fps, dpiX=440.00, dpiY=440.00, group=-1}
+   # 显示参数: 1080x2340分辨率,60fps刷新率,440dpi
+   
+   supportedModes=
+     {id=0, hwcId=0, width=1080, height=2340, refreshRate=60.00fps, dpiX=440.00, dpiY=440.00, group=-1}
+   
+   deviceProductInfo={name=EMU_display_0, manufacturerPnpId=GGL, productId=1, manufactureWeek=27, manufactureYear=2006, relativeAddress=[]}
+   
+   Composition Display State: ["EMU_display_0"]
+   isVirtual=false                     # 非虚拟显示器
+   isEnabled=true                      # 已启用
+   isSecure=true                       # 安全显示
+   usesClientComposition=false         # 不使用客户端合成
+   usesDeviceComposition=true          # 使用设备合成
+   
+   # 各种坐标空间(都是1080x2340)
+   layerStackSpace=ProjectionSpace(bounds = Rect(0, 0, 1080, 2340), content = Rect(0, 0, 1080, 2340), orientation = ROTATION_0) 
+   framebufferSpace=ProjectionSpace(bounds = Rect(0, 0, 1080, 2340), content = Rect(0, 0, 1080, 2340), orientation = ROTATION_0) 
+   orientedDisplaySpace=ProjectionSpace(bounds = Rect(0, 0, 1080, 2340), content = Rect(0, 0, 1080, 2340), orientation = ROTATION_0) 
+   displaySpace=ProjectionSpace(bounds = Rect(0, 0, 1080, 2340), content = Rect(0, 0, 1080, 2340), orientation = ROTATION_0) 
+   
+   colorMode=NATIVE (0)                # 颜色模式: 原生
+   HWC Support: wideColorGamut=false hdr10plus=false hdr10=false hlg=false dv=false  # 不支持HDR
+   
+   # 帧缓冲表面
+   size=[1080 2340]                    # 尺寸
+   ANativeWindow=0xb40000755ce6d440    # 原生窗口指针
+   flips=1978034                       # 缓冲区翻转次数
+
+# ============================================================
+# 十五、HWC 图层表
+# ============================================================
+
+Display 4619827259835644672 HWC layers:
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Layer name
+           Z |  Window Type |  Comp Type |  Transform |   Disp Frame (LTRB) |          Source Crop (LTRB) |     Frame Rate (Explicit) (Seamlessness) [Focused]
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+# 应用主界面 - Z轴0层,窗口类型1,硬件合成
+ com.example.stability/com.example.stability.arouter.ARouterMainActivity#0
+  rel      0 |            1 |     DEVICE |          0 |    0    0 1080 2340 |    0.0    0.0 1080.0 2340.0 |                                              [*]
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+# 状态栏 - Z轴0层,窗口类型2000(系统UI)
+ StatusBar#0
+  rel      0 |         2000 |     DEVICE |          0 |    0    0 1080  145 |    0.0    0.0 1080.0  145.0 |                                              [ ]
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+# 导航栏 - Z轴0层,窗口类型2019
+ NavigationBar0#0
+  rel      0 |         2019 |     DEVICE |          0 |    0 2208 1080 2340 |    0.0    0.0 1080.0  132.0 |                                              [ ]
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# ============================================================
+# 十六、缓冲区分配统计
+# ============================================================
+
+GraphicBufferAllocator buffers:
+    Handle |        Size |     W (Stride) x H | Layers |   Format |      Usage | Requestor
+0xb40000744ce72cd0 | 9871.88 KiB | 1080 (1080) x 2340 |      1 |        1 | 0x    1b00 | FramebufferSurface
+0xb40000744ce73c90 | 9871.88 KiB | 1080 (1080) x 2340 |      1 |        1 | 0x    1b00 | FramebufferSurface
+Total allocated by GraphicBufferAllocator (estimate): 19743.75 KB  # 约19MB
+
+# ============================================================
+# 总结
+# ============================================================
+
+# 从这份日志可以看出:
+# 1. 系统使用60fps刷新率,分辨率1080x2340
+# 2. 当前有95个可见图层,主要是应用界面、状态栏、导航栏
+# 3. 所有可见图层都使用硬件合成(DEVICE)
+# 4. 有9099帧丢帧,都是硬件合成器导致的
+# 5. 屏幕大部分时间处于静止状态(93.6%)
+# ============================================================
