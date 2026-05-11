@@ -8,6 +8,16 @@ import java.util.*
  * 特点：可以表示各种复杂的关系，如社交网络、地图等
  */
 class GraphExample {
+
+    private class Node {
+        var value : Int = 0
+        // 出度
+        var children = mutableListOf<Node>()
+        // 入度
+        var parents = mutableListOf<Node>()
+    }
+
+    private val nodes = mutableMapOf<Int, Node>()
     
     private val adjacencyList = mutableMapOf<Int, MutableList<Int>>()
     
@@ -55,6 +65,12 @@ class GraphExample {
      * 创建一个图
      */
     private fun createGraph() {
+        // 0 -> 1 -> 3
+        // 0 -> 1 -> 3 -> 4
+        // 0 -> 1 -> 3 -> 4 -> 5
+        // 0 -> 1 -> 3 -> 5
+        // 0 -> 1 -> 4
+        // 0 -> 2 -> 4
         // 添加顶点和边
         addEdge(0, 1)
         addEdge(0, 2)

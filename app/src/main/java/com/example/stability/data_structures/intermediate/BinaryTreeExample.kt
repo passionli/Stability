@@ -45,16 +45,20 @@ class BinaryTreeExample {
         Log.d("DataStructures", "层序遍历:")
         levelOrderTraversal(root)
         
-        // 6. 查找元素
+        // 6. 按层打印
+        Log.d("DataStructures", "按层打印:")
+        printLevelOrder(root)
+        
+        // 7. 查找元素
         val target = 5
         val found = search(root, target)
         Log.d("DataStructures", "查找元素 $target: $found")
         
-        // 7. 计算二叉树的高度
+        // 8. 计算二叉树的高度
         val height = calculateHeight(root)
         Log.d("DataStructures", "二叉树的高度: $height")
         
-        // 8. 计算二叉树的节点数
+        // 9. 计算二叉树的节点数
         val nodeCount = countNodes(root)
         Log.d("DataStructures", "二叉树的节点数: $nodeCount")
         
@@ -131,6 +135,42 @@ class BinaryTreeExample {
             if (node.right != null) {
                 queue.offer(node.right)
             }
+        }
+    }
+    
+    /**
+     * 按层打印二叉树，每一层的节点在同一行输出，例如：
+     * 1
+     * 2 3
+     * 4 5 6 7
+     * 使用队列实现，记录每层节点数量
+     * 时间复杂度: O(n)，每个节点都会被访问一次
+     */
+    private fun printLevelOrder(root: TreeNode?) {
+        if (root == null) return
+        
+        val queue: Queue<TreeNode> = LinkedList()
+        queue.offer(root)
+        var level = 1
+        
+        while (queue.isNotEmpty()) {
+            val levelSize = queue.size
+            val levelNodes = mutableListOf<String>()
+            
+            for (i in 0 until levelSize) {
+                val node = queue.poll()
+                levelNodes.add(node.value.toString())
+                
+                if (node.left != null) {
+                    queue.offer(node.left)
+                }
+                if (node.right != null) {
+                    queue.offer(node.right)
+                }
+            }
+            
+            Log.d("DataStructures", "第${level}层: ${levelNodes.joinToString(" ")}")
+            level++
         }
     }
     

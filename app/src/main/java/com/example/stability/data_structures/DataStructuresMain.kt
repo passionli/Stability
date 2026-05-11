@@ -2,6 +2,7 @@ package com.example.stability.data_structures
 
 import android.util.Log
 import com.example.stability.data_structures.advanced.GraphExample
+import com.example.stability.data_structures.advanced.GraphExampleV2
 import com.example.stability.data_structures.advanced.TrieExample
 import com.example.stability.data_structures.advanced.UnionFindExample
 import com.example.stability.data_structures.basic.ArrayExample
@@ -91,6 +92,10 @@ class DataStructuresMain {
         // 图示例
         val graphExample = GraphExample()
         graphExample.runGraphExample()
+        
+        // 图示例 V2（面向对象实现）
+        val graphExampleV2 = GraphExampleV2()
+        graphExampleV2.runGraphExample()
         
         // 前缀树示例
         val trieExample = TrieExample()
