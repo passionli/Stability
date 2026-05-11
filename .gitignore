@@ -11,6 +11,9 @@
 .DS_Store
 /build
 /apktool/build
+/data/build
+/domain/build
+/core/build
 /online_coding/build
 /captures
 .externalNativeBuild

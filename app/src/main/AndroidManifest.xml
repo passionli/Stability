@@ -21,6 +21,9 @@
         android:theme="@style/Theme.Stability">
         <activity
             android:name=".MainActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ui.NavigationActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

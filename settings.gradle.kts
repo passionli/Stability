@@ -79,12 +79,10 @@ dependencyResolutionManagement {
 rootProject.name = "Stability"
 // 设置根项目名称为 "Stability"
 include(":app")
-// 包含 app 模块
 include(":nativelib")
-// 包含 nativelib 模块
 include(":nativelib2")
-// 包含 nativelib2 模块
 include(":online_coding")
-// 包含 online_coding 模块
 include(":apktool")
-// 包含 apktool 模块 (APK DEX 分析工具)
+include(":domain")
+include(":data")
+include(":core")

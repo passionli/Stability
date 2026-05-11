@@ -11,10 +11,6 @@ class MyApplication : Application() {
     companion object {
         lateinit var instance: MyApplication
             private set
-
-        init {
-            // NativeLib().stringFromJNI()
-        }
     }
 
     override fun onCreate() {
@@ -22,13 +18,8 @@ class MyApplication : Application() {
 
         instance = this
 
-        // 初始化 ARouter
         initARouter()
-
-        // 初始化 LeakCanary（仅在 debug 版本，通过反射避免编译错误）
         initLeakCanary()
-
-        // 初始化 OOM 模块
         initOomModule()
     }
 
