@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebView Demo</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        h2 {
+            color: #1a73e8;
+            margin-top: 0;
+        }
+        button {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #1557b0;
+        }
+        button.secondary {
+            background-color: #f1f3f4;
+            color: #3c4043;
+        }
+        button.secondary:hover {
+            background-color: #e8eaed;
+        }
+        #output {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 13px;
+            min-height: 60px;
+            white-space: pre-wrap;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+        form {
+            margin-top: 15px;
+        }
+        .file-input {
+            border: 2px dashed #dadce0;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .file-input:hover {
+            border-color: #1a73e8;
+        }
+        .file-input input {
+            display: none;
+        }
+        .download-link {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #34a853;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .download-link:hover {
+            background-color: #2e86de;
+        }
+    </style>
+</head>
+<body>
+    <h1>Android WebView 示例</h1>
+    <p>这是一个展示 WebView 各种功能的演示页面</p>
+
+    <div class="section">
+        <h2>1. JavaScript 与原生交互</h2>
+        <input type="text" id="messageInput" placeholder="输入要发送的消息">
+        <br>
+        <button onclick="sendMessageToNative()">发送消息到 Android</button>
+        <button onclick="getDeviceInfo()">获取设备信息</button>
+        <button onclick="showToast()">显示 Toast</button>
+        <div id="output"></div>
+    </div>
+
+    <div class="section">
+        <h2>2. 文件上传</h2>
+        <div class="file-input" onclick="document.getElementById('fileInput').click()">
+            <input type="file" id="fileInput" accept="*/*" multiple>
+            <p>点击选择文件</p>
+            <p style="font-size: 12px; color: #666;">支持多选文件</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>3. 文件下载</h2>
+        <p>点击下面的链接下载测试文件：</p>
+        <a href="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" class="download-link">下载 PDF 文件</a>
+        <a href="https://www.sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4" class="download-link">下载 MP4 视频</a>
+    </div>
+
+    <div class="section">
+        <h2>4. 页面内导航</h2>
+        <button onclick="changeContent()">动态修改内容</button>
+        <button onclick="goBack()" class="secondary">返回上一页</button>
+        <button onclick="reloadPage()" class="secondary">刷新页面</button>
+    </div>
+
+    <script>
+        function sendMessageToNative() {
+            var message = document.getElementById('messageInput').value;
+            if (message) {
+                AndroidInterface.sendMessage(message);
+                appendOutput('发送消息: ' + message);
+            } else {
+                appendOutput('请输入消息内容');
+            }
+        }
+
+        function getDeviceInfo() {
+            try {
+                var info = AndroidInterface.getDeviceInfo();
+                appendOutput('设备信息: ' + info);
+            } catch (e) {
+                appendOutput('获取设备信息失败: ' + e.message);
+            }
+        }
+
+        function showToast() {
+            AndroidInterface.showToast('Hello from JavaScript!');
+            appendOutput('Toast 已显示');
+        }
+
+        function appendOutput(text) {
+            var output = document.getElementById('output');
+            output.textContent = text + '\n' + output.textContent;
+        }
+
+        function changeContent() {
+            appendOutput('内容已更新: ' + new Date().toLocaleString());
+        }
+
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                appendOutput('没有上一页可返回');
+            }
+        }
+
+        function reloadPage() {
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>

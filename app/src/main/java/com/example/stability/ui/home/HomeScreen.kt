@@ -57,6 +57,8 @@ import com.example.stability.oom.examples.OomExamplesActivity
 import com.example.stability.oom.examples.LeakActivity
 import com.example.stability.ListViewActivity
 import com.example.stability.ComposeActivity
+import androidx.navigation.NavController
+import com.example.stability.ui.navigation.Screen
 
 data class FeatureItem(
     val title: String,
@@ -80,11 +82,13 @@ sealed class FeatureAction {
     object ARouter : FeatureAction()
     object ListView : FeatureAction()
     object Compose : FeatureAction()
+    object WebView : FeatureAction()
 }
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = viewModel()
+    viewModel: HomeViewModel = viewModel(),
+    navController: NavController? = null
 ) {
     val context = LocalContext.current
     
@@ -110,7 +114,8 @@ fun HomeScreen(
         FeatureItem("内存管理", Icons.Default.Memory, FeatureAction.Memory),
         FeatureItem("ARouter", Icons.Default.NetworkCheck, FeatureAction.ARouter),
         FeatureItem("ListView", Icons.Default.ListAlt, FeatureAction.ListView),
-        FeatureItem("Compose", Icons.Default.Android, FeatureAction.Compose)
+        FeatureItem("Compose", Icons.Default.Android, FeatureAction.Compose),
+        FeatureItem("WebView", Icons.Default.Computer, FeatureAction.WebView)
     )
 
     Column(
@@ -135,7 +140,7 @@ fun HomeScreen(
                     title = item.title,
                     icon = item.icon,
                     onClick = { 
-                        handleFeatureClick(item.action, context, viewModel, 
+                        handleFeatureClick(item.action, context, viewModel, navController,
                             showThreadDialog, showCppDialog, showCDialog, 
                             showOpenGLLevelDialog, showDesignPatternDialog, showMemoryDialog) 
                     }
@@ -160,6 +165,7 @@ fun handleFeatureClick(
     action: FeatureAction,
     context: Context,
     viewModel: HomeViewModel,
+    navController: NavController?,
     showThreadDialog: MutableState<Boolean>,
     showCppDialog: MutableState<Boolean>,
     showCDialog: MutableState<Boolean>,
@@ -183,6 +189,7 @@ fun handleFeatureClick(
         FeatureAction.ARouter -> context.startActivity(Intent(context, ARouterMainActivity::class.java))
         FeatureAction.ListView -> context.startActivity(Intent(context, ListViewActivity::class.java))
         FeatureAction.Compose -> context.startActivity(Intent(context, ComposeActivity::class.java))
+        FeatureAction.WebView -> navController?.navigate(Screen.WebView.route)
     }
 }
 

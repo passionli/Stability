@@ -7,10 +7,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.stability.ui.auth.LoginScreen
 import com.example.stability.ui.home.HomeScreen
+import com.example.stability.webview.WebViewScreen
 
 sealed class Screen(val route: String) {
     object Home : Screen("home")
     object Login : Screen("login")
+    object WebView : Screen("webview")
 }
 
 @Composable
@@ -18,10 +20,13 @@ fun AppNavigation() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.Home.route) {
         composable(Screen.Home.route) {
-            HomeScreen()
+            HomeScreen(navController = navController)
         }
         composable(Screen.Login.route) {
             LoginScreen(navController = navController)
+        }
+        composable(Screen.WebView.route) {
+            WebViewScreen(navController = navController)
         }
     }
 }
