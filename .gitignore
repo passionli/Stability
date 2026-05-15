@@ -14,6 +14,7 @@
 /data/build
 /domain/build
 /core/build
+/build-logging-plugin/build
 /online_coding/build
 /captures
 .externalNativeBuild

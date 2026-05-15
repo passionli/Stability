@@ -1,5 +1,6 @@
 pluginManagement {
     // 插件管理配置
+    includeBuild("build-logging-plugin")
     repositories {
         // 仓库配置
         // 国内镜像，用于加速依赖下载

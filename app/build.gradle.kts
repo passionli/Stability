@@ -1,6 +1,14 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    id("com.example.buildloggingplugin")
+}
+
+bytecodeLogging {
+    packages.set(listOf("com.example.stability.**"))
+    printStackTrace.set(true)
+    printReturnValue.set(true)
+    logTag.set("BytecodeLogging")
 }
 
 android {
