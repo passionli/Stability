@@ -95,6 +95,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":data"))
     implementation(project(":core"))
+    implementation(project(":voice_assistant"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

@@ -16,6 +16,7 @@
 /core/build
 /build-logging-plugin/build
 /online_coding/build
+/voice_assistant/build
 /captures
 .externalNativeBuild
 .cxx

@@ -454,6 +454,16 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // 查找语音助手按钮
+        val btnVoiceAssistant = findViewById<Button>(R.id.btnVoiceAssistant)
+        // 设置按钮点击事件
+        btnVoiceAssistant.setOnClickListener {
+            Log.d("MainActivity", "=== Button clicked: Voice Assistant ===")
+            // 创建 Intent，启动 VoiceAssistantActivity
+            val intent = Intent(this, com.example.stability.voiceassistant.VoiceAssistantActivity::class.java)
+            startActivity(intent)
+        }
+
         println("getWindow $window")
 
 //        Handler().postDelayed({
