@@ -32,6 +32,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
     PthreadKeyOpt.cpp
     ArtJavaHook.cpp
     NativeCrashMonitor.cpp
+    NativeFunctionPatcher.cpp
     nativelib.cpp
     )
 

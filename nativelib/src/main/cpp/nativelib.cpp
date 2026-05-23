@@ -13,6 +13,7 @@
 #include "shadowhook.h"
 #include "ArtJavaHook.h"
 #include "NativeCrashMonitor.h"
+#include "NativeFunctionPatcher.h"
 
 #define LOG_TAG "KEY_MONITOR"
 #define LOGD(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
@@ -459,4 +460,114 @@ Java_com_example_nativelib_NativeLib_createPthreadKeyLeak(
         count++;
         return count;
     }
+}
+
+extern "C" JNIEXPORT jint JNICALL
+Java_com_example_nativelib_NativeLib_patchFunctionByName(
+        JNIEnv* env,
+        jobject /* this */,
+        jstring so_name,
+        jstring symbol_name,
+        jlong return_value) {
+    if (!so_name || !symbol_name) {
+        return PATCH_ERROR_INVALID_ARG;
+    }
+
+    const char* so_name_str = env->GetStringUTFChars(so_name, NULL);
+    const char* symbol_name_str = env->GetStringUTFChars(symbol_name, NULL);
+
+    int result = NativeFunctionPatcher::getInstance().patchFunctionByName(
+            so_name_str, symbol_name_str, static_cast<uint64_t>(return_value));
+
+    env->ReleaseStringUTFChars(so_name, so_name_str);
+    env->ReleaseStringUTFChars(symbol_name, symbol_name_str);
+
+    return result;
+}
+
+extern "C" JNIEXPORT jint JNICALL
+Java_com_example_nativelib_NativeLib_restoreFunctionByName(
+        JNIEnv* env,
+        jobject /* this */,
+        jstring so_name,
+        jstring symbol_name) {
+    if (!so_name || !symbol_name) {
+        return PATCH_ERROR_INVALID_ARG;
+    }
+
+    const char* so_name_str = env->GetStringUTFChars(so_name, NULL);
+    const char* symbol_name_str = env->GetStringUTFChars(symbol_name, NULL);
+
+    int result = NativeFunctionPatcher::getInstance().restoreFunctionByName(
+            so_name_str, symbol_name_str);
+
+    env->ReleaseStringUTFChars(so_name, so_name_str);
+    env->ReleaseStringUTFChars(symbol_name, symbol_name_str);
+
+    return result;
+}
+
+extern "C" JNIEXPORT jlong JNICALL
+Java_com_example_nativelib_NativeLib_findSymbol(
+        JNIEnv* env,
+        jobject /* this */,
+        jstring so_name,
+        jstring symbol_name) {
+    if (!so_name || !symbol_name) {
+        return 0;
+    }
+
+    const char* so_name_str = env->GetStringUTFChars(so_name, NULL);
+    const char* symbol_name_str = env->GetStringUTFChars(symbol_name, NULL);
+
+    void* addr = nullptr;
+    int result = NativeFunctionPatcher::getInstance().findSymbol(
+            so_name_str, symbol_name_str, &addr);
+
+    env->ReleaseStringUTFChars(so_name, so_name_str);
+    env->ReleaseStringUTFChars(symbol_name, symbol_name_str);
+
+    return result == PATCH_SUCCESS ? reinterpret_cast<jlong>(addr) : 0;
+}
+
+extern "C" JNIEXPORT jint JNICALL
+Java_com_example_nativelib_NativeLib_patchFunctionByAddr(
+        JNIEnv* env,
+        jobject /* this */,
+        jlong func_addr,
+        jlong return_value) {
+    return NativeFunctionPatcher::getInstance().patchFunction(
+            reinterpret_cast<void*>(func_addr), static_cast<uint64_t>(return_value));
+}
+
+extern "C" JNIEXPORT jint JNICALL
+Java_com_example_nativelib_NativeLib_restoreFunctionByAddr(
+        JNIEnv* env,
+        jobject /* this */,
+        jlong func_addr) {
+    return NativeFunctionPatcher::getInstance().restoreFunction(
+            reinterpret_cast<void*>(func_addr));
+}
+
+extern "C" JNIEXPORT jboolean JNICALL
+Java_com_example_nativelib_NativeLib_isFunctionPatched(
+        JNIEnv* env,
+        jobject /* this */,
+        jlong func_addr) {
+    return NativeFunctionPatcher::getInstance().isPatched(
+            reinterpret_cast<void*>(func_addr)) ? JNI_TRUE : JNI_FALSE;
+}
+
+extern "C" JNIEXPORT jint JNICALL
+Java_com_example_nativelib_NativeLib_getPatchedCount(
+        JNIEnv* env,
+        jobject /* this */) {
+    return static_cast<jint>(NativeFunctionPatcher::getInstance().getPatchedCount());
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_example_nativelib_NativeLib_clearAllPatches(
+        JNIEnv* env,
+        jobject /* this */) {
+    NativeFunctionPatcher::getInstance().clearAllPatches();
 }

@@ -6,6 +6,7 @@
 #include <string>
 #include "shadowhook.h"
 #include "xdl.h"
+#include "NativeFunctionPatcher.h"
 
 #define LOG_TAG "ArtJavaHook"
 #define LOGD(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
@@ -571,6 +572,30 @@ static void* proxy_art_Class_AllocObject(void* thiz, void* thread) {
 }
 
 int ArtJavaHook::start(JNIEnv* env) {
+    LOGD("ArtJavaHook::start - Patching libart.so functions with NativeFunctionPatcher");
+    
+    int patch_result;
+    
+    patch_result = NativeFunctionPatcher::getInstance().patchFunctionByName(
+            "libart.so", 
+            "_ZN3art11ClassLinker29ValidateSuperClassDescriptorsENS_6HandleINS_6mirror5ClassEEE", 
+            1);
+    if (patch_result == PATCH_SUCCESS) {
+        LOGD("Successfully patched _ZN3art11ClassLinker29ValidateSuperClassDescriptorsENS_6HandleINS_6mirror5ClassEEE to return 1");
+    } else {
+        LOGE("Failed to patch _ZN3art11ClassLinker29ValidateSuperClassDescriptorsENS_6HandleINS_6mirror5ClassEEE, result: %d", patch_result);
+    }
+    
+    patch_result = NativeFunctionPatcher::getInstance().patchFunctionByName(
+            "libart.so", 
+            "_ZN3art41HasSameSignatureWithDifferentClassLoadersEPNS_6ThreadENS_6HandleINS_6mirror5ClassEEES5_PNS_9ArtMethodES7_", 
+            1);
+    if (patch_result == PATCH_SUCCESS) {
+        LOGD("Successfully patched _ZN3art41HasSameSignatureWithDifferentClassLoadersEPNS_6ThreadENS_6HandleINS_6mirror5ClassEEES5_PNS_9ArtMethodES7_ to return 1");
+    } else {
+        LOGE("Failed to patch _ZN3art41HasSameSignatureWithDifferentClassLoadersEPNS_6ThreadENS_6HandleINS_6mirror5ClassEEES5_PNS_9ArtMethodES7_, result: %d", patch_result);
+    }
+    
     // 初始化主线程 ID（start 方法通常在主线程中调用）
     g_main_thread_id = pthread_self();
     LOGD("Main thread ID: %lu", (unsigned long)g_main_thread_id);
