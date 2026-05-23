@@ -460,8 +460,8 @@ class MainActivity : AppCompatActivity() {
         btnVoiceAssistant.setOnClickListener {
             Log.d("MainActivity", "=== Button clicked: Voice Assistant ===")
             // 创建 Intent，启动 VoiceAssistantActivity
-            val intent = Intent(this, com.example.stability.voiceassistant.VoiceAssistantActivity::class.java)
-            startActivity(intent)
+//            val intent = Intent(this, com.example.stability.voiceassistant.VoiceAssistantActivity::class.java)
+//            startActivity(intent)
         }
 
         println("getWindow $window")

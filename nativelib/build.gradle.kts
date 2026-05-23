@@ -94,9 +94,10 @@ dependencies {
     // 依赖 xdl 库，版本 2.3.0
     // xdl 是一个用于动态加载和查找共享库符号的库
     
-    implementation("com.bytedance.android:shadowhook:2.0.0")
-    // 依赖 shadowhook 库，版本 2.0.0
+    implementation(project(":third_party:shadowhook"))
+    // 依赖 shadowhook 源码模块，版本 2.0.0
     // shadowhook 是一个用于 hook 系统函数的库
+    // 从本地源码构建，不再依赖 Maven Central
     
     implementation(libs.androidx.core.ktx)
     // 依赖 AndroidX Core KTX 库

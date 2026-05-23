@@ -11,6 +11,9 @@ class MyApplication : Application() {
     companion object {
         lateinit var instance: MyApplication
             private set
+        init {
+            NativeLib().stringFromJNI()
+        }
     }
 
     override fun onCreate() {

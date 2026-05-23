@@ -29,6 +29,8 @@
             <option value="$PROJECT_DIR$/nativelib" />
             <option value="$PROJECT_DIR$/nativelib2" />
             <option value="$PROJECT_DIR$/online_coding" />
+            <option value="$PROJECT_DIR$/third_party" />
+            <option value="$PROJECT_DIR$/third_party/shadowhook" />
           </set>
         </option>
       </GradleProjectSettings>
