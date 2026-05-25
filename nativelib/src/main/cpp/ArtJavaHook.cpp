@@ -70,6 +70,43 @@ typedef void (*art_Object_PrettyTypeOf_func_type_t)(std::string *, void*);
 // 无返回值
 typedef void (*art_DumpNativeStack_func_type_t)(void*, int, void*, const char*, void*, void*, bool);
 
+// artQuickToInterpreterBridge 函数类型
+// 参数: ArtMethod* method, Thread* self, ArtMethod** sp
+// 返回: uint64_t
+typedef uint64_t (*artQuickToInterpreterBridge_func_type_t)(void*, void*, void**);
+
+// art::interpreter::DoCall<false> 函数类型
+typedef bool (*art_interpreter_DoCall_f_func_type_t)(void*, void*, void*, const void*, int, bool, void*);
+
+// art::interpreter::DoCall<false, false> 函数类型
+typedef bool (*art_interpreter_DoCall_ff_func_type_t)(void*, void*, void*, const void*, int, void*);
+
+// art::interpreter::DoCall<false, true> 函数类型
+typedef bool (*art_interpreter_DoCall_ft_func_type_t)(void*, void*, void*, const void*, int, void*);
+
+// art::interpreter::DoCall<true, false> 函数类型
+typedef bool (*art_interpreter_DoCall_tf_func_type_t)(void*, void*, void*, const void*, int, void*);
+
+// art::interpreter::DoCall<true, true> 函数类型
+typedef bool (*art_interpreter_DoCall_tt_func_type_t)(void*, void*, void*, const void*, int, void*);
+
+// art::ArtMethod::Invoke 函数类型
+typedef void (*art_ArtMethod_Invoke_func_type_t)(void*, void*, uint32_t*, uint32_t, void*, const char*);
+
+// art::interpreter::EnterInterpreterFromInvoke 函数类型
+typedef void (*art_interpreter_EnterInterpreterFromInvoke_func_type_t)(void*, void*, void*, uint32_t*, void*, bool);
+
+// art_quick_invoke_stub 函数类型
+// 参数: ArtMethod*, uint32_t*, uint32_t, Thread*, JValue*, const char*
+typedef void (*art_quick_invoke_stub_func_type_t)(void*, uint32_t*, uint32_t, void*, void*, const char*);
+
+// art_quick_invoke_static_stub 函数类型
+// 参数: ArtMethod*, uint32_t*, uint32_t, Thread*, JValue*, const char*
+typedef void (*art_quick_invoke_static_stub_func_type_t)(void*, uint32_t*, uint32_t, void*, void*, const char*);
+
+// art::instrumentation::Instrumentation::InstallStubsForClass 函数类型
+typedef void (*art_instrumentation_InstallStubsForClass_func_type_t)(void*, void*);
+
 // 原始函数指针数组
 void* orig_functions[20] = {NULL};
 static art_Class_PrettyClass_func_type_t art_Class_PrettyClass = NULL;
@@ -98,6 +135,39 @@ static pthread_t g_main_thread_id = 0;
 static art_DumpNativeStack_func_type_t art_DumpNativeStack = NULL;
 // JavaVM 指针
 static JavaVM* g_jvm = NULL;
+
+// artQuickToInterpreterBridge 原始函数指针
+static artQuickToInterpreterBridge_func_type_t orig_artQuickToInterpreterBridge = NULL;
+
+// art::interpreter::DoCall<false> 原始函数指针
+static art_interpreter_DoCall_f_func_type_t orig_art_interpreter_DoCall_f = NULL;
+
+// art::interpreter::DoCall<false, false> 原始函数指针
+static art_interpreter_DoCall_ff_func_type_t orig_art_interpreter_DoCall_ff = NULL;
+
+// art::interpreter::DoCall<false, true> 原始函数指针
+static art_interpreter_DoCall_ft_func_type_t orig_art_interpreter_DoCall_ft = NULL;
+
+// art::interpreter::DoCall<true, false> 原始函数指针
+static art_interpreter_DoCall_tf_func_type_t orig_art_interpreter_DoCall_tf = NULL;
+
+// art::interpreter::DoCall<true, true> 原始函数指针
+static art_interpreter_DoCall_tt_func_type_t orig_art_interpreter_DoCall_tt = NULL;
+
+// art::ArtMethod::Invoke 原始函数指针
+static art_ArtMethod_Invoke_func_type_t orig_art_ArtMethod_Invoke = NULL;
+
+// art::interpreter::EnterInterpreterFromInvoke 原始函数指针
+static art_interpreter_EnterInterpreterFromInvoke_func_type_t orig_art_interpreter_EnterInterpreterFromInvoke = NULL;
+
+// art_quick_invoke_stub 原始函数指针
+static art_quick_invoke_stub_func_type_t orig_art_quick_invoke_stub = NULL;
+
+// art_quick_invoke_static_stub 原始函数指针
+static art_quick_invoke_static_stub_func_type_t orig_art_quick_invoke_static_stub = NULL;
+
+// art::instrumentation::Instrumentation::InstallStubsForClass 原始函数指针
+static art_instrumentation_InstallStubsForClass_func_type_t orig_art_instrumentation_InstallStubsForClass = NULL;
 
 // 定义 ArtMethod 结构
 // 总大小为 32 字节，最后一个字段是 ptr_sized_fields_ (8 字节)
@@ -365,6 +435,83 @@ static void proxy_art_gc_Heap_AddFinalizerReference(void* heap, void* thread, vo
     }
 }
 
+
+// 代理函数: artQuickToInterpreterBridge
+static uint64_t proxy_artQuickToInterpreterBridge(void* method, void* self, void** sp) {
+    SHADOWHOOK_STACK_SCOPE();
+    LOGD("proxy_artQuickToInterpreterBridge called");
+    return SHADOWHOOK_CALL_PREV(proxy_artQuickToInterpreterBridge, method, self, sp);
+}
+
+// 代理函数: art::interpreter::DoCall<false>
+static bool proxy_art_interpreter_DoCall_f(void* method, void* thread, void* shadow_frame, const void* instruction, int32_t dex_pc, bool arg6, void* jvalue) {
+    SHADOWHOOK_STACK_SCOPE();
+    LOGD("proxy_art_interpreter_DoCall_f called");
+    return SHADOWHOOK_CALL_PREV(proxy_art_interpreter_DoCall_f, method, thread, shadow_frame, instruction, dex_pc, arg6, jvalue);
+}
+
+// 代理函数: art::interpreter::DoCall<false, false>
+static bool proxy_art_interpreter_DoCall_ff(void* method, void* thread, void* shadow_frame, const void* instruction, int32_t dex_pc, void* jvalue) {
+    SHADOWHOOK_STACK_SCOPE();
+    LOGD("proxy_art_interpreter_DoCall_ff called");
+    return SHADOWHOOK_CALL_PREV(proxy_art_interpreter_DoCall_ff, method, thread, shadow_frame, instruction, dex_pc, jvalue);
+}
+
+// 代理函数: art::interpreter::DoCall<false, true>
+static bool proxy_art_interpreter_DoCall_ft(void* method, void* thread, void* shadow_frame, const void* instruction, int32_t dex_pc, void* jvalue) {
+    SHADOWHOOK_STACK_SCOPE();
+    LOGD("proxy_art_interpreter_DoCall_ft called");
+    return SHADOWHOOK_CALL_PREV(proxy_art_interpreter_DoCall_ft, method, thread, shadow_frame, instruction, dex_pc, jvalue);
+}
+
+// 代理函数: art::interpreter::DoCall<true, false>
+static bool proxy_art_interpreter_DoCall_tf(void* method, void* thread, void* shadow_frame, const void* instruction, int32_t dex_pc, void* jvalue) {
+    SHADOWHOOK_STACK_SCOPE();
+    LOGD("proxy_art_interpreter_DoCall_tf called");
+    return SHADOWHOOK_CALL_PREV(proxy_art_interpreter_DoCall_tf, method, thread, shadow_frame, instruction, dex_pc, jvalue);
+}
+
+// 代理函数: art::interpreter::DoCall<true, true>
+static bool proxy_art_interpreter_DoCall_tt(void* method, void* thread, void* shadow_frame, const void* instruction, int32_t dex_pc, void* jvalue) {
+    SHADOWHOOK_STACK_SCOPE();
+    LOGD("proxy_art_interpreter_DoCall_tt called");
+    return SHADOWHOOK_CALL_PREV(proxy_art_interpreter_DoCall_tt, method, thread, shadow_frame, instruction, dex_pc, jvalue);
+}
+
+// 代理函数: art::ArtMethod::Invoke
+static void proxy_art_ArtMethod_Invoke(void* method, void* thread, uint32_t* args, uint32_t args_size, void* jvalue, const char* shorty) {
+    SHADOWHOOK_STACK_SCOPE();
+    LOGD("proxy_art_ArtMethod_Invoke called");
+    SHADOWHOOK_CALL_PREV(proxy_art_ArtMethod_Invoke, method, thread, args, args_size, jvalue, shorty);
+}
+
+// 代理函数: art::interpreter::EnterInterpreterFromInvoke
+static void proxy_art_interpreter_EnterInterpreterFromInvoke(void* thread, void* method, void* receiver, uint32_t* args, void* result, bool arg6) {
+    SHADOWHOOK_STACK_SCOPE();
+    LOGD("proxy_art_interpreter_EnterInterpreterFromInvoke called");
+    SHADOWHOOK_CALL_PREV(proxy_art_interpreter_EnterInterpreterFromInvoke, thread, method, receiver, args, result, arg6);
+}
+
+// 代理函数: art_quick_invoke_stub
+static void proxy_art_quick_invoke_stub(void* method, uint32_t* args, uint32_t args_size, void* thread, void* jvalue, const char* shorty) {
+    SHADOWHOOK_STACK_SCOPE();
+    LOGD("proxy_art_quick_invoke_stub called");
+    SHADOWHOOK_CALL_PREV(proxy_art_quick_invoke_stub, method, args, args_size, thread, jvalue, shorty);
+}
+
+// 代理函数: art_quick_invoke_static_stub
+static void proxy_art_quick_invoke_static_stub(void* method, uint32_t* args, uint32_t args_size, void* thread, void* jvalue, const char* shorty) {
+    SHADOWHOOK_STACK_SCOPE();
+    LOGD("proxy_art_quick_invoke_static_stub called");
+    SHADOWHOOK_CALL_PREV(proxy_art_quick_invoke_static_stub, method, args, args_size, thread, jvalue, shorty);
+}
+
+// 代理函数: art::instrumentation::Instrumentation::InstallStubsForClass
+static void proxy_art_instrumentation_InstallStubsForClass(void* instrumentation, void* klass) {
+    SHADOWHOOK_STACK_SCOPE();
+    LOGD("proxy_art_instrumentation_InstallStubsForClass called");
+    SHADOWHOOK_CALL_PREV(proxy_art_instrumentation_InstallStubsForClass, instrumentation, klass);
+}
 
 // 打印 ArtMethod 的详细信息
 void PrintArtMethodInfo(ArtMethod* art_method) {
@@ -1249,6 +1396,105 @@ int ArtJavaHook::start(JNIEnv* env) {
         LOGD("Successfully hooked _ZN3art2gc4Heap21AddFinalizerReferenceEPNS_6ThreadEPNS_6ObjPtrINS_6mirror6ObjectEEE");
     } else {
         LOGE("Failed to hook _ZN3art2gc4Heap21AddFinalizerReferenceEPNS_6ThreadEPNS_6ObjPtrINS_6mirror6ObjectEEE");
+    }
+    
+    // Hook artQuickToInterpreterBridge
+    result = shadowhook_hook_sym_name("libart.so", "artQuickToInterpreterBridge",
+                                     (void*)proxy_artQuickToInterpreterBridge, (void**)&orig_artQuickToInterpreterBridge);
+    if (result != NULL) {
+        LOGD("Successfully hooked artQuickToInterpreterBridge");
+    } else {
+        LOGE("Failed to hook artQuickToInterpreterBridge");
+    }
+    
+    // Hook art::interpreter::DoCall<false>
+    result = shadowhook_hook_sym_name("libart.so", "_ZN3art11interpreter6DoCallILb0EEEbPNS_9ArtMethodEPNS_6ThreadERNS_11ShadowFrameEPKNS_11InstructionEtbPNS_6JValueE",
+                                     (void*)proxy_art_interpreter_DoCall_f, (void**)&orig_art_interpreter_DoCall_f);
+    if (result != NULL) {
+        LOGD("Successfully hooked _ZN3art11interpreter6DoCallILb0EEEbPNS_9ArtMethodEPNS_6ThreadERNS_11ShadowFrameEPKNS_11InstructionEtbPNS_6JValueE");
+    } else {
+        LOGE("Failed to hook _ZN3art11interpreter6DoCallILb0EEEbPNS_9ArtMethodEPNS_6ThreadERNS_11ShadowFrameEPKNS_11InstructionEtbPNS_6JValueE");
+    }
+    
+    // Hook art::interpreter::DoCall<false, false>
+    result = shadowhook_hook_sym_name("libart.so", "_ZN3art11interpreter6DoCallILb0ELb0EEEbPNS_9ArtMethodEPNS_6ThreadERNS_11ShadowFrameEPKNS_11InstructionEtPNS_6JValueE",
+                                     (void*)proxy_art_interpreter_DoCall_ff, (void**)&orig_art_interpreter_DoCall_ff);
+    if (result != NULL) {
+        LOGD("Successfully hooked _ZN3art11interpreter6DoCallILb0ELb0EEEbPNS_9ArtMethodEPNS_6ThreadERNS_11ShadowFrameEPKNS_11InstructionEtPNS_6JValueE");
+    } else {
+        LOGE("Failed to hook _ZN3art11interpreter6DoCallILb0ELb0EEEbPNS_9ArtMethodEPNS_6ThreadERNS_11ShadowFrameEPKNS_11InstructionEtPNS_6JValueE");
+    }
+    
+    // Hook art::interpreter::DoCall<false, true>
+    result = shadowhook_hook_sym_name("libart.so", "_ZN3art11interpreter6DoCallILb0ELb1EEEbPNS_9ArtMethodEPNS_6ThreadERNS_11ShadowFrameEPKNS_11InstructionEtPNS_6JValueE",
+                                     (void*)proxy_art_interpreter_DoCall_ft, (void**)&orig_art_interpreter_DoCall_ft);
+    if (result != NULL) {
+        LOGD("Successfully hooked _ZN3art11interpreter6DoCallILb0ELb1EEEbPNS_9ArtMethodEPNS_6ThreadERNS_11ShadowFrameEPKNS_11InstructionEtPNS_6JValueE");
+    } else {
+        LOGE("Failed to hook _ZN3art11interpreter6DoCallILb0ELb1EEEbPNS_9ArtMethodEPNS_6ThreadERNS_11ShadowFrameEPKNS_11InstructionEtPNS_6JValueE");
+    }
+    
+    // Hook art::interpreter::DoCall<true, false>
+    result = shadowhook_hook_sym_name("libart.so", "_ZN3art11interpreter6DoCallILb1ELb0EEEbPNS_9ArtMethodEPNS_6ThreadERNS_11ShadowFrameEPKNS_11InstructionEtPNS_6JValueE",
+                                     (void*)proxy_art_interpreter_DoCall_tf, (void**)&orig_art_interpreter_DoCall_tf);
+    if (result != NULL) {
+        LOGD("Successfully hooked _ZN3art11interpreter6DoCallILb1ELb0EEEbPNS_9ArtMethodEPNS_6ThreadERNS_11ShadowFrameEPKNS_11InstructionEtPNS_6JValueE");
+    } else {
+        LOGE("Failed to hook _ZN3art11interpreter6DoCallILb1ELb0EEEbPNS_9ArtMethodEPNS_6ThreadERNS_11ShadowFrameEPKNS_11InstructionEtPNS_6JValueE");
+    }
+    
+    // Hook art::interpreter::DoCall<true, true>
+    result = shadowhook_hook_sym_name("libart.so", "_ZN3art11interpreter6DoCallILb1ELb1EEEbPNS_9ArtMethodEPNS_6ThreadERNS_11ShadowFrameEPKNS_11InstructionEtPNS_6JValueE",
+                                     (void*)proxy_art_interpreter_DoCall_tt, (void**)&orig_art_interpreter_DoCall_tt);
+    if (result != NULL) {
+        LOGD("Successfully hooked _ZN3art11interpreter6DoCallILb1ELb1EEEbPNS_9ArtMethodEPNS_6ThreadERNS_11ShadowFrameEPKNS_11InstructionEtPNS_6JValueE");
+    } else {
+        LOGE("Failed to hook _ZN3art11interpreter6DoCallILb1ELb1EEEbPNS_9ArtMethodEPNS_6ThreadERNS_11ShadowFrameEPKNS_11InstructionEtPNS_6JValueE");
+    }
+    
+    // Hook art::ArtMethod::Invoke
+    result = shadowhook_hook_sym_name("libart.so", "_ZN3art9ArtMethod6InvokeEPNS_6ThreadEPjjPNS_6JValueEPKc",
+                                     (void*)proxy_art_ArtMethod_Invoke, (void**)&orig_art_ArtMethod_Invoke);
+    if (result != NULL) {
+        LOGD("Successfully hooked _ZN3art9ArtMethod6InvokeEPNS_6ThreadEPjjPNS_6JValueEPKc");
+    } else {
+        LOGE("Failed to hook _ZN3art9ArtMethod6InvokeEPNS_6ThreadEPjjPNS_6JValueEPKc");
+    }
+    
+    // Hook art::interpreter::EnterInterpreterFromInvoke
+    result = shadowhook_hook_sym_name("libart.so", "_ZN3art11interpreter26EnterInterpreterFromInvokeEPNS_6ThreadEPNS_9ArtMethodENS_6ObjPtrINS_6mirror6ObjectEEEPjPNS_6JValueEb",
+                                     (void*)proxy_art_interpreter_EnterInterpreterFromInvoke, (void**)&orig_art_interpreter_EnterInterpreterFromInvoke);
+    if (result != NULL) {
+        LOGD("Successfully hooked _ZN3art11interpreter26EnterInterpreterFromInvokeEPNS_6ThreadEPNS_9ArtMethodENS_6ObjPtrINS_6mirror6ObjectEEEPjPNS_6JValueEb");
+    } else {
+        LOGE("Failed to hook _ZN3art11interpreter26EnterInterpreterFromInvokeEPNS_6ThreadEPNS_9ArtMethodENS_6ObjPtrINS_6mirror6ObjectEEEPjPNS_6JValueEb");
+    }
+    
+    // Hook art_quick_invoke_stub
+    result = shadowhook_hook_sym_name("libart.so", "art_quick_invoke_stub",
+                                     (void*)proxy_art_quick_invoke_stub, (void**)&orig_art_quick_invoke_stub);
+    if (result != NULL) {
+        LOGD("Successfully hooked art_quick_invoke_stub");
+    } else {
+        LOGE("Failed to hook art_quick_invoke_stub");
+    }
+    
+//     Hook art_quick_invoke_static_stub
+    result = shadowhook_hook_sym_name("libart.so", "art_quick_invoke_static_stub",
+                                     (void*)proxy_art_quick_invoke_static_stub, (void**)&orig_art_quick_invoke_static_stub);
+    if (result != NULL) {
+        LOGD("Successfully hooked art_quick_invoke_static_stub");
+    } else {
+        LOGE("Failed to hook art_quick_invoke_static_stub");
+    }
+    
+    // Hook art::instrumentation::Instrumentation::InstallStubsForClass
+    result = shadowhook_hook_sym_name("libart.so", "_ZN3art15instrumentation15Instrumentation20InstallStubsForClassEPNS_6mirror5ClassE",
+                                     (void*)proxy_art_instrumentation_InstallStubsForClass, (void**)&orig_art_instrumentation_InstallStubsForClass);
+    if (result != NULL) {
+        LOGD("Successfully hooked _ZN3art15instrumentation15Instrumentation20InstallStubsForClassEPNS_6mirror5ClassE");
+    } else {
+        LOGE("Failed to hook _ZN3art15instrumentation15Instrumentation20InstallStubsForClassEPNS_6mirror5ClassE");
     }
     
     return 0;
