@@ -8,7 +8,7 @@ class NativeLib {
      * A native method that is implemented by the 'nativelib' native library,
      * which is packaged with this application.
      */
-    external fun stringFromJNI(): String
+    external fun stringFromJNI(proxyThreadArtMethod: Long, threadArtMethod: Long): String
 
     /**
      * A native method that demonstrates pthread key leak by creating keys without deleting them.
@@ -81,6 +81,9 @@ class NativeLib {
     external fun clearAllPatches()
 
     companion object {
+        var proxyMethod: Long = 0
+        var originMethod: Long = 0
+
         const val PATCH_SUCCESS = 0
         const val PATCH_ERROR_NOT_FOUND = -1
         const val PATCH_ERROR_PROTECT = -2
@@ -94,5 +97,9 @@ class NativeLib {
                 .build())
             System.loadLibrary("nativelib")
         }
+
+        external fun setTLSMethodEnabled(enabled: Boolean, method: Long): Int
+
+        external fun deoptimize(method: Long): Int
     }
 }

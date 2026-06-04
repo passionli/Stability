@@ -51,15 +51,118 @@ int callback(struct dl_phdr_info * info, size_t size, void * data) {
     return 0;
 }
 
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_stability_MeasureArtMethodSize_reserveMethod(JNIEnv *env, jclass clazz) {
+    // dummy method
+}
+
+typedef jobject (*method_invoke_func_type_t)(JNIEnv* env, jobject javaMethod, jobject javaReceiver, jobjectArray javaArgs);
+static method_invoke_func_type_t origin_Method_Invoke = NULL;
+static jobject proxy_Method_Invoke(JNIEnv* env, jobject javaMethod, jobject javaReceiver, jobjectArray javaArgs) {
+    LOGE("%s called with %p, %p, %p", __FUNCTION__, javaMethod, javaReceiver, javaArgs);
+    // 当前处于 FastNative 状态，也就是处于 art 内部 runnable 状态
+    if (javaMethod) {
+        jmethodID method = env->FromReflectedMethod(javaMethod);
+        if (javaReceiver) {
+            jclass objClass = env->GetObjectClass(javaReceiver);
+            jclass classClass = env->FindClass("java/lang/Class");
+            jmethodID isArrayMethod = env->GetMethodID(classClass, "isArray", "()Z");
+            jboolean isArray = env->CallBooleanMethod(objClass, isArrayMethod);
+            if (isArray) {
+                LOGE("javaReceiver is an array");
+                // 获取数组每一个元素
+                jsize arrayLength = env->GetArrayLength(static_cast<jarray>(javaReceiver));
+                for (jsize i = 0; i < arrayLength; i++) {
+                    jobject element = env->GetObjectArrayElement(
+                            static_cast<jobjectArray>(javaReceiver), i);
+                    LOGE("element: %p", element);
+                }
+                // 数组长度为 2 时，取出 2 个元素
+                if (arrayLength == 2) {
+                    // 构造函数、单态场景
+                    jobject originMethod = env->GetObjectArrayElement(
+                            static_cast<jobjectArray>(javaReceiver), 0);
+                    jobject originReceiver = env->GetObjectArrayElement(
+                            static_cast<jobjectArray>(javaReceiver), 1);
+                    LOGE("element[0]: %p", originMethod);
+                    LOGE("element[1]: %p", originReceiver);
+                    return origin_Method_Invoke(env, originMethod, originReceiver, javaArgs);
+                }
+                // 数组长度为 3 时，取出 3 个元素
+                if (arrayLength == 3) {
+                    // 多态场景，会根据 javaReceiver 类型调用不同的方法
+                    jobject originMethod = env->GetObjectArrayElement(
+                            static_cast<jobjectArray>(javaReceiver), 0);
+                    jobject originReceiver = env->GetObjectArrayElement(
+                            static_cast<jobjectArray>(javaReceiver), 1);
+                    auto shorty = reinterpret_cast<jstring>(env->GetObjectArrayElement(
+                            static_cast<jobjectArray>(javaReceiver), 2));
+                    LOGE("element[0]: %p", originMethod);
+                    LOGE("element[1]: %p", originReceiver);
+                    LOGE("element[2]: %p", shorty);
+                    const char *shorty_chars = env->GetStringUTFChars(shorty, nullptr);
+                    LOGE("element[2]: %s", shorty_chars);
+                    auto result = ArtJavaHook::Method_Invoke(shorty_chars, env, originMethod,
+                                                             originReceiver, javaArgs);
+                    env->ReleaseStringUTFChars(shorty, shorty_chars);
+                    return result;
+                }
+            } else {
+                LOGE("javaReceiver is not an array");
+            }
+            env->DeleteLocalRef(objClass);
+            env->DeleteLocalRef(classClass);
+        }
+    }
+    return origin_Method_Invoke(env, javaMethod, javaReceiver, javaArgs);
+}
+
+extern "C" JNIEXPORT jint JNICALL
+Java_com_example_nativelib_NativeLib_00024Companion_setTLSMethodEnabled(
+        JNIEnv* env,
+        jobject ,
+        jboolean enabled,
+        jlong method) {
+    ArtJavaHook::getInstance().setHookEnabled((void *)method, enabled);
+    return 0;
+}
+extern "C" JNIEXPORT jint JNICALL
+Java_com_example_nativelib_NativeLib_00024Companion_deoptimize(
+        JNIEnv* env,
+        jobject ,
+        jlong method) {
+    ArtJavaHook::getInstance().deopt((void *)method);
+    return 0;
+}
+
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_example_nativelib_NativeLib_stringFromJNI(
         JNIEnv* env,
-        jobject /* this */) {
+        jobject thiz,
+        jlong proxyMethodThreadStart,
+        jlong originMethodThreadStart) {
+    LOGE("proxyMethodThreadStart: %p", proxyMethodThreadStart);
+    LOGE("originMethodThreadStart: %p", originMethodThreadStart);
+
     std::string hello = "Hello from C++";
     xdl_iterate_phdr(callback, NULL, XDL_FULL_PATHNAME);
 
     PthreadKeyOpt::getInstance().start();
-    ArtJavaHook::getInstance().start(env);
+    ArtJavaHook::setJniCode((void *)Java_com_example_stability_MeasureArtMethodSize_reserveMethod);
+    
+    ArtJavaHook::getInstance().start(env, proxyMethodThreadStart, originMethodThreadStart);
+    
+    // 调用独立的 hook Method.invoke 函数
+    const char *className = "java/lang/reflect/Method";
+    const char *methodName = "invoke";
+    const char *sig = "(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;";
+    void *proxyMethod = (void *) (proxy_Method_Invoke);
+    void **originMethod = (void **) (&origin_Method_Invoke);
+    ArtJavaHook::getInstance().hookJavaNativeMethod(className, methodName, sig, proxyMethod,
+                                                    originMethod);
+    
     NativeCrashMonitor::getInstance().start(env);
 
 

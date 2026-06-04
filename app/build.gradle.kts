@@ -4,12 +4,12 @@ plugins {
     id("com.example.buildloggingplugin")
 }
 
-bytecodeLogging {
-    packages.set(listOf("com.example.stability.**"))
-    printStackTrace.set(true)
-    printReturnValue.set(true)
-    logTag.set("BytecodeLogging")
-}
+//bytecodeLogging {
+//    packages.set(listOf("com.example.stability.**"))
+//    printStackTrace.set(true)
+//    printReturnValue.set(true)
+//    logTag.set("BytecodeLogging")
+//}
 
 android {
     namespace = "com.example.stability"
@@ -22,7 +22,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.stability"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
