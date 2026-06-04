@@ -10,102 +10,48 @@ object AnrLog {
     
     private const val TAG = "ANR_MONITOR"
     
-    /**
-     * 调试日志级别
-     */
     const val DEBUG = Log.DEBUG
-    
-    /**
-     * 信息日志级别
-     */
     const val INFO = Log.INFO
-    
-    /**
-     * 警告日志级别
-     */
     const val WARN = Log.WARN
-    
-    /**
-     * 错误日志级别
-     */
     const val ERROR = Log.ERROR
     
-    /**
-     * 当前日志级别，低于此级别的日志将被过滤
-     */
     var currentLevel = DEBUG
-    
-    /**
-     * 是否启用日志输出
-     */
     var enabled = true
     
     /**
-     * 记录调试日志
+     * 日志级别检查函数（高阶函数）
      */
-    fun d(message: String) {
-        if (enabled && currentLevel <= DEBUG) {
-            Log.d(TAG, message)
+    private inline fun logIf(level: Int, tag: String, message: String, block: () -> Unit) {
+        if (enabled && currentLevel <= level) {
+            Log.v(tag, "[$level] $message")
+            block()
         }
     }
     
     /**
-     * 记录调试日志（带自定义标签）
+     * 简化的日志执行函数
      */
-    fun d(tag: String, message: String) {
-        if (enabled && currentLevel <= DEBUG) {
-            Log.d(tag, message)
+    private inline fun log(level: Int, tag: String, message: String) {
+        if (enabled && currentLevel <= level) {
+            when (level) {
+                DEBUG -> Log.d(tag, message)
+                INFO -> Log.i(tag, message)
+                WARN -> Log.w(tag, message)
+                ERROR -> Log.e(tag, message)
+                else -> Log.v(tag, message)
+            }
         }
     }
     
-    /**
-     * 记录信息日志
-     */
-    fun i(message: String) {
-        if (enabled && currentLevel <= INFO) {
-            Log.i(TAG, message)
-        }
-    }
+    fun d(message: String) = log(DEBUG, TAG, message)
+    fun d(tag: String, message: String) = log(DEBUG, tag, message)
+    fun i(message: String) = log(INFO, TAG, message)
+    fun i(tag: String, message: String) = log(INFO, tag, message)
+    fun w(message: String) = log(WARN, TAG, message)
+    fun w(tag: String, message: String) = log(WARN, tag, message)
+    fun e(message: String) = log(ERROR, TAG, message)
+    fun e(tag: String, message: String) = log(ERROR, tag, message)
     
-    /**
-     * 记录信息日志（带自定义标签）
-     */
-    fun i(tag: String, message: String) {
-        if (enabled && currentLevel <= INFO) {
-            Log.i(tag, message)
-        }
-    }
-    
-    /**
-     * 记录警告日志
-     */
-    fun w(message: String) {
-        if (enabled && currentLevel <= WARN) {
-            Log.w(TAG, message)
-        }
-    }
-    
-    /**
-     * 记录警告日志（带自定义标签）
-     */
-    fun w(tag: String, message: String) {
-        if (enabled && currentLevel <= WARN) {
-            Log.w(tag, message)
-        }
-    }
-    
-    /**
-     * 记录错误日志
-     */
-    fun e(message: String) {
-        if (enabled && currentLevel <= ERROR) {
-            Log.e(TAG, message)
-        }
-    }
-    
-    /**
-     * 记录错误日志（带异常）
-     */
     fun e(message: String, throwable: Throwable) {
         if (enabled && currentLevel <= ERROR) {
             Log.e(TAG, message, throwable)
@@ -113,45 +59,31 @@ object AnrLog {
     }
     
     /**
-     * 记录错误日志（带自定义标签）
-     */
-    fun e(tag: String, message: String) {
-        if (enabled && currentLevel <= ERROR) {
-            Log.e(tag, message)
-        }
-    }
-    
-    /**
-     * 记录详细的 ANR 信息
+     * 记录详细的 ANR 信息（使用函数式方式处理长字符串）
      */
     fun anr(stackTrace: String) {
         if (!enabled) return
         
-        // 将长堆栈信息分段输出
         val maxLength = 4000
-        var start = 0
         
         Log.e(TAG, "================== ANR DETECTED ==================")
         
-        while (start < stackTrace.length) {
+        // 使用函数式方式分段输出
+        generateSequence(0) { start ->
+            if (start < stackTrace.length) start + maxLength else null
+        }
+        .forEach { start ->
             val end = minOf(start + maxLength, stackTrace.length)
             Log.e(TAG, stackTrace.substring(start, end))
-            start = end
         }
         
         Log.e(TAG, "================== ANR END ==================")
     }
     
-    /**
-     * 记录性能警告
-     */
     fun performanceWarning(message: String, durationMs: Long) {
         w("PERFORMANCE_WARNING: $message - ${durationMs}ms")
     }
     
-    /**
-     * 记录性能错误
-     */
     fun performanceError(message: String, durationMs: Long) {
         e("PERFORMANCE_ERROR: $message - ${durationMs}ms")
     }
