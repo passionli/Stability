@@ -11,10 +11,7 @@ import java.util.*
 /**
  * 二叉树节点类
  */
-class TreeNode(var value: Int) {
-    var left: TreeNode? = null
-    var right: TreeNode? = null
-}
+data class TreeNode(val value: Int, val left: TreeNode? = null, val right: TreeNode? = null)
 
 class BinaryTreeExample {
     
@@ -66,22 +63,26 @@ class BinaryTreeExample {
     }
     
     /**
-     * 创建一个二叉树
+     * 创建一个二叉树（使用不可变节点）
      */
     private fun createBinaryTree(): TreeNode {
-        val root = TreeNode(1)
-        root.left = TreeNode(2)
-        root.right = TreeNode(3)
-        root.left?.left = TreeNode(4)
-        root.left?.right = TreeNode(5)
-        root.right?.left = TreeNode(6)
-        root.right?.right = TreeNode(7)
-        return root
+        return TreeNode(
+            value = 1,
+            left = TreeNode(
+                value = 2,
+                left = TreeNode(4),
+                right = TreeNode(5)
+            ),
+            right = TreeNode(
+                value = 3,
+                left = TreeNode(6),
+                right = TreeNode(7)
+            )
+        )
     }
     
     /**
      * 前序遍历：根 -> 左 -> 右
-     * 时间复杂度: O(n)
      */
     private fun preorderTraversal(node: TreeNode?) {
         if (node == null) return
@@ -93,7 +94,6 @@ class BinaryTreeExample {
     
     /**
      * 中序遍历：左 -> 根 -> 右
-     * 时间复杂度: O(n)
      */
     private fun inorderTraversal(node: TreeNode?) {
         if (node == null) return
@@ -105,7 +105,6 @@ class BinaryTreeExample {
     
     /**
      * 后序遍历：左 -> 右 -> 根
-     * 时间复杂度: O(n)
      */
     private fun postorderTraversal(node: TreeNode?) {
         if (node == null) return
@@ -116,95 +115,61 @@ class BinaryTreeExample {
     }
     
     /**
-     * 层序遍历：按层次从上到下，从左到右
-     * 时间复杂度: O(n)
+     * 层序遍历：使用序列操作
      */
     private fun levelOrderTraversal(root: TreeNode?) {
-        if (root == null) return
+        root ?: return
         
-        val queue: Queue<TreeNode> = LinkedList()
-        queue.offer(root)
-        
-        while (queue.isNotEmpty()) {
-            val node = queue.poll()
-            Log.d("DataStructures", "节点值: ${node.value}")
-            
-            if (node.left != null) {
-                queue.offer(node.left)
-            }
-            if (node.right != null) {
-                queue.offer(node.right)
+        generateSequence(listOf(root)) { level ->
+            level.flatMap { node ->
+                listOfNotNull(node.left, node.right)
+            }.takeIf { it.isNotEmpty() }
+        }.forEach { level ->
+            level.forEach { node ->
+                Log.d("DataStructures", "节点值: ${node.value}")
             }
         }
     }
     
     /**
-     * 按层打印二叉树，每一层的节点在同一行输出，例如：
-     * 1
-     * 2 3
-     * 4 5 6 7
-     * 使用队列实现，记录每层节点数量
-     * 时间复杂度: O(n)，每个节点都会被访问一次
+     * 按层打印二叉树（使用序列操作）
      */
     private fun printLevelOrder(root: TreeNode?) {
-        if (root == null) return
+        root ?: return
         
-        val queue: Queue<TreeNode> = LinkedList()
-        queue.offer(root)
-        var level = 1
-        
-        while (queue.isNotEmpty()) {
-            val levelSize = queue.size
-            val levelNodes = mutableListOf<String>()
-            
-            for (i in 0 until levelSize) {
-                val node = queue.poll()
-                levelNodes.add(node.value.toString())
-                
-                if (node.left != null) {
-                    queue.offer(node.left)
-                }
-                if (node.right != null) {
-                    queue.offer(node.right)
-                }
+        generateSequence(listOf(root) to 1) { (level, depth) ->
+            val nextLevel = level.flatMap { node ->
+                listOfNotNull(node.left, node.right)
             }
-            
-            Log.d("DataStructures", "第${level}层: ${levelNodes.joinToString(" ")}")
-            level++
+            nextLevel.takeIf { it.isNotEmpty() }?.let { it to depth + 1 }
+        }.forEach { (level, depth) ->
+            val values = level.joinToString(" ") { it.value.toString() }
+            Log.d("DataStructures", "第${depth}层: $values")
         }
     }
     
     /**
      * 查找元素
-     * 时间复杂度: O(n)
      */
-    private fun search(node: TreeNode?, target: Int): Boolean {
-        if (node == null) return false
-        if (node.value == target) return true
-        
-        return search(node.left, target) || search(node.right, target)
+    private fun search(node: TreeNode?, target: Int): Boolean = when {
+        node == null -> false
+        node.value == target -> true
+        else -> search(node.left, target) || search(node.right, target)
     }
     
     /**
      * 计算二叉树的高度
-     * 时间复杂度: O(n)
      */
-    private fun calculateHeight(node: TreeNode?): Int {
-        if (node == null) return 0
-        
-        val leftHeight = calculateHeight(node.left)
-        val rightHeight = calculateHeight(node.right)
-        
-        return maxOf(leftHeight, rightHeight) + 1
+    private fun calculateHeight(node: TreeNode?): Int = when (node) {
+        null -> 0
+        else -> maxOf(calculateHeight(node.left), calculateHeight(node.right)) + 1
     }
     
     /**
      * 计算二叉树的节点数
-     * 时间复杂度: O(n)
      */
-    private fun countNodes(node: TreeNode?): Int {
-        if (node == null) return 0
-        
-        return countNodes(node.left) + countNodes(node.right) + 1
+    private fun countNodes(node: TreeNode?): Int = when (node) {
+        null -> 0
+        else -> countNodes(node.left) + countNodes(node.right) + 1
     }
 }

@@ -12,164 +12,158 @@ import com.example.stability.anr.utils.TimeUtils
 class MainThreadBlockDetector {
     
     /**
-     * 警告阈值（100ms）- 超过此时间认为是慢操作
+     * 检测阈值配置（不可变数据类）
      */
-    private val WARNING_THRESHOLD = 100L
+    data class ThresholdConfig(
+        val warningThreshold: Long = 100L,
+        val criticalThreshold: Long = 500L,
+        val checkInterval: Long = 50L
+    )
     
     /**
-     * 严重阈值（500ms）- 超过此时间认为是严重阻塞
+     * 检测状态（不可变数据类）
      */
-    private val CRITICAL_THRESHOLD = 500L
+    data class DetectionState(
+        val isRunning: Boolean,
+        val lastCheckTime: Long,
+        val slowOperationCount: Int
+    )
     
     /**
-     * 检测间隔（50ms）
+     * 检测结果密封类
      */
-    private val CHECK_INTERVAL = 50L
+    sealed class DetectionResult {
+        object Normal : DetectionResult()
+        data class SlowOperation(val durationMs: Long) : DetectionResult()
+        data class CriticalBlock(val durationMs: Long) : DetectionResult()
+        data class ContinuousSlowOperations(val count: Int) : DetectionResult()
+    }
     
-    /**
-     * 主线程 Handler
-     */
+    private val config = ThresholdConfig()
     private val mainHandler = Handler(Looper.getMainLooper())
-    
-    /**
-     * 检测回调
-     */
     private var listener: BlockListener? = null
     
-    /**
-     * 是否正在运行
-     */
     @Volatile
-    private var isRunning = false
+    private var state = DetectionState(false, 0L, 0)
     
-    /**
-     * 最后一次检测时间
-     */
-    @Volatile
-    private var lastCheckTime = 0L
-    
-    /**
-     * 慢操作计数
-     */
-    @Volatile
-    private var slowOperationCount = 0
-    
-    /**
-     * 阻塞回调接口
-     */
     interface BlockListener {
-        /**
-         * 检测到慢操作
-         * @param durationMs 操作耗时
-         */
         fun onSlowOperation(durationMs: Long)
-        
-        /**
-         * 检测到严重阻塞
-         * @param durationMs 阻塞时长
-         */
         fun onCriticalBlock(durationMs: Long)
-        
-        /**
-         * 检测到持续慢操作
-         * @param count 连续慢操作次数
-         */
         fun onContinuousSlowOperations(count: Int)
     }
     
-    /**
-     * 设置监听器
-     */
     fun setListener(listener: BlockListener): MainThreadBlockDetector {
         this.listener = listener
         return this
     }
     
     /**
-     * 开始检测
+     * 检查阻塞级别（纯函数）
      */
+    private fun checkBlockLevel(elapsed: Long, slowCount: Int): DetectionResult {
+        return when {
+            elapsed >= config.criticalThreshold -> DetectionResult.CriticalBlock(elapsed)
+            elapsed >= config.warningThreshold -> DetectionResult.SlowOperation(elapsed)
+            slowCount >= 5 -> DetectionResult.ContinuousSlowOperations(slowCount)
+            else -> DetectionResult.Normal
+        }
+    }
+    
+    /**
+     * 更新状态（纯函数）
+     */
+    private fun updateState(result: DetectionResult, currentTime: Long): DetectionState {
+        return when (result) {
+            is DetectionResult.CriticalBlock -> state.copy(
+                lastCheckTime = currentTime,
+                slowOperationCount = 0
+            )
+            is DetectionResult.SlowOperation -> state.copy(
+                lastCheckTime = currentTime,
+                slowOperationCount = state.slowOperationCount + 1
+            )
+            is DetectionResult.ContinuousSlowOperations -> state.copy(
+                lastCheckTime = currentTime,
+                slowOperationCount = 0
+            )
+            else -> state.copy(
+                lastCheckTime = currentTime,
+                slowOperationCount = 0
+            )
+        }
+    }
+    
+    /**
+     * 处理检测结果（副作用处理）
+     */
+    private fun handleResult(result: DetectionResult) {
+        when (result) {
+            is DetectionResult.CriticalBlock -> {
+                AnrLog.performanceError("Main thread critical block detected", result.durationMs)
+                listener?.onCriticalBlock(result.durationMs)
+            }
+            is DetectionResult.SlowOperation -> {
+                AnrLog.performanceWarning("Main thread slow operation detected", result.durationMs)
+                listener?.onSlowOperation(result.durationMs)
+                
+                if (state.slowOperationCount + 1 >= 5) {
+                    listener?.onContinuousSlowOperations(state.slowOperationCount + 1)
+                }
+            }
+            is DetectionResult.ContinuousSlowOperations -> {
+                listener?.onContinuousSlowOperations(result.count)
+            }
+            DetectionResult.Normal -> {}
+        }
+    }
+    
     fun start() {
-        if (isRunning) {
+        if (state.isRunning) {
             AnrLog.w("MainThreadBlockDetector is already running")
             return
         }
         
-        isRunning = true
-        lastCheckTime = TimeUtils.currentTimeMillis()
-        slowOperationCount = 0
-        
+        state = DetectionState(true, TimeUtils.currentTimeMillis(), 0)
         AnrLog.i("Starting MainThreadBlockDetector")
         
         scheduleNextCheck()
     }
     
-    /**
-     * 停止检测
-     */
     fun stop() {
-        isRunning = false
+        state = state.copy(isRunning = false)
         listener = null
         AnrLog.i("MainThreadBlockDetector stopped")
     }
     
-    /**
-     * 调度下一次检测
-     */
     private fun scheduleNextCheck() {
-        if (!isRunning) return
+        if (!state.isRunning) return
         
         mainHandler.postDelayed({
-            if (!isRunning) return@postDelayed
+            if (!state.isRunning) return@postDelayed
             
             val currentTime = TimeUtils.currentTimeMillis()
-            val elapsed = currentTime - lastCheckTime
+            val elapsed = currentTime - state.lastCheckTime
             
-            // 检查是否超过阈值
-            when {
-                elapsed >= CRITICAL_THRESHOLD -> {
-                    AnrLog.performanceError("Main thread critical block detected", elapsed)
-                    listener?.onCriticalBlock(elapsed)
-                    slowOperationCount = 0
-                }
-                elapsed >= WARNING_THRESHOLD -> {
-                    AnrLog.performanceWarning("Main thread slow operation detected", elapsed)
-                    listener?.onSlowOperation(elapsed)
-                    slowOperationCount++
-                    
-                    // 连续慢操作检测
-                    if (slowOperationCount >= 5) {
-                        listener?.onContinuousSlowOperations(slowOperationCount)
-                        slowOperationCount = 0
-                    }
-                }
-                else -> {
-                    // 正常响应，重置计数器
-                    slowOperationCount = 0
-                }
-            }
+            // 使用函数式方式处理检测
+            val result = checkBlockLevel(elapsed, state.slowOperationCount)
+            handleResult(result)
+            state = updateState(result, currentTime)
             
-            lastCheckTime = currentTime
             scheduleNextCheck()
-        }, CHECK_INTERVAL)
+        }, config.checkInterval)
     }
     
-    /**
-     * 获取当前检测状态
-     */
     fun getStatus(): String {
         return buildString {
             append("MainThreadBlockDetector Status:\n")
-            append("  Running: $isRunning\n")
-            append("  Last Check: ${TimeUtils.formatTimeMs(lastCheckTime)}\n")
-            append("  Slow Operation Count: $slowOperationCount\n")
+            append("  Running: ${state.isRunning}\n")
+            append("  Last Check: ${TimeUtils.formatTimeMs(state.lastCheckTime)}\n")
+            append("  Slow Operation Count: ${state.slowOperationCount}\n")
         }
     }
     
-    /**
-     * 重置计数器
-     */
     fun resetCounters() {
-        slowOperationCount = 0
+        state = state.copy(slowOperationCount = 0)
         AnrLog.d("MainThreadBlockDetector counters reset")
     }
 }

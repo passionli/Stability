@@ -122,21 +122,27 @@ class StackExample {
     }
     
     /**
-     * 检查括号是否匹配
+     * 检查括号是否匹配（使用 fold 函数）
      * 应用：编译器语法检查、表达式求值等
      */
     private fun checkParenthesesBalance(expression: String): Boolean {
-        val stack = mutableListOf<Char>()
-        
-        for (char in expression) {
-            when (char) {
-                '(', '[', '{' -> stack.add(char)
-                ')' -> if (stack.isEmpty() || stack.removeAt(stack.size - 1) != '(') return false
-                ']' -> if (stack.isEmpty() || stack.removeAt(stack.size - 1) != '[') return false
-                '}' -> if (stack.isEmpty() || stack.removeAt(stack.size - 1) != '{') return false
+        val opening = setOf('(', '[', '{')
+        val closing = setOf(')', ']', '}')
+        val matching = mapOf(')' to '(', ']' to '[', '}' to '{')
+
+        val result = expression.fold(emptyList<Char>()) { stack, char ->
+            when {
+                char in opening -> stack + char
+                char in closing -> {
+                    if (stack.isEmpty() || stack.last() != matching[char]) {
+                        return false
+                    }
+                    stack.dropLast(1)
+                }
+                else -> stack
             }
         }
-        
-        return stack.isEmpty()
+
+        return result.isEmpty()
     }
 }

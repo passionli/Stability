@@ -61,10 +61,8 @@ class HeapExample {
      * 时间复杂度: O(log n)
      */
     private fun insert(value: Int) {
-        // 将元素添加到堆的末尾
         heap.add(value)
-        // 向上调整堆
-        heapifyUp(heap.size - 1)
+        heapifyUpRecursive(heap.size - 1)
         Log.d("DataStructures", "插入元素: $value")
     }
     
@@ -78,15 +76,14 @@ class HeapExample {
             return null
         }
         
-        // 保存堆顶元素
         val top = heap[0]
-        // 将堆的最后一个元素移到堆顶
-        heap[0] = heap[heap.size - 1]
-        // 删除最后一个元素
-        heap.removeAt(heap.size - 1)
-        // 向下调整堆
+        if (heap.size > 1) {
+            heap[0] = heap.last()
+        }
+        heap.removeLast()
+        
         if (heap.isNotEmpty()) {
-            heapifyDown(0)
+            heapifyDownRecursive(0)
         }
         
         return top
@@ -101,60 +98,66 @@ class HeapExample {
             Log.d("DataStructures", "堆为空，无法查看堆顶元素")
             return null
         }
-        
         return heap[0]
     }
     
     /**
      * 检查堆是否为空
      */
-    private fun isEmpty(): Boolean {
-        return heap.isEmpty()
-    }
+    private fun isEmpty(): Boolean = heap.isEmpty()
     
     /**
-     * 向上调整堆
+     * 递归向上调整堆
      */
-    private fun heapifyUp(index: Int) {
-        var current = index
-        var parent = (current - 1) / 2
+    private fun heapifyUpRecursive(index: Int) {
+        if (index <= 0) return
         
-        while (current > 0 && heap[current] > heap[parent]) {
-            // 交换当前节点和父节点
-            val temp = heap[current]
-            heap[current] = heap[parent]
-            heap[parent] = temp
-            
-            current = parent
-            parent = (current - 1) / 2
+        val parent = (index - 1) / 2
+        
+        if (heap[index] > heap[parent]) {
+            swap(index, parent)
+            heapifyUpRecursive(parent)
         }
     }
     
     /**
-     * 向下调整堆
+     * 递归向下调整堆
      */
-    private fun heapifyDown(index: Int) {
-        var current = index
-        var leftChild = 2 * current + 1
-        var rightChild = 2 * current + 2
+    private fun heapifyDownRecursive(index: Int) {
+        val leftChild = 2 * index + 1
+        val rightChild = 2 * index + 2
+        
+        val largest = findLargestIndex(index, leftChild, rightChild)
+        
+        if (largest != index) {
+            swap(index, largest)
+            heapifyDownRecursive(largest)
+        }
+    }
+    
+    /**
+     * 找到最大元素的索引
+     */
+    private fun findLargestIndex(current: Int, left: Int, right: Int): Int {
         var largest = current
         
-        // 找到当前节点、左子节点、右子节点中的最大值
-        if (leftChild < heap.size && heap[leftChild] > heap[largest]) {
-            largest = leftChild
+        if (left < heap.size && heap[left] > heap[largest]) {
+            largest = left
         }
-        if (rightChild < heap.size && heap[rightChild] > heap[largest]) {
-            largest = rightChild
+        if (right < heap.size && heap[right] > heap[largest]) {
+            largest = right
         }
         
-        // 如果最大值不是当前节点，交换并继续调整
-        if (largest != current) {
-            val temp = heap[current]
-            heap[current] = heap[largest]
-            heap[largest] = temp
-            
-            heapifyDown(largest)
-        }
+        return largest
+    }
+    
+    /**
+     * 交换元素
+     */
+    private fun swap(i: Int, j: Int) {
+        val temp = heap[i]
+        heap[i] = heap[j]
+        heap[j] = temp
     }
     
     /**
@@ -167,35 +170,37 @@ class HeapExample {
     /**
      * 堆排序
      * 时间复杂度: O(n log n)
-     * 应用：优先队列、堆排序等
      */
     private fun heapSort(array: IntArray) {
         val n = array.size
         
-        // 构建最大堆
-        for (i in n / 2 - 1 downTo 0) {
-            heapify(array, n, i)
-        }
+        // 使用函数式方式构建最大堆
+        (n / 2 - 1 downTo 0).forEach { heapify(array, n, it) }
         
-        // 逐个提取元素
-        for (i in n - 1 downTo 1) {
-            // 交换堆顶和当前末尾元素
-            val temp = array[0]
-            array[0] = array[i]
-            array[i] = temp
-            
-            // 对剩余的堆进行调整
+        // 使用函数式方式逐个提取元素
+        (n - 1 downTo 1).forEach { i ->
+            swap(array, 0, i)
             heapify(array, i, 0)
         }
     }
     
     /**
-     * 调整堆
+     * 调整堆（函数式风格）
      */
     private fun heapify(array: IntArray, n: Int, i: Int) {
-        var largest = i
-        val left = 2 * i + 1
-        val right = 2 * i + 2
+        val largest = findLargestIndex(array, n, i, 2 * i + 1, 2 * i + 2)
+        
+        if (largest != i) {
+            swap(array, i, largest)
+            heapify(array, n, largest)
+        }
+    }
+    
+    /**
+     * 找到数组中最大元素的索引
+     */
+    private fun findLargestIndex(array: IntArray, n: Int, current: Int, left: Int, right: Int): Int {
+        var largest = current
         
         if (left < n && array[left] > array[largest]) {
             largest = left
@@ -204,12 +209,15 @@ class HeapExample {
             largest = right
         }
         
-        if (largest != i) {
-            val temp = array[i]
-            array[i] = array[largest]
-            array[largest] = temp
-            
-            heapify(array, n, largest)
-        }
+        return largest
+    }
+    
+    /**
+     * 交换数组元素
+     */
+    private fun swap(array: IntArray, i: Int, j: Int) {
+        val temp = array[i]
+        array[i] = array[j]
+        array[j] = temp
     }
 }

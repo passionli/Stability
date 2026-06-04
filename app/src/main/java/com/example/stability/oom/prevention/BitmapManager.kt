@@ -124,20 +124,19 @@ object BitmapManager {
         reqHeight: Int
     ): Int {
         val (height: Int, width: Int) = options.run { outHeight to outWidth }
-        var inSampleSize = 1
-        
-        // 如果原图尺寸大于目标尺寸，计算采样率
-        if (height > reqHeight || width > reqWidth) {
-            val halfHeight = height / 2
-            val halfWidth = width / 2
-            
-            // 找到最大的采样率，同时保证采样后的尺寸不小于目标尺寸
-            while (halfHeight / inSampleSize >= reqHeight && 
-                   halfWidth / inSampleSize >= reqWidth) {
-                inSampleSize *= 2
-            }
+
+        // 使用函数式方式计算最大采样率
+        val widthRatio = width.toFloat() / reqWidth.toFloat()
+        val heightRatio = height.toFloat() / reqHeight.toFloat()
+        val maxRatio = maxOf(widthRatio, heightRatio)
+
+        // 计算最大的 2 的幂次方采样率
+        val inSampleSize = if (maxRatio <= 1) {
+            1
+        } else {
+            Integer.highestOneBit(maxRatio.toInt())
         }
-        
+
         OomLog.d("BitmapManager", "Calculated inSampleSize: $inSampleSize")
         return inSampleSize
     }

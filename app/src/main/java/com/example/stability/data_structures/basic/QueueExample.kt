@@ -117,24 +117,19 @@ class QueueExample {
     }
     
     /**
-     * 模拟打印机任务队列
+     * 模拟打印机任务队列（使用序列操作）
      * 应用：任务调度、消息队列等
      */
     private fun simulatePrinterQueue() {
         Log.d("DataStructures", "=== 模拟打印机任务队列 ===")
         
         // 创建任务队列
-        val printerQueue = mutableListOf<String>()
+        val printerQueue = listOf("文档1.pdf", "文档2.pdf", "文档3.pdf")
         
-        // 添加打印任务
-        printerQueue.add("文档1.pdf")
-        printerQueue.add("文档2.pdf")
-        printerQueue.add("文档3.pdf")
         Log.d("DataStructures", "添加打印任务后: $printerQueue")
         
-        // 处理打印任务
-        while (printerQueue.isNotEmpty()) {
-            val task = printerQueue.removeAt(0)
+        // 使用 forEach 处理打印任务
+        printerQueue.forEach { task ->
             Log.d("DataStructures", "正在打印: $task")
             // 模拟打印时间
             Thread.sleep(500)
