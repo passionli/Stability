@@ -84,30 +84,35 @@ class LoginPresenter(private val model: LoginContract.Model) : LoginContract.Pre
      * 技术目的：确保输入数据的有效性
      */
     private fun validateInput(username: String, password: String): Boolean {
-        var isValid = true
-        
-        // 验证用户名
-        if (username.isEmpty()) {
-            view?.showUsernameError("用户名不能为空")
-            isValid = false
-        } else if (username.length < 3) {
-            view?.showUsernameError("用户名至少3个字符")
-            isValid = false
-        } else {
-            view?.showUsernameError("") // 清除错误
-        }
-        
-        // 验证密码
-        if (password.isEmpty()) {
-            view?.showPasswordError("密码不能为空")
-            isValid = false
-        } else if (password.length < 6) {
-            view?.showPasswordError("密码至少6个字符")
-            isValid = false
-        } else {
-            view?.showPasswordError("") // 清除错误
-        }
-        
-        return isValid
+        val usernameValidation = validateUsername(username)
+        val passwordValidation = validatePassword(password)
+
+        view?.showUsernameError(usernameValidation.errorMessage)
+        view?.showPasswordError(passwordValidation.errorMessage)
+
+        return usernameValidation.isValid && passwordValidation.isValid
+    }
+
+    /**
+     * 验证结果数据类
+     */
+    private data class ValidationResult(val isValid: Boolean, val errorMessage: String)
+
+    /**
+     * 验证用户名
+     */
+    private fun validateUsername(username: String): ValidationResult = when {
+        username.isEmpty() -> ValidationResult(false, "用户名不能为空")
+        username.length < 3 -> ValidationResult(false, "用户名至少3个字符")
+        else -> ValidationResult(true, "")
+    }
+
+    /**
+     * 验证密码
+     */
+    private fun validatePassword(password: String): ValidationResult = when {
+        password.isEmpty() -> ValidationResult(false, "密码不能为空")
+        password.length < 6 -> ValidationResult(false, "密码至少6个字符")
+        else -> ValidationResult(true, "")
     }
 }

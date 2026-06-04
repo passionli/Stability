@@ -89,25 +89,33 @@ class LoginViewModel : ViewModel() {
     }
 
     private fun validateInput(): Boolean {
-        var isValid = true
+        val usernameValid = validateField(
+            _username.value,
+            minLength = 3,
+            emptyError = "用户名不能为空",
+            lengthError = "用户名至少3个字符"
+        ) { _usernameError.value = it }
 
-        if (_username.value.isEmpty()) {
-            _usernameError.value = "用户名不能为空"
-            isValid = false
-        } else if (_username.value.length < 3) {
-            _usernameError.value = "用户名至少3个字符"
-            isValid = false
-        }
+        val passwordValid = validateField(
+            _password.value,
+            minLength = 6,
+            emptyError = "密码不能为空",
+            lengthError = "密码至少6个字符"
+        ) { _passwordError.value = it }
 
-        if (_password.value.isEmpty()) {
-            _passwordError.value = "密码不能为空"
-            isValid = false
-        } else if (_password.value.length < 6) {
-            _passwordError.value = "密码至少6个字符"
-            isValid = false
-        }
+        return usernameValid && passwordValid
+    }
 
-        return isValid
+    private fun validateField(
+        value: String,
+        minLength: Int,
+        emptyError: String,
+        lengthError: String,
+        setError: (String) -> Unit
+    ): Boolean = when {
+        value.isEmpty() -> { setError(emptyError); false }
+        value.length < minLength -> { setError(lengthError); false }
+        else -> { setError(""); true }
     }
 
     fun clearError() {

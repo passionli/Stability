@@ -81,36 +81,19 @@ class LinkedListExample {
      * 打印链表
      */
     private fun printLinkedList(head: ListNode?) {
-        val sb = StringBuilder()
-        var current = head
-        
-        while (current != null) {
-            sb.append(current.value)
-            if (current.next != null) {
-                sb.append(" -> ")
-            }
-            current = current.next
-        }
-        
-        Log.d("DataStructures", "链表: $sb")
+        val result = generateSequence(head) { it.next }
+            .joinToString(" -> ") { it.value.toString() }
+
+        Log.d("DataStructures", "链表: $result")
     }
     
     /**
      * 查找元素
      * 时间复杂度: O(n)
      */
-    private fun findNode(head: ListNode?, target: Int): ListNode? {
-        var current = head
-        
-        while (current != null) {
-            if (current.value == target) {
-                return current
-            }
-            current = current.next
-        }
-        
-        return null
-    }
+    private fun findNode(head: ListNode?, target: Int): ListNode? =
+        generateSequence(head) { it.next }
+            .find { it.value == target }
     
     /**
      * 在头部插入元素
@@ -128,17 +111,15 @@ class LinkedListExample {
      */
     private fun insertAtTail(head: ListNode?, value: Int): ListNode {
         val newNode = ListNode(value)
-        
+
         if (head == null) {
             return newNode
         }
-        
-        var current = head
-        while (current?.next != null) {
-            current = current.next
-        }
-        
-        current?.next = newNode
+
+        // 使用函数式方式找到最后一个节点
+        val lastNode = generateSequence(head) { it.next }.last()
+        lastNode.next = newNode
+
         return head
     }
     
@@ -150,21 +131,19 @@ class LinkedListExample {
         if (position == 0) {
             return insertAtHead(head, value)
         }
-        
+
         val newNode = ListNode(value)
-        var current = head
-        var count = 0
-        
-        while (current != null && count < position - 1) {
-            current = current.next
-            count++
+
+        // 使用函数式方式找到指定位置的前一个节点
+        val nodeAtPosition = generateSequence(head) { it.next }
+            .take(position)
+            .lastOrNull()
+
+        if (nodeAtPosition != null) {
+            newNode.next = nodeAtPosition.next
+            nodeAtPosition.next = newNode
         }
-        
-        if (current != null) {
-            newNode.next = current.next
-            current.next = newNode
-        }
-        
+
         return head!!
     }
     
@@ -188,13 +167,13 @@ class LinkedListExample {
         if (head == null || head.next == null) {
             return null
         }
-        
-        var current = head
-        while (current?.next?.next != null) {
-            current = current.next
+
+        // 使用函数式方式找到倒数第二个节点
+        val nodes = generateSequence(head) { it.next }.toList()
+        if (nodes.size >= 2) {
+            nodes[nodes.size - 2].next = null
         }
-        
-        current?.next = null
+
         return head
     }
     
@@ -206,23 +185,20 @@ class LinkedListExample {
         if (head == null) {
             return null
         }
-        
+
         if (position == 0) {
             return head.next
         }
-        
-        var current = head
-        var count = 0
-        
-        while (current != null && count < position - 1) {
-            current = current.next
-            count++
+
+        // 使用函数式方式找到指定位置的前一个节点
+        val nodeBeforePosition = generateSequence(head) { it.next }
+            .take(position)
+            .lastOrNull()
+
+        if (nodeBeforePosition?.next != null) {
+            nodeBeforePosition.next = nodeBeforePosition.next?.next
         }
-        
-        if (current?.next != null) {
-            current.next = current.next?.next
-        }
-        
+
         return head
     }
 }

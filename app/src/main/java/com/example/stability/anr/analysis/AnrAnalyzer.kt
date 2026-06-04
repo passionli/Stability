@@ -65,82 +65,67 @@ class AnrAnalyzer {
      * @param stackTrace 完整的堆栈信息
      * @return 分析结果
      */
-    fun analyze(stackTrace: String): List<AnalysisResult> {
-        val results = mutableListOf<AnalysisResult>()
-        
-        // 检查主线程状态
-        if (isMainThreadBlocked(stackTrace)) {
-            results.add(analyzeMainThreadBlocking(stackTrace))
-        }
-        
+    fun analyze(stackTrace: String): List<AnalysisResult> = listOfNotNull(
+        // 检查主线程阻塞
+        analyzeMainThreadBlocking(stackTrace).takeIf { isMainThreadBlocked(stackTrace) },
+
         // 检查死锁
-        if (hasDeadlock(stackTrace)) {
-            results.add(AnalysisResult(
-                hasIssue = true,
-                issueType = IssueType.DEADLOCK,
-                description = "检测到死锁，多个线程互相等待对方持有的锁",
-                suggestion = "检查锁的获取顺序，确保所有线程以相同的顺序获取锁",
-                relevantStack = extractRelevantStack(stackTrace, "BLOCKED")
-            ))
-        }
-        
+        AnalysisResult(
+            hasIssue = true,
+            issueType = IssueType.DEADLOCK,
+            description = "检测到死锁，多个线程互相等待对方持有的锁",
+            suggestion = "检查锁的获取顺序，确保所有线程以相同的顺序获取锁",
+            relevantStack = extractRelevantStack(stackTrace, "BLOCKED")
+        ).takeIf { hasDeadlock(stackTrace) },
+
         // 检查锁竞争
-        if (hasLockContention(stackTrace)) {
-            results.add(AnalysisResult(
-                hasIssue = true,
-                issueType = IssueType.LOCK_CONTENTION,
-                description = "检测到严重的锁竞争，多个线程等待同一个锁",
-                suggestion = "减少锁的粒度，使用更细粒度的同步策略，或使用无锁数据结构",
-                relevantStack = extractRelevantStack(stackTrace, "WAITING")
-            ))
-        }
-        
+        AnalysisResult(
+            hasIssue = true,
+            issueType = IssueType.LOCK_CONTENTION,
+            description = "检测到严重的锁竞争，多个线程等待同一个锁",
+            suggestion = "减少锁的粒度，使用更细粒度的同步策略，或使用无锁数据结构",
+            relevantStack = extractRelevantStack(stackTrace, "WAITING")
+        ).takeIf { hasLockContention(stackTrace) },
+
         // 检查网络请求
-        if (hasNetworkOnMainThread(stackTrace)) {
-            results.add(AnalysisResult(
-                hasIssue = true,
-                issueType = IssueType.NETWORK_ON_MAIN_THREAD,
-                description = "在主线程执行网络请求",
-                suggestion = "将网络请求移到后台线程，使用 Coroutine 或 AsyncTask",
-                relevantStack = extractRelevantStack(stackTrace, "HttpURLConnection|OkHttp|Retrofit")
-            ))
-        }
-        
+        AnalysisResult(
+            hasIssue = true,
+            issueType = IssueType.NETWORK_ON_MAIN_THREAD,
+            description = "在主线程执行网络请求",
+            suggestion = "将网络请求移到后台线程，使用 Coroutine 或 AsyncTask",
+            relevantStack = extractRelevantStack(stackTrace, "HttpURLConnection|OkHttp|Retrofit")
+        ).takeIf { hasNetworkOnMainThread(stackTrace) },
+
         // 检查数据库操作
-        if (hasDatabaseOnMainThread(stackTrace)) {
-            results.add(AnalysisResult(
-                hasIssue = true,
-                issueType = IssueType.DATABASE_ON_MAIN_THREAD,
-                description = "在主线程执行数据库操作",
-                suggestion = "将数据库操作移到后台线程，使用 Room 的异步查询",
-                relevantStack = extractRelevantStack(stackTrace, "SQLite|Database|Cursor")
-            ))
-        }
-        
+        AnalysisResult(
+            hasIssue = true,
+            issueType = IssueType.DATABASE_ON_MAIN_THREAD,
+            description = "在主线程执行数据库操作",
+            suggestion = "将数据库操作移到后台线程，使用 Room 的异步查询",
+            relevantStack = extractRelevantStack(stackTrace, "SQLite|Database|Cursor")
+        ).takeIf { hasDatabaseOnMainThread(stackTrace) },
+
         // 检查文件操作
-        if (hasFileIoOnMainThread(stackTrace)) {
-            results.add(AnalysisResult(
-                hasIssue = true,
-                issueType = IssueType.FILE_IO_ON_MAIN_THREAD,
-                description = "在主线程执行文件 I/O 操作",
-                suggestion = "将文件操作移到后台线程",
-                relevantStack = extractRelevantStack(stackTrace, "FileInputStream|FileOutputStream|BufferedReader")
-            ))
-        }
-        
+        AnalysisResult(
+            hasIssue = true,
+            issueType = IssueType.FILE_IO_ON_MAIN_THREAD,
+            description = "在主线程执行文件 I/O 操作",
+            suggestion = "将文件操作移到后台线程",
+            relevantStack = extractRelevantStack(stackTrace, "FileInputStream|FileOutputStream|BufferedReader")
+        ).takeIf { hasFileIoOnMainThread(stackTrace) }
+    ).ifEmpty {
         // 如果没有找到特定问题，检查是否有一般的主线程阻塞
-        if (results.isEmpty() && stackTrace.contains("main") && 
-            stackTrace.contains("RUNNABLE")) {
-            results.add(AnalysisResult(
+        if (stackTrace.contains("main") && stackTrace.contains("RUNNABLE")) {
+            listOf(AnalysisResult(
                 hasIssue = true,
                 issueType = IssueType.MAIN_THREAD_BLOCKING,
                 description = "主线程长时间处于运行状态，可能在执行耗时操作",
                 suggestion = "检查主线程中的耗时操作，将其移到后台线程",
                 relevantStack = extractMainThreadStack(stackTrace)
             ))
+        } else {
+            emptyList()
         }
-        
-        return results
     }
     
     /**
@@ -156,23 +141,14 @@ class AnrAnalyzer {
     /**
      * 判断是否存在死锁
      */
-    private fun hasDeadlock(stackTrace: String): Boolean {
-        // 检查是否有多个线程处于 BLOCKED 状态并且互相等待
-        val blockedCount = stackTrace.split("\n").count { 
-            it.contains("BLOCKED") 
-        }
-        return blockedCount >= 2
-    }
+    private fun hasDeadlock(stackTrace: String): Boolean =
+        stackTrace.split("\n").count { it.contains("BLOCKED") } >= 2
     
     /**
      * 判断是否存在严重的锁竞争
      */
-    private fun hasLockContention(stackTrace: String): Boolean {
-        val waitingCount = stackTrace.split("\n").count { 
-            it.contains("WAITING") && it.contains("lock") 
-        }
-        return waitingCount >= 3
-    }
+    private fun hasLockContention(stackTrace: String): Boolean =
+        stackTrace.split("\n").count { it.contains("WAITING") && it.contains("lock") } >= 3
     
     /**
      * 检查是否在主线程执行网络请求
@@ -273,11 +249,10 @@ class AnrAnalyzer {
     /**
      * 提取与特定模式相关的堆栈信息
      */
-    private fun extractRelevantStack(stackTrace: String, pattern: String): String {
-        return stackTrace.split("\n")
+    private fun extractRelevantStack(stackTrace: String, pattern: String): String =
+        stackTrace.split("\n")
             .filter { it.contains(pattern) }
             .joinToString("\n")
-    }
     
     /**
      * 打印分析结果到日志

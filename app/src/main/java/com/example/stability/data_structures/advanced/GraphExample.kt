@@ -105,7 +105,7 @@ class GraphExample {
      * 打印图
      */
     private fun printGraph() {
-        for ((vertex, neighbors) in adjacencyList) {
+        adjacencyList.forEach { (vertex, neighbors) ->
             Log.d("DataStructures", "顶点 $vertex 的邻居: $neighbors")
         }
     }
@@ -126,13 +126,11 @@ class GraphExample {
         // 标记当前顶点为已访问
         visited.add(vertex)
         Log.d("DataStructures", "访问顶点: $vertex")
-        
+
         // 递归访问所有未访问的邻居
-        for (neighbor in adjacencyList[vertex] ?: emptyList()) {
-            if (!visited.contains(neighbor)) {
-                dfsHelper(neighbor, visited)
-            }
-        }
+        adjacencyList[vertex].orEmpty()
+            .filterNot { it in visited }
+            .forEach { dfsHelper(it, visited) }
     }
     
     /**
@@ -141,25 +139,25 @@ class GraphExample {
      */
     private fun bfs(startVertex: Int) {
         val visited = mutableSetOf<Int>()
-        val queue: Queue<Int> = LinkedList()
-        
+        val queue = ArrayDeque<Int>()
+
         // 标记起始顶点为已访问并加入队列
         visited.add(startVertex)
-        queue.offer(startVertex)
-        
-        while (queue.isNotEmpty()) {
-            // 出队一个顶点
-            val vertex = queue.poll()
-            Log.d("DataStructures", "访问顶点: $vertex")
-            
-            // 访问所有未访问的邻居
-            for (neighbor in adjacencyList[vertex] ?: emptyList()) {
-                if (!visited.contains(neighbor)) {
-                    visited.add(neighbor)
-                    queue.offer(neighbor)
-                }
+        queue.add(startVertex)
+
+        generateSequence(queue.poll()) { queue.poll() }
+            .onEach { vertex ->
+                Log.d("DataStructures", "访问顶点: $vertex")
             }
-        }
+            .flatMap { vertex ->
+                adjacencyList[vertex].orEmpty()
+                    .filterNot { it in visited }
+                    .onEach { neighbor ->
+                        visited.add(neighbor)
+                        queue.add(neighbor)
+                    }
+            }
+            .toList()
     }
     
     /**
@@ -173,21 +171,16 @@ class GraphExample {
     /**
      * 检查路径辅助函数
      */
-    private fun hasPathHelper(source: Int, destination: Int, visited: MutableSet<Int>): Boolean {
-        if (source == destination) {
-            return true
-        }
-        
-        visited.add(source)
-        
-        for (neighbor in adjacencyList[source] ?: emptyList()) {
-            if (!visited.contains(neighbor) && hasPathHelper(neighbor, destination, visited)) {
-                return true
+    private fun hasPathHelper(source: Int, destination: Int, visited: MutableSet<Int>): Boolean =
+        when {
+            source == destination -> true
+            else -> {
+                visited.add(source)
+                adjacencyList[source].orEmpty()
+                    .filterNot { it in visited }
+                    .any { hasPathHelper(it, destination, visited) }
             }
         }
-        
-        return false
-    }
     
     /**
      * 创建一个有向无环图 (DAG)
@@ -230,53 +223,55 @@ class GraphExample {
         val result = mutableListOf<Int>()
         val visited = mutableSetOf<Int>()
         val tempMark = mutableSetOf<Int>() // 用于检测环
-        
+
         // 对每个未访问的顶点进行深度优先搜索
-        for (vertex in adjacencyList.keys) {
-            if (!visited.contains(vertex)) {
-                if (!topologicalSortHelper(vertex, visited, tempMark, result)) {
-                    // 检测到环，返回空列表
-                    Log.d("DataStructures", "图中存在环，无法进行拓扑排序")
-                    return emptyList()
-                }
+        val hasCycle = adjacencyList.keys
+            .filterNot { it in visited }
+            .any { vertex ->
+                !topologicalSortHelper(vertex, visited, tempMark, result)
             }
+
+        return if (hasCycle) {
+            Log.d("DataStructures", "图中存在环，无法进行拓扑排序")
+            emptyList()
+        } else {
+            result.reversed()
         }
-        
-        // 反转结果，因为我们是后序遍历
-        result.reverse()
-        return result
     }
     
     /**
      * 拓扑排序辅助函数
      */
-    private fun topologicalSortHelper(vertex: Int, visited: MutableSet<Int>, tempMark: MutableSet<Int>, result: MutableList<Int>): Boolean {
+    private fun topologicalSortHelper(
+        vertex: Int,
+        visited: MutableSet<Int>,
+        tempMark: MutableSet<Int>,
+        result: MutableList<Int>
+    ): Boolean = when {
         // 检测环
-        if (tempMark.contains(vertex)) {
-            return false
-        }
-        
-        if (visited.contains(vertex)) {
-            return true
-        }
-        
-        // 临时标记当前顶点
-        tempMark.add(vertex)
-        
-        // 递归访问所有邻居
-        for (neighbor in adjacencyList[vertex] ?: emptyList()) {
-            if (!topologicalSortHelper(neighbor, visited, tempMark, result)) {
-                return false
+        vertex in tempMark -> false
+        vertex in visited -> true
+        else -> {
+            // 临时标记当前顶点
+            tempMark.add(vertex)
+
+            // 递归访问所有邻居
+            val hasCycle = adjacencyList[vertex].orEmpty()
+                .any { neighbor ->
+                    !topologicalSortHelper(neighbor, visited, tempMark, result)
+                }
+
+            if (hasCycle) {
+                false
+            } else {
+                // 移除临时标记
+                tempMark.remove(vertex)
+                // 标记为已访问
+                visited.add(vertex)
+                // 添加到结果列表
+                result.add(vertex)
+                true
             }
         }
-        
-        // 移除临时标记
-        tempMark.remove(vertex)
-        // 标记为已访问
-        visited.add(vertex)
-        // 添加到结果列表
-        result.add(vertex)
-        
-        return true
     }
 }

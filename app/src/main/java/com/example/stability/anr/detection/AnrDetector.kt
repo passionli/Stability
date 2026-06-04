@@ -42,60 +42,49 @@ object AnrDetector {
      * 获取指定线程的堆栈信息
      * @param thread 目标线程
      */
-    fun getThreadStackTrace(thread: Thread): String {
-        val sb = StringBuilder()
-        sb.append("Thread: ${thread.name} (id=${thread.id}, state=${thread.state})\n")
-        
-        val stackTrace = thread.stackTrace
-        for (element in stackTrace) {
-            sb.append("\tat ${element.className}.${element.methodName}(")
-            sb.append("${element.fileName}:${element.lineNumber})\n")
+    fun getThreadStackTrace(thread: Thread): String = buildString {
+        appendLine("Thread: ${thread.name} (id=${thread.id}, state=${thread.state})")
+        thread.stackTrace.forEach { element ->
+            appendLine("\tat ${element.className}.${element.methodName}(${element.fileName}:${element.lineNumber})")
         }
-        
-        return sb.toString()
     }
     
     /**
      * 获取所有线程的信息（简化版）
      */
-    fun getAllThreadsInfo(): String {
-        val sb = StringBuilder()
+    fun getAllThreadsInfo(): String = buildString {
         val threads = Thread.getAllStackTraces()
-        
-        sb.append("=== All Threads (${threads.size}) ===\n")
-        
-        for ((thread, stackTrace) in threads) {
-            sb.append("\n--- ${thread.name} ---\n")
-            sb.append("  ID: ${thread.id}\n")
-            sb.append("  State: ${thread.state}\n")
-            sb.append("  Priority: ${thread.priority}\n")
-            
+
+        appendLine("=== All Threads (${threads.size}) ===")
+
+        threads.forEach { (thread, stackTrace) ->
+            appendLine()
+            appendLine("--- ${thread.name} ---")
+            appendLine("  ID: ${thread.id}")
+            appendLine("  State: ${thread.state}")
+            appendLine("  Priority: ${thread.priority}")
+
             // 只显示前10行堆栈
             val maxLines = minOf(stackTrace.size, 10)
-            for (i in 0 until maxLines) {
-                sb.append("    at ${stackTrace[i].className}.${stackTrace[i].methodName}\n")
+            stackTrace.take(maxLines).forEach { element ->
+                appendLine("    at ${element.className}.${element.methodName}")
             }
-            
+
             if (stackTrace.size > maxLines) {
-                sb.append("    ... (${stackTrace.size - maxLines} more)\n")
+                appendLine("    ... (${stackTrace.size - maxLines} more)")
             }
         }
-        
-        return sb.toString()
     }
     
     /**
      * 获取阻塞的线程列表
      * @return 状态为 BLOCKED 或 WAITING 的线程列表
      */
-    fun getBlockedThreads(): List<Thread> {
-        val threads = Thread.getAllStackTraces().keys
-        return threads.filter {
-            it.state == Thread.State.BLOCKED || 
-            it.state == Thread.State.WAITING ||
-            it.state == Thread.State.TIMED_WAITING
-        }.toList()
-    }
+    fun getBlockedThreads(): List<Thread> =
+        Thread.getAllStackTraces().keys
+            .filter { it.state == Thread.State.BLOCKED ||
+                      it.state == Thread.State.WAITING ||
+                      it.state == Thread.State.TIMED_WAITING }
     
     /**
      * 检查是否存在死锁风险

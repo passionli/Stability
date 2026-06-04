@@ -30,20 +30,18 @@ class MemoryAnalyzer(private val context: Context) {
      * @param fileName 转储文件名（不含扩展名）
      * @return 转储文件路径，如果失败返回 null
      */
-    fun dumpHeap(fileName: String): String? {
-        return try {
-            val timestamp = System.currentTimeMillis()
-            val dumpFile = File(dumpDir, "${fileName}_$timestamp.hprof")
-            
-            // 触发堆转储
-            Debug.dumpHprofData(dumpFile.absolutePath)
-            
-            OomLog.i("MemoryAnalyzer", "Heap dump saved to: ${dumpFile.absolutePath}")
-            dumpFile.absolutePath
-        } catch (e: IOException) {
-            OomLog.e("MemoryAnalyzer", "Failed to dump heap", e)
-            null
-        }
+    fun dumpHeap(fileName: String): String? = runCatching {
+        val timestamp = System.currentTimeMillis()
+        val dumpFile = File(dumpDir, "${fileName}_$timestamp.hprof")
+
+        // 触发堆转储
+        Debug.dumpHprofData(dumpFile.absolutePath)
+
+        OomLog.i("MemoryAnalyzer", "Heap dump saved to: ${dumpFile.absolutePath}")
+        dumpFile.absolutePath
+    }.getOrElse { e ->
+        OomLog.e("MemoryAnalyzer", "Failed to dump heap", e)
+        null
     }
     
     /**
@@ -80,24 +78,18 @@ class MemoryAnalyzer(private val context: Context) {
      * PSS 是应用实际使用的物理内存大小
      * @return PSS 值（字节），如果获取失败返回 0
      */
-    fun getAppPss(): Long {
-        return try {
-            val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-            val myPid = android.os.Process.myPid()
-            
-            // 获取所有进程的内存信息
-            val processInfos = activityManager.getProcessMemoryInfo(intArrayOf(myPid))
-            
-            if (processInfos.isNotEmpty()) {
-                // 返回 PSS（单位：KB）转换为字节
-                processInfos[0].getTotalPss() * 1024L
-            } else {
-                0L
-            }
-        } catch (e: Exception) {
-            OomLog.e("MemoryAnalyzer", "Failed to get PSS", e)
-            0L
-        }
+    fun getAppPss(): Long = runCatching {
+        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val myPid = android.os.Process.myPid()
+
+        // 获取所有进程的内存信息
+        val processInfos = activityManager.getProcessMemoryInfo(intArrayOf(myPid))
+
+        // 返回 PSS（单位：KB）转换为字节
+        processInfos.firstOrNull()?.getTotalPss()?.times(1024L) ?: 0L
+    }.getOrElse { e ->
+        OomLog.e("MemoryAnalyzer", "Failed to get PSS", e)
+        0L
     }
     
     /**
@@ -105,23 +97,17 @@ class MemoryAnalyzer(private val context: Context) {
      * Private Dirty 是应用独占的、已修改的内存页大小
      * @return Private Dirty 值（字节），如果获取失败返回 0
      */
-    fun getAppPrivateDirty(): Long {
-        return try {
-            val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-            val myPid = android.os.Process.myPid()
-            
-            val processInfos = activityManager.getProcessMemoryInfo(intArrayOf(myPid))
-            
-            if (processInfos.isNotEmpty()) {
-                // 返回 Private Dirty（单位：KB）转换为字节
-                processInfos[0].getTotalPrivateDirty() * 1024L
-            } else {
-                0L
-            }
-        } catch (e: Exception) {
-            OomLog.e("MemoryAnalyzer", "Failed to get Private Dirty", e)
-            0L
-        }
+    fun getAppPrivateDirty(): Long = runCatching {
+        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val myPid = android.os.Process.myPid()
+
+        val processInfos = activityManager.getProcessMemoryInfo(intArrayOf(myPid))
+
+        // 返回 Private Dirty（单位：KB）转换为字节
+        processInfos.firstOrNull()?.getTotalPrivateDirty()?.times(1024L) ?: 0L
+    }.getOrElse { e ->
+        OomLog.e("MemoryAnalyzer", "Failed to get Private Dirty", e)
+        0L
     }
     
     /**
@@ -153,25 +139,20 @@ class MemoryAnalyzer(private val context: Context) {
      * @return 内存问题描述列表
      */
     fun checkMemoryIssues(): List<String> {
-        val issues = mutableListOf<String>()
         val status = getMemoryStatus()
-        
-        // 检查堆内存使用率
-        if (status.heapUsedPercent > 90) {
-            issues.add("High heap usage: ${status.heapUsedPercent}% (consider releasing memory)")
-        }
-        
-        // 检查系统低内存状态
-        if (status.isLowMemory) {
-            issues.add("System is in low memory state")
-        }
-        
-        // 检查可用系统内存
-        if (status.systemAvailable < 50 * 1024 * 1024) {
-            issues.add("System available memory is low: ${formatSize(status.systemAvailable)}")
-        }
-        
-        return issues
+
+        return listOfNotNull(
+            // 检查堆内存使用率
+            "High heap usage: ${status.heapUsedPercent}% (consider releasing memory)"
+                .takeIf { status.heapUsedPercent > 90 },
+
+            // 检查系统低内存状态
+            "System is in low memory state".takeIf { status.isLowMemory },
+
+            // 检查可用系统内存
+            "System available memory is low: ${formatSize(status.systemAvailable)}"
+                .takeIf { status.systemAvailable < 50 * 1024 * 1024 }
+        )
     }
     
     /**
