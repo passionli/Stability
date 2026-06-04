@@ -24,35 +24,24 @@ class SocketBasicExample {
     }
     
     /**
-     * 创建 Socket 示例
+     * 创建 Socket 示例（使用函数式风格）
      */
     private fun createSocket() {
         Log.d("Socket", "=== 运行创建 Socket 示例 ===")
         
-        var socket: Socket? = null
-        
-        try {
-            // 创建 Socket 并连接到服务器
-            // 这里使用 Google 的公共 DNS 服务器作为示例
-            socket = Socket("8.8.8.8", 53)
-            Log.d("Socket", "创建 Socket 成功")
-            Log.d("Socket", "服务器地址: ${socket.inetAddress.hostAddress}")
-            Log.d("Socket", "服务器端口: ${socket.port}")
-            Log.d("Socket", "本地地址: ${socket.localAddress.hostAddress}")
-            Log.d("Socket", "本地端口: ${socket.localPort}")
-        } catch (e: IOException) {
+        // 使用 runCatching 处理异常
+        runCatching {
+            // 使用 use 函数自动关闭资源
+            Socket("8.8.8.8", 53).use { socket ->
+                Log.d("Socket", "创建 Socket 成功")
+                Log.d("Socket", "服务器地址: ${socket.inetAddress.hostAddress}")
+                Log.d("Socket", "服务器端口: ${socket.port}")
+                Log.d("Socket", "本地地址: ${socket.localAddress.hostAddress}")
+                Log.d("Socket", "本地端口: ${socket.localPort}")
+            }
+        }.onFailure { e ->
             // 连接失败
             Log.d("Socket", "创建 Socket 失败: ${e.message}")
-        } finally {
-            // 关闭 Socket
-            if (socket != null && !socket.isClosed) {
-                try {
-                    socket.close()
-                    Log.d("Socket", "关闭 Socket 成功")
-                } catch (e: IOException) {
-                    Log.d("Socket", "关闭 Socket 失败: ${e.message}")
-                }
-            }
         }
         
         Log.d("Socket", "=== 创建 Socket 示例完成 ===")

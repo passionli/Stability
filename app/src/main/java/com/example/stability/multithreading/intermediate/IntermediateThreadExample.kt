@@ -1,13 +1,14 @@
 package com.example.stability.multithreading.intermediate
 
 import android.util.Log
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
-import java.util.concurrent.locks.ReentrantLock
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 /**
  * 多线程中级示例
- * 展示线程同步、线程池和并发集合等内容
+ * 展示线程同步、协程和并发集合等内容
  */
 class IntermediateThreadExample {
     
@@ -21,8 +22,8 @@ class IntermediateThreadExample {
         // 运行线程同步示例
         runThreadSynchronizationExample()
         
-        // 运行线程池示例
-        runThreadPoolExample()
+        // 运行协程示例
+        runCoroutineExample()
         
         // 运行线程通信示例
         runThreadCommunicationExample()
@@ -31,7 +32,7 @@ class IntermediateThreadExample {
     }
     
     /**
-     * 线程同步示例
+     * 线程同步示例（使用协程和互斥锁）
      */
     private fun runThreadSynchronizationExample() {
         Log.d("Multithreading", "=== 运行线程同步示例 ===")
@@ -39,39 +40,26 @@ class IntermediateThreadExample {
         // 创建共享资源
         val sharedResource = SharedResource()
         
-        // 创建两个线程同时访问共享资源
-        val thread1 = Thread {
-            for (i in 1..5) {
-                sharedResource.increment()
-                try {
-                    Thread.sleep(100)
-                } catch (e: InterruptedException) {
-                    Log.e("Multithreading", "Thread interrupted", e)
+        // 使用协程替代手动线程
+        runBlocking {
+            // 创建两个协程同时访问共享资源
+            val jobs = listOf(
+                launch {
+                    repeat(5) {
+                        sharedResource.increment()
+                        delay(100)
+                    }
+                },
+                launch {
+                    repeat(5) {
+                        sharedResource.increment()
+                        delay(100)
+                    }
                 }
-            }
-        }
-        
-        val thread2 = Thread {
-            for (i in 1..5) {
-                sharedResource.increment()
-                try {
-                    Thread.sleep(100)
-                } catch (e: InterruptedException) {
-                    Log.e("Multithreading", "Thread interrupted", e)
-                }
-            }
-        }
-        
-        // 启动线程
-        thread1.start()
-        thread2.start()
-        
-        // 等待线程执行完成
-        try {
-            thread1.join()
-            thread2.join()
-        } catch (e: InterruptedException) {
-            Log.e("Multithreading", "Thread interrupted", e)
+            )
+            
+            // 等待所有协程完成
+            jobs.forEach { it.join() }
         }
         
         // 打印最终结果
@@ -81,175 +69,84 @@ class IntermediateThreadExample {
     }
     
     /**
-     * 线程池示例
+     * 协程示例
      */
-    private fun runThreadPoolExample() {
-        Log.d("Multithreading", "=== 运行线程池示例 ===")
+    private fun runCoroutineExample() {
+        Log.d("Multithreading", "=== 运行协程示例 ===")
         
-        // 创建一个固定大小的线程池
-        val executor: ExecutorService = Executors.newFixedThreadPool(3)
-        
-        // 提交多个任务到线程池
-        for (i in 1..5) {
-            val taskId = i
-            executor.submit {
-                Log.d("Multithreading", "Task $taskId started, Thread ID: ${Thread.currentThread().id}")
-                // 模拟耗时操作
-                try {
-                    Thread.sleep(1000)
-                } catch (e: InterruptedException) {
-                    Log.e("Multithreading", "Thread interrupted", e)
+        runBlocking {
+            // 使用 repeat 函数创建多个协程
+            val jobs = (1..5).map { taskId ->
+                launch(Dispatchers.Default) {
+                    Log.d("Multithreading", "Task $taskId started, Thread ID: ${Thread.currentThread().id}")
+                    // 模拟耗时操作
+                    delay(1000)
+                    Log.d("Multithreading", "Task $taskId completed, Thread ID: ${Thread.currentThread().id}")
                 }
-                Log.d("Multithreading", "Task $taskId completed, Thread ID: ${Thread.currentThread().id}")
             }
+            
+            // 等待所有任务完成
+            jobs.forEach { it.join() }
         }
         
-        // 关闭线程池
-        executor.shutdown()
-        
-        // 等待所有任务执行完成
-        try {
-            // 等待最多 10 秒
-            if (!executor.awaitTermination(10, java.util.concurrent.TimeUnit.SECONDS)) {
-                Log.d("Multithreading", "Some tasks may not have completed")
-            }
-        } catch (e: InterruptedException) {
-            Log.e("Multithreading", "Thread interrupted", e)
-        }
-        
-        Log.d("Multithreading", "=== 线程池示例完成 ===")
+        Log.d("Multithreading", "=== 协程示例完成 ===")
     }
     
     /**
-     * 线程通信示例
+     * 线程通信示例（使用 Channel）
      */
     private fun runThreadCommunicationExample() {
         Log.d("Multithreading", "=== 运行线程通信示例 ===")
         
-        // 创建共享数据
-        val sharedData = SharedData()
-        
-        // 创建生产者线程
-        val producer = Thread {
-            for (i in 1..5) {
-                sharedData.produce(i)
-                try {
-                    Thread.sleep(500)
-                } catch (e: InterruptedException) {
-                    Log.e("Multithreading", "Thread interrupted", e)
+        runBlocking {
+            // 创建 Channel 用于协程通信
+            val channel = Channel<Int>(capacity = 1)
+            
+            // 生产者协程
+            val producer = launch {
+                repeat(5) { i ->
+                    channel.send(i + 1)
+                    Log.d("Multithreading", "Produced data: ${i + 1}, Thread ID: ${Thread.currentThread().id}")
+                    delay(500)
+                }
+                channel.close()
+            }
+            
+            // 消费者协程
+            val consumer = launch {
+                for (value in channel) {
+                    Log.d("Multithreading", "Consumed data: $value, Thread ID: ${Thread.currentThread().id}")
+                    delay(1000)
                 }
             }
-        }
-        
-        // 创建消费者线程
-        val consumer = Thread {
-            for (i in 1..5) {
-                sharedData.consume()
-                try {
-                    Thread.sleep(1000)
-                } catch (e: InterruptedException) {
-                    Log.e("Multithreading", "Thread interrupted", e)
-                }
-            }
-        }
-        
-        // 启动线程
-        producer.start()
-        consumer.start()
-        
-        // 等待线程执行完成
-        try {
+            
+            // 等待协程完成
             producer.join()
             consumer.join()
-        } catch (e: InterruptedException) {
-            Log.e("Multithreading", "Thread interrupted", e)
         }
         
         Log.d("Multithreading", "=== 线程通信示例完成 ===")
     }
     
     /**
-     * 共享资源类，演示线程同步
+     * 共享资源类，演示线程同步（使用协程互斥锁）
      */
     private class SharedResource {
         // 共享变量
-        var count = 0
+        private var _count = 0
+        val count: Int get() = _count
         
-        // 可重入锁
-        private val lock = ReentrantLock()
-        
-        /**
-         * 增加计数
-         */
-        fun increment() {
-            // 获取锁
-            lock.lock()
-            try {
-                // 临界区代码
-                count++
-                Log.d("Multithreading", "Incremented count to $count, Thread ID: ${Thread.currentThread().id}")
-            } finally {
-                // 释放锁
-                lock.unlock()
-            }
-        }
-    }
-    
-    /**
-     * 共享数据类，演示线程通信
-     */
-    private class SharedData {
-        // 数据
-        private var data: Int? = null
-        // 数据是否可用
-        private var isDataAvailable = false
+        // 互斥锁
+        private val mutex = Mutex()
         
         /**
-         * 生产数据
+         * 增加计数（协程安全）
          */
-        @Synchronized
-        fun produce(value: Int) {
-            // 等待数据被消费
-            while (isDataAvailable) {
-                try {
-                    Log.d("Multithreading", "Producer waiting for data to be consumed, Thread ID: ${Thread.currentThread().id}")
-                    (this as Object).wait()
-                } catch (e: InterruptedException) {
-                    Log.e("Multithreading", "Thread interrupted", e)
-                }
+        suspend fun increment() {
+            mutex.withLock {
+                _count++
+                Log.d("Multithreading", "Incremented count to $_count, Thread ID: ${Thread.currentThread().id}")
             }
-            
-            // 生产数据
-            data = value
-            isDataAvailable = true
-            Log.d("Multithreading", "Produced data: $value, Thread ID: ${Thread.currentThread().id}")
-            
-            // 通知消费者
-            (this as Object).notify()
-        }
-        
-        /**
-         * 消费数据
-         */
-        @Synchronized
-        fun consume() {
-            // 等待数据可用
-            while (!isDataAvailable) {
-                try {
-                    Log.d("Multithreading", "Consumer waiting for data to be produced, Thread ID: ${Thread.currentThread().id}")
-                    (this as Object).wait()
-                } catch (e: InterruptedException) {
-                    Log.e("Multithreading", "Thread interrupted", e)
-                }
-            }
-            
-            // 消费数据
-            val value = data
-            isDataAvailable = false
-            Log.d("Multithreading", "Consumed data: $value, Thread ID: ${Thread.currentThread().id}")
-            
-            // 通知生产者
-            (this as Object).notify()
         }
     }
 }

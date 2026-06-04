@@ -31,9 +31,9 @@ class CreationalBasicExample {
     private fun singletonPatternExample() {
         Log.d("DesignPatterns", "=== 运行单例模式示例 ===")
         
-        // 获取单例实例
-        val instance1 = Singleton.getInstance()
-        val instance2 = Singleton.getInstance()
+        // 获取单例实例（使用 Kotlin object 声明）
+        val instance1 = Singleton
+        val instance2 = Singleton
         
         // 验证是否是同一个实例
         Log.d("DesignPatterns", "instance1 === instance2: ${instance1 === instance2}")
@@ -65,24 +65,11 @@ class CreationalBasicExample {
     }
     
     /**
-     * 单例模式实现
+     * 单例模式实现（使用 Kotlin object 声明，线程安全）
      */
-    class Singleton private constructor() {
-        companion object {
-            // 懒加载单例实例
-            private var instance: Singleton? = null
-            
-            /**
-             * 获取单例实例
-             * 解决问题：确保只有一个实例被创建
-             */
-            fun getInstance(): Singleton {
-                if (instance == null) {
-                    instance = Singleton()
-                    Log.d("DesignPatterns", "Singleton instance created")
-                }
-                return instance!!
-            }
+    object Singleton {
+        init {
+            Log.d("DesignPatterns", "Singleton instance created")
         }
         
         /**
@@ -90,6 +77,23 @@ class CreationalBasicExample {
          */
         fun doSomething() {
             Log.d("DesignPatterns", "Singleton.doSomething() called")
+        }
+    }
+    
+    /**
+     * 线程安全的懒加载单例（使用 lazy 委托）
+     */
+    class LazySingleton private constructor() {
+        companion object {
+            // 使用 lazy 委托实现线程安全的懒加载
+            val instance: LazySingleton by lazy {
+                Log.d("DesignPatterns", "LazySingleton instance created")
+                LazySingleton()
+            }
+        }
+        
+        fun doSomething() {
+            Log.d("DesignPatterns", "LazySingleton.doSomething() called")
         }
     }
     
@@ -130,23 +134,21 @@ class CreationalBasicExample {
     }
     
     /**
-     * 产品工厂
+     * 产品工厂（使用 when 表达式）
      */
     object ProductFactory {
         /**
          * 创建产品
          * 解决问题：根据类型创建不同的产品实例
          */
-        fun createProduct(type: ProductType): Product? {
-            return when (type) {
-                ProductType.TYPE_A -> {
-                    Log.d("DesignPatterns", "Creating ProductA")
-                    ProductA()
-                }
-                ProductType.TYPE_B -> {
-                    Log.d("DesignPatterns", "Creating ProductB")
-                    ProductB()
-                }
+        fun createProduct(type: ProductType): Product = when (type) {
+            ProductType.TYPE_A -> {
+                Log.d("DesignPatterns", "Creating ProductA")
+                ProductA()
+            }
+            ProductType.TYPE_B -> {
+                Log.d("DesignPatterns", "Creating ProductB")
+                ProductB()
             }
         }
     }
