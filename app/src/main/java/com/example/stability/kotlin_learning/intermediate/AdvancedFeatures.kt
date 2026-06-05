@@ -137,6 +137,13 @@ class AdvancedFeatures {
         
         val result2 = calculate(5, 3) { a, b -> a * b }
         Log.d("KotlinLearning", "Result of multiplication: $result2")
+
+        val result3 = calculate1(1,2) { a, b -> a / b }
+        Log.d("KotlinLearning", "Result of division: $result3")
+
+        val result4 = calculate2(1,2) { a, b -> a / b }
+        val result5 = result4(3)
+        Log.d("KotlinLearning", "Result of division: $result5")
         
         // Lambda 作为参数
         // listOf - 集合创建函数
@@ -263,6 +270,18 @@ class AdvancedFeatures {
         val result = operation(a, b)
         Log.d("KotlinLearning", "calculate returned: $result")
         return result
+    }
+
+    private fun calculate1(a : Int, b : Int, block: (Int, Int) -> Int) : Int {
+        return block(b, a)
+    }
+
+    private fun calculate2(a : Int, b : Int, block: (Int, Int) -> Int) : (Int) -> Int {
+        return { c -> block(a, b) + c}
+    }
+
+    private fun calculate3(block: () -> Unit ) : () -> Unit {
+        return { block() }
     }
     
     /**
