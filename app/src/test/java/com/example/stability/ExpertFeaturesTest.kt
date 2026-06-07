@@ -48,6 +48,28 @@ sealed class ApiResult {
     data class Error(val message: String) : ApiResult()
 }
 
+class JavaInteropExample {
+    @JvmField
+    val publicField: String = "Public Field"
+
+    companion object {
+        @JvmStatic
+        fun staticMethod(): String = "Static Method"
+
+        @JvmField
+        val STATIC_FIELD: String = "Static Field"
+    }
+
+    @JvmOverloads
+    fun overloadedMethod(a: Int, b: String = "default", c: Boolean = true): String {
+        return "a: $a, b: $b, c: $c"
+    }
+}
+
+final class FinalClass {
+    fun doSomething(): String = "Final did something"
+}
+
 class ExpertFeaturesTest {
 
     @Test
@@ -135,5 +157,49 @@ class ExpertFeaturesTest {
         }
         val error = ApiResult.Error("Failed")
         assertEquals("Error: Failed", handleApiResult(error))
+    }
+
+    @Test
+    fun `jvmField exposes property as field`() {
+        val example = JavaInteropExample()
+        assertEquals("Public Field", example.publicField)
+    }
+
+    @Test
+    fun `jvmStatic exposes method as static`() {
+        assertEquals("Static Method", JavaInteropExample.staticMethod())
+        assertEquals("Static Field", JavaInteropExample.STATIC_FIELD)
+    }
+
+    @Test
+    fun `jvmOverloads generates overloads`() {
+        val example = JavaInteropExample()
+        assertEquals("a: 1, b: default, c: true", example.overloadedMethod(1))
+        assertEquals("a: 1, b: custom, c: true", example.overloadedMethod(1, "custom"))
+        assertEquals("a: 1, b: custom, c: false", example.overloadedMethod(1, "custom", false))
+    }
+
+    @Test
+    fun `generic with upper bound works`() {
+        fun <T : Number> sum(list: List<T>): Double {
+            return list.sumOf { it.toDouble() }
+        }
+        val intList = listOf(1, 2, 3)
+        val doubleList = listOf(1.1, 2.2, 3.3)
+        assertEquals(6.0, sum(intList), 0.001)
+        assertEquals(6.6, sum(doubleList), 0.001)
+    }
+
+    @Test
+    fun `final class cannot be inherited`() {
+        val finalClass = FinalClass()
+        assertEquals("Final did something", finalClass.doSomething())
+    }
+
+    @Test
+    fun `custom annotation can be used`() {
+        val annotationClass = AnnotatedClass::class.java
+        val annotations = annotationClass.annotations
+        assertTrue(annotations.any { it.annotationClass == MyAnnotation::class })
     }
 }

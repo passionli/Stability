@@ -96,4 +96,34 @@ class BasicSyntaxTest {
         val greeting = "Hello, $name!"
         assertEquals("Hello, World!", greeting)
     }
+
+    @Test
+    fun `throw keyword throws exception`() {
+        assertThrows(IllegalArgumentException::class.java) {
+            throw IllegalArgumentException("Test exception")
+        }
+    }
+
+    @Test
+    fun `finally block always executes`() {
+        var finallyExecuted = false
+        try {
+            throw Exception()
+        } catch (e: Exception) {
+        } finally {
+            finallyExecuted = true
+        }
+        assertTrue(finallyExecuted)
+    }
+
+    @Test
+    fun `type inference works for variables`() {
+        val intValue = 42
+        val stringValue = "Hello"
+        val booleanValue = true
+
+        assertTrue(intValue is Int)
+        assertTrue(stringValue is String)
+        assertTrue(booleanValue is Boolean)
+    }
 }
